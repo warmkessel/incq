@@ -1,0 +1,66 @@
+package com.incq.constants;
+
+public class JspConstants {
+	public static final String INDEX = "/index.jsp";
+	public static final String PROFILES = "/profiles.jsp";
+	public static final String CONTACT = "/contact.jsp";
+	public static final String PIVACY = "/privacy.jsp";
+	public static final String REVIEW = "/review.jsp";
+
+	public static final String LANGUAGE = "la";
+
+	
+	
+	public static final String DEFAULTFAGCOLOR = "#886433";
+	public static final String PERSONALFAGCOLOR = "black";
+	public static final String FOCUSFLAGCOLOR = "red";
+	public static final String MULTIEVENTCOLOR = "green";
+
+	
+	public static final String DIRTY = "dirty";
+	public static final String EDIT = "edit";
+	public static final String SAVE = "save";
+	
+	
+	public static final String ID = "id";
+
+	public static final String RESET = "reset";
+	public static final String LIST = "list";
+	public static final String COUNT = "count";
+	public static final String EMAIL = "email";
+
+	
+
+	public static final String META = "meta";
+	public static final String TAGS = "tags";
+	public static final String TAGINPUT = "tag";
+
+	
+	public static final String PROMOTE= "promote";
+	public static final String TITLE = "title";
+	public static final String LINK = "link";
+	public static final String LONGDESC = "longDesc";
+	public static final String DELETED = "deleted";
+	public static final String BOOKMARKED = "bookmarked";
+	public static final String MEDIA = "media";
+	public static final String SUMMARY = "summary";	
+	
+	
+	public static final String COMMAND = "command";	
+	public static final String INSTURCTION = "instruction";	
+	public static final String INPUT = "input";	
+	
+	public static final String SAVEDETAILSFORM = "saveDetailsForm";	
+	public static final String DETIALS = "details";	
+
+	public static final String SIZE = "size";	
+	
+	public static final String OPENAIEPHEMERALUSERID = "openai-ephemeral-user-id";	
+	public static final String OPENAICONVERSTAIONID = "openai-conversation-id";	
+	
+	
+	public static final String INCQEULR = "https://incq.com";	
+	
+	
+
+}
