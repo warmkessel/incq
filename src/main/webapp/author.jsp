@@ -11,22 +11,31 @@
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.matches(".*Mobile.*");
 
-Review review = new Review();
 Author author = new Author();
 
 
-Language lang = Language.ENGLISH;
+String lang = Language.ENGLISH.code;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+	lang = Language.findByCode(langString).code;
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
+
 if (null != id && id.length() > 0) {
-	review.loadEvent(new Long(id).longValue(), lang);
-	author.loadFromEntity(AuthorList.fetchAuthor(review.getAuthor(), lang));
+	author.loadAuthor(new Long(id).longValue());
 }
+else{
+	String name = (String) request.getParameter(JspConstants.NAME);
+	if (null != name && name.length() > 0) {
+		author.loadFromEntity(AuthorList.fetchAuthor(name, Language.findByCode(lang)));
+	}
+	else{
+		author.loadAuthor(AuthorConstants.DEFAULTID);
+	}
+}
+
 long idLong = 0L;
 try {
 	idLong = Long.parseLong(id);
@@ -53,11 +62,10 @@ try {
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
-<meta name="keywords" content="<%= review.getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="assets/css/sols.css">
-<title>INCQ Reviews</title>
+<title>INCQ Reviews - Authors</title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 	<!-- First Navigation -->
@@ -98,7 +106,7 @@ try {
 					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
+      				        <option value="<%=langEnum.code%>" <%= langEnum.code.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
     </select><input type=hidden name=id value="<%=idLong%>"></form></li>
 				</ul>
@@ -111,35 +119,11 @@ try {
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-						<%JSONObject json = review.getReviewDetails().getLongJSON(); %>
-						<h4><a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a> by - <a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName() %></a>
-						</h4>
-						<img border="0" src="<%=review.getMediaList().get(0)%>">
-						<p><%= json.getJSONObject("review").getString("introduction")%></p>
-						<%  
-						
-						JSONArray faqArray = json.getJSONArray("faq");
-						for (Object obj : faqArray) {
-						    if (obj instanceof JSONObject) {
-						        JSONObject faq = (JSONObject) obj;
-							%>
-							<h4><%= faq.getString("question") %></h4>
-							<p><%= faq.getString("answer") %></p>
-							<%
-						    }
-						}
-						%>
-						<h4>Conclusion</h4>
-						<p><%= json.getJSONObject("review").getString("conclusion")%></p>
-						<h4><a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author - <%=author.getName() %></a></h4>
-						<p><%=author.getShortDescription() %></p>
+						<h4><%= author.getName()%></h4>
 						<p>
-						<% 	for(int x=0; x < review.getTagsList().size(); x++){%>
-								| <a href=""><%=review.getTagsList().get(x) %></a> 
-						<%}%>
-						|
+						<%= author.getLongDescription() %>
 						</p>
-					</div>
+				</div>
 			</div>
 		</div>
 	</section>

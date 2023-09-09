@@ -8,15 +8,10 @@ import java.util.Set;
 //import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.incq.constants.Constants;
-import com.incq.constants.ReviewConstants;
-import com.incq.datastore.ReviewDetailsList;
-import com.google.cloud.Timestamp;
-import com.google.cloud.datastore.Entity;
-import com.google.cloud.datastore.Key;
-import com.google.cloud.datastore.ListValue;
-import com.google.cloud.datastore.StringValue;
-import com.google.cloud.datastore.Value;
+import com.incq.constants.*;
+import com.incq.datastore.*;
+import com.google.cloud.*;
+import com.google.cloud.datastore.*;
 public class Review extends BaseEntity implements Comparable<Review> {
 	/**
 	 * 
@@ -29,23 +24,23 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	private long userId = 0;
 	private List<? extends Value<?>> tags = null;
 	private List<? extends Value<?>> meta = null;
-	private long eventDate = 0;
 	private List<? extends Value<?>> media = null;
 	private ReviewDetails reviewDetails = null;
 	private String link = "";
+	private String author = "";
 
 	
 	public Review() {
 		setReviewDetails(new ReviewDetails());
 	}
-	public Review(Key key, boolean deleted, boolean bookmarked, Timestamp createdDate, Timestamp updatedDate, int userId, List<? extends Value<?>> tags, List<? extends Value<?>> meta, long eventDate, String title, String compactDesc,
+	public Review(Key key, boolean deleted, boolean bookmarked, Timestamp createdDate, Timestamp updatedDate, int userId, List<? extends Value<?>> tags, List<? extends Value<?>> meta, String author, String title, String compactDesc,
 			String longDesc, String link, List<? extends Value<?>> media) {
 		super(key, deleted, createdDate, updatedDate);
 		this.bookmarked = bookmarked;
 		this.userId = userId;
 		this.tags = Objects.requireNonNull(tags);
 		this.meta = Objects.requireNonNull(tags);
-		this.eventDate = Objects.requireNonNull(eventDate);
+		this.author = Objects.requireNonNull(author);
 		this.media = Objects.requireNonNull(media);
 		this.link = Objects.requireNonNull(link);
 
@@ -161,14 +156,12 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	public void setMeta(List<? extends Value<?>> meta) {
 		this.meta = meta;
 	}
-	
-
-	public long getEventDate() {
-		return eventDate;
+	public String getAuthor() {
+		return author;
 	}
 
-	public void setEventDate(long eventDate) {
-		this.eventDate = eventDate;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 	public String getLink() {
 		return link;
@@ -248,7 +241,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		result = 31 * result + (bookmarked ? 1 : 0);
 		result = 31 * result + new Long(userId).intValue();
 		result = 31 * result + getTags().hashCode();
-		result = 31 * result + new Long(eventDate).hashCode();
+		result = 31 * result + author.hashCode();
 		result = 31 * result + media.hashCode();
 		result = 31 * result + link.hashCode();
 
@@ -264,7 +257,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		Entity.Builder entity = Entity.newBuilder(key);
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
 				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.USERID, getUserId())
-				.set(ReviewConstants.TAGS, getTags()).set(ReviewConstants.META, getMeta()).set(ReviewConstants.EVENTDATE, getEventDate()).set(ReviewConstants.LINK, getLink())
+				.set(ReviewConstants.TAGS, getTags()).set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor()).set(ReviewConstants.LINK, getLink())
 				.set(ReviewConstants.MEDIA, getMedia()).build();
 		getDatastore().put(entity.build());
 	}
@@ -274,11 +267,11 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		return Arrays.asList(ListValue.of(stringValues));
 	}
 
-	public void loadEvent(String key, int lang) {
+	public void loadEvent(String key, Language lang) {
 		loadEvent(new Long(key).longValue(), lang);
 	}
 
-	public void loadEvent(long key, int lang) {
+	public void loadEvent(long key, Language lang) {
 		Entity event = ReviewDetailsList.fetchEventDetails(key, lang);
 		if(null != event) {
 			ReviewDetails rd = new ReviewDetails();
@@ -289,21 +282,21 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 	
 
-	public void loadEvent(Key key, int lang) {
+	public void loadEvent(Key key, Language lang) {
 		// log.info("key " + key.toString());
 		Entity event = getDatastore().get(key);
 		loadFromEntity(event, lang);
 
 	}
 
-	public void loadFromEntity(Entity entity, int lang) {
+	public void loadFromEntity(Entity entity, Language lang) {
 		super.loadFromEntity(entity);
 		if (null != entity) {
 			setBookmarked(entity.getBoolean(ReviewConstants.BOOKMARKED));
 			setUserId(entity.getLong(ReviewConstants.USERID));
 			setTags(entity.getList(ReviewConstants.TAGS));
 			setMeta(entity.getList(ReviewConstants.META));
-			setEventDate(entity.getLong(ReviewConstants.EVENTDATE));
+			setAuthor(ReviewConstants.AUTHOR);
 			setMedia(entity.getList(ReviewConstants.MEDIA));
 			setLink(entity.getString(ReviewConstants.LINK));
 
@@ -321,7 +314,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 				+ ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
 				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", "+ ReviewConstants.USERID +"=" + userId + ", "
 				+ '\'' + ", \" + TAGS + \"='" + getTags()+ ", \" + META + \"='" + getMeta()
-				+ '\'' + ", \" + EVENTDATE + \"='" + eventDate + '\''
+				+ '\'' + ", \" + AUTHOR + \"='" + author + '\''
 				+ ", \" + KINGDOM + \"='" + ReviewConstants.COMPACTDESC + '\'' + ", \" + LINK + \"='" + link
 				+ '\'' + ", \" + MEDIA + \"'" + media + '\'' + '}';
 	}

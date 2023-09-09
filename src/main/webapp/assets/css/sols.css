@@ -11437,7 +11437,7 @@ section {
 }
 
 section:nth-child(odd) {
-  background: white;
+  background: black;
 }
 
 section .section-devider {
@@ -11498,9 +11498,6 @@ section.has-overlay:after {
 }
 
 section.has-img-bg {
-  position: relative;
-  background: url(../imgs/section.jpg) no-repeat center top fixed;
-  background-size: cover;
   color: #fff;
 }
 

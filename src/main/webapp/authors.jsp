@@ -1,20 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="org.json.*"%>
-<%@ page import="com.incq.entity.*"%>
-<%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.constants.*"%>
+<%@ page import="com.incq.datastore.*"%>
+<%@ page import="com.incq.entity.*"%>
+<%@ page import="com.google.cloud.datastore.*"%>
 
 <%
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.matches(".*Mobile.*");
 
-Review review = new Review();
-Author author = new Author();
-
-
+UserService userService = UserServiceFactory.getUserService();
+User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
@@ -22,20 +20,7 @@ if (null != langString && langString.length() > 0) {
 	lang = Language.findByCode(langString);
 }
 
-String id = (String) request.getParameter(JspConstants.ID);
-if (null != id && id.length() > 0) {
-	review.loadEvent(new Long(id).longValue(), lang);
-	author.loadFromEntity(AuthorList.fetchAuthor(review.getAuthor(), lang));
-}
-long idLong = 0L;
-try {
-	idLong = Long.parseLong(id);
-} catch (NumberFormatException e) {
-	idLong = 0L; // Set value to 0 in case of NumberFormatException
-}
-
-
-
+ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 %><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,23 +33,24 @@ try {
 
   gtag('config', 'G-PMGYN3L4QF');
 </script>
+
+
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
-<meta name="keywords" content="<%= review.getMetaString()%>">
-
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="assets/css/sols.css">
-<title>INCQ Reviews</title>
+<title>INCQ Reviews - Authors</title>
+
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>"> <img
-				src="assets/imgs/logo-sm.jpg" alt="INCQ">
+			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
+				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -89,61 +75,48 @@ try {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact
-							Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>" method="get" id="languageForm">
+					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang%>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
       				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
-    </select><input type=hidden name=id value="<%=idLong%>"></form></li>
+    </select></form></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
-	<section id="">
+	<!-- Menu Section -->
+	<section class="has-img-bg" id="insite">
 		<div class="container">
-
+			<h6 class="section-subtitle text-center">Here are some of our INCQ reviews</h6>
+			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-						<%JSONObject json = review.getReviewDetails().getLongJSON(); %>
-						<h4><a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a> by - <a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName() %></a>
-						</h4>
-						<img border="0" src="<%=review.getMediaList().get(0)%>">
-						<p><%= json.getJSONObject("review").getString("introduction")%></p>
-						<%  
-						
-						JSONArray faqArray = json.getJSONArray("faq");
-						for (Object obj : faqArray) {
-						    if (obj instanceof JSONObject) {
-						        JSONObject faq = (JSONObject) obj;
-							%>
-							<h4><%= faq.getString("question") %></h4>
-							<p><%= faq.getString("answer") %></p>
-							<%
-						    }
-						}
-						%>
-						<h4>Conclusion</h4>
-						<p><%= json.getJSONObject("review").getString("conclusion")%></p>
-						<h4><a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author - <%=author.getName() %></a></h4>
-						<p><%=author.getShortDescription() %></p>
-						<p>
-						<% 	for(int x=0; x < review.getTagsList().size(); x++){%>
-								| <a href=""><%=review.getTagsList().get(x) %></a> 
-						<%}%>
-						|
-						</p>
+					<div class="row text-left">
+					<%  for(int x=0; x < theList.size(); x++){%>					
+						<div class="col-md-6 my-4">
+								<div class="d-flex">
+									<div class="flex-grow-1">
+									<a href="<%=JspConstants.AUTHOR%> %>?id=<%=theList.get(x).getKey().getId()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getName() %></a>
+										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHOR%>?id=<%=theList.get(x).getKey().getId()%>"><%= theList.get(x).getShortDescription()%></a></p>
+									</div>
+								</div>	
+						</div>
+					<%
+					}
+					%>
 					</div>
+				</div>
 			</div>
 		</div>
 	</section>
-	<!-- End OF Pray Section -->
+	<!-- End of Menu Section -->
 	<!-- Prefooter Section  -->
 	<div
 		class="py-4 border border-lighter border-bottom-0 border-left-0 border-right-0 bg-dark">
@@ -151,13 +124,13 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img src="assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -174,6 +147,16 @@ try {
 						&copy;
 						<%=Constants.YEAR%>
 						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
+						<%
+						if (currentUser != null) {
+						%> <a
+						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+						class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+						<%
+						} else {
+						%> <a
+						href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+						class="btn btn-primary btn-sm">Login/Register</a> <%}%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">

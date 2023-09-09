@@ -3,6 +3,8 @@ package com.incq.constants;
 public class ReviewConstants extends BaseEntityConstants{
 	public static final String REVIEW = "Review";
 
+	public static final String DEFAULTID = "fill me in";
+	
 	public static final String REVIEWDETAILS = "ReviewDetails";
 	
 	public static final String TIMELINEEVENT = "TimelineEvent";
@@ -21,7 +23,7 @@ public class ReviewConstants extends BaseEntityConstants{
 
 	public static final String LINK = "Link";
 
-	public static final String EVENTDATE = "EventDate";
+	public static final String AUTHOR = "Author";
 
 	public static final String TAGS = "Tags";
 

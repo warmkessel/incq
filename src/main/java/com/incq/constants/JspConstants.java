@@ -2,11 +2,18 @@ package com.incq.constants;
 
 public class JspConstants {
 	public static final String INDEX = "/index.jsp";
-	public static final String PROFILES = "/profiles.jsp";
 	public static final String CONTACT = "/contact.jsp";
-	public static final String PIVACY = "/privacy.jsp";
+	public static final String PRIVACY = "/privacy.jsp";
 	public static final String REVIEW = "/review.jsp";
+	public static final String AUTHOR = "/author.jsp";
+	public static final String AUTHORS = "/authors.jsp";
 
+	
+	public static final String ADMINREVIEW = "/admin/review.jsp";
+	public static final String ADMINAUTHOR = "/admin/author.jsp";
+
+	
+	
 	public static final String LANGUAGE = "la";
 
 	
@@ -35,6 +42,9 @@ public class JspConstants {
 	public static final String TAGS = "tags";
 	public static final String TAGINPUT = "tag";
 
+	public static final String NAME = "name";
+	public static final String SHORTDESC = "shortDescription";
+	
 	
 	public static final String PROMOTE= "promote";
 	public static final String TITLE = "title";
@@ -61,6 +71,8 @@ public class JspConstants {
 	
 	public static final String INCQEULR = "https://incq.com";	
 	
-	
-
+	public static final String SUBJECT = "subject";	
+	public static final String FROM = "from";	
+	public static final String BODY = "body";	
+	public static final String PAGEURL = "pageurl";	
 }

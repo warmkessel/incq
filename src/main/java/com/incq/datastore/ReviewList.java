@@ -8,7 +8,7 @@ import com.google.cloud.datastore.*;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.common.collect.Lists;
-import com.incq.constants.ReviewConstants;
+import com.incq.constants.*;
 import com.incq.entity.*;
 
 public class ReviewList {
@@ -26,7 +26,7 @@ public class ReviewList {
 		return entities;
 	}
 	
-	public static ArrayList<Review> fetchBookmaredReviews(int lang) {
+	public static ArrayList<Review> fetchBookmaredReviews(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities();
 			for(int x=0; x < entitys.size(); x++) {

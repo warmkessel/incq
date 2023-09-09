@@ -22,7 +22,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	private static final long serialVersionUID = -361472214131790072L;
 	 //private static final Logger log = Logger.getLogger(Event.class.getName());
 
-	private int language = 0;
+	private String language = Language.ENGLISH.code;
 	private String title = "";
 	private String summary = "";
 	private String longDesc = "";
@@ -54,11 +54,11 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		this.summary = summary;
 	}
 
-	public int getLanguage() {
+	public String getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(int language) {
+	public void setLanguage(String language) {
 		this.language = language;
 	}
 	
@@ -95,7 +95,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
-		result = 31 * result + language;
+		result = 31 * result + language.hashCode();
 		result = 31 * result + title.hashCode();
 		result = 31 * result + summary.hashCode();
 		result = 31 * result + longDesc.hashCode();
@@ -138,10 +138,10 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 			setLongDesc(entity.getString(ReviewConstants.LONGDESC));
 			setSummary(entity.getString(ReviewConstants.SUMMARY));
 			try{
-				setLanguage(new Long(entity.getLong(ReviewConstants.LANGUAGE)).intValue());
+				setLanguage(entity.getString(ReviewConstants.LANGUAGE));
 			}
 			catch(NumberFormatException nfe) {
-				setLanguage(Language.DEFAULTLNAG);
+				setLanguage(Language.ENGLISH.code);
 			}
 		}
 	}

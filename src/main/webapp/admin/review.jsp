@@ -23,11 +23,11 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 <%
 Review review = new Review();
 
-int lang = Language.DEFAULTLNAG;
+Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 if (null != langString && langString.length() > 0) {
-	lang = Language.getLanguageNum(langString);
+	lang = Language.findByCode(langString);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
@@ -132,14 +132,27 @@ if (dirty && save) {
 %>
 </head>
 <body>
+	<h1>
+		ID: <a href="<%=JspConstants.ADMINREVIEW%>?id=<%=idLong%>"><%=idLong%></a>
+	</h1>
+	Language:
+	<form action="<%=JspConstants.ADMINREVIEW%>" method="get" id="languageForm">
+		<select name="la"
+			onchange="document.getElementById('languageForm').submit();">
+			<%
+			for (Language langEnum : Language.values()) {
+			%>
+			<option value="<%=langEnum.code%>"
+				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+				<%=langEnum.name%></option>
+			<%}%>
+		</select><input type=hidden name=id value="<%=idLong%>">
+	</form>
+	<br>
+
 	<form method=post action="./review.jsp">
-		<h1>
-			ID: <a href="./review.jsp?id=<%=idLong%>"><%=idLong%></a><input
-				type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		</h1>
-		<h1>
-			Language:
-			<%=Language.getLanguage(lang)%></h1>
+		<input
+			type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
 		Deleted:<input type="checkbox" name="<%=JspConstants.DELETED%>"
 			<%=review.isDeleted() ? "checked" : ""%> value="true"><br>
 		Bookmark:<input type="checkbox" name="<%=JspConstants.BOOKMARKED%>"

@@ -5,14 +5,14 @@
 <%@ page import="com.incq.constants.*"%>
 <%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.incq.entity.*"%>
+<%@ page import="javax.mail.*"%>
+<%@ page import="javax.mail.internet.*"%>
 <%@ page import="com.google.cloud.datastore.*"%>
 
 <%
 String userAgent = request.getHeader("User-Agent");
 boolean isMobile = userAgent.matches(".*Mobile.*");
 
-UserService userService = UserServiceFactory.getUserService();
-User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
@@ -20,11 +20,39 @@ if (null != langString && langString.length() > 0) {
 	lang = Language.findByCode(langString);
 }
 
-
 ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
+//Get the subject and body parameters from the request
+String subject = request.getParameter(JspConstants.SUBJECT);
+String from = request.getParameter(JspConstants.FROM);
+String body = request.getParameter(JspConstants.BODY);
+String pageurl = request.getParameter(JspConstants.PAGEURL);
 
 
+String emailResp = null;
+if ((null != from) && subject != null && body != null) {
+    Properties props = new Properties();
+    Session mailSession = Session.getDefaultInstance(props, null);
 
+    try {
+        // Create a new email message
+        Message msg = new MimeMessage(mailSession);
+        msg.setFrom(new InternetAddress(from, from));
+        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("jr@warmkessel.com", "Incq"));
+        msg.setSubject("INCQ:" + subject);
+        msg.setText(body + "\r" + pageurl);
+
+        // Send the email
+        Transport.send(msg);
+
+        emailResp = "We got it!";
+    } catch (AddressException e) {
+        //out.println("Error: " + e.getMessage());
+        emailResp = "Error: " + e.getMessage();
+
+    } catch (MessagingException e) {
+        emailResp = "Error: " + e.getMessage();
+    }
+}
 %><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,7 +73,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
+<link rel="stylesheet" href="assets/css/sols.css?v=1">
 <title>INCQ Reviews</title>
 
 </head>
@@ -95,31 +123,53 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
-	<!-- Menu Section -->
-	<section class="has-img-bg" id="insite">
+	<!-- Menu Section --> 
+	<!-- Contact Section -->
+	<section id="" class="bg-white">
 		<div class="container">
-			<h6 class="section-subtitle text-center">Here is a menu of INCQ reviews</h6>
-			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
-			<div class="card bg-light">
-				<div class="card-body px-4 pb-4 text-center">
-					<div class="row text-left">
-					<%  for(int x=0; x < theList.size(); x++){%>					
-						<div class="col-md-6 my-4">
-								<div class="d-flex">
-									<div class="flex-grow-1">
-									<a href="<%= JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getReviewDetails().getTitle() %></a>
-										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%= JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%= theList.get(x).getReviewDetails().getSummary()%></a></p>
-									</div>
-								</div>	
+			<div class="row align-items-center">
+				<div class="col-md-6 d-none d-md-block">
+					<img src="assets/imgs/logo.jpg"
+						alt="Shrine of Lost Secrets Landing page">
+				</div>
+				<div class="col-md-6">
+					<h3 class="section-title mb-5 text-center" id="reponse"></h3>
+					<form action="<%= JspConstants.CONTACT %>" method="get"
+						enctype="text/plain">
+						<input type="hidden" name="pageurl"
+							value="<%=request.getRequestURI() + (request.getQueryString() == null ? "" : "?" + request.getQueryString())%>">
+						<div class="form-group">
+							<input type="text" class="form-control" id="name"
+								aria-describedby="emailHelp" placeholder="Subject"
+								name="subject">
+							<input type="text" class="form-control" id="from"
+								aria-describedby="emailHelp" placeholder="From"
+								name="from">
+							<textarea class="form-control" id="message"
+								aria-describedby="emailHelp"
+								placeholder="Your comment or question" name="body" rows="4"
+								cols="50"></textarea>
 						</div>
-					<%
-					}
-					%>
-					</div>
+						<button type="submit" class="btn btn-primary btn-block">Share
+							your thoughts</button>
+						<small class="form-text text-muted mt-3">We appreciate
+							your interest. Check our <a
+							href="<%=JspConstants.PRIVACY%>">Privacy
+								Policy</a>
+						</small>
+
+						<%if(null != emailResp){ %>
+						<script>
+							var modal = document.getElementById('reponse');
+							modal.innerHTML = "<%=emailResp%>";
+						</script>
+						<%}%>
+					</form>
 				</div>
 			</div>
 		</div>
 	</section>
+	<!-- End OF Contact Section -->
 	<!-- End of Menu Section -->
 	<!-- Prefooter Section  -->
 	<div
@@ -151,16 +201,6 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 						&copy;
 						<%=Constants.YEAR%>
 						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
-						<%
-						if (currentUser != null) {
-						%> <a
-						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
-						<%
-						} else {
-						%> <a
-						href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Login/Register</a> <%}%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
