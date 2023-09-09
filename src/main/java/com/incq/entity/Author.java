@@ -18,6 +18,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	private boolean bookmarked = false;
 	private String name = "";
 	private String language = "";
+	private String style = "";
 	private String shortDescription = "";
 	private String longDescription = "";
 
@@ -50,6 +51,14 @@ public class Author extends BaseEntity implements Comparable<Author> {
 
 	public void setShortDescription(String shortDescription) {
 		this.shortDescription = shortDescription;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public String getLongDescription() {
@@ -105,8 +114,10 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		Entity.Builder entity = Entity.newBuilder(key);
 		entity.set(AuthorConstants.DELETED, isDeleted()).set(AuthorConstants.BOOKMARKED, isBookmarked())
 				.set(AuthorConstants.CREATEDDATE, getCreatedDate()).set(AuthorConstants.UPDATEDDATE, getUpdatedDate())
-				.set(AuthorConstants.NAME, getName()).set(AuthorConstants.LONGDESC, getLongDescription())
-				.set(AuthorConstants.SHORTDESC, getShortDescription())
+				.set(AuthorConstants.NAME, getName())
+				.set(AuthorConstants.LONGDESC, StringValue.newBuilder(getLongDescription()).setExcludeFromIndexes(true).build())
+				.set(AuthorConstants.SHORTDESC, StringValue.newBuilder(getShortDescription()).setExcludeFromIndexes(true).build())
+				.set(AuthorConstants.STYLE, StringValue.newBuilder(getStyle()).setExcludeFromIndexes(true).build())
 				.set(AuthorConstants.LANGUAGE, getLanguageSring())
 				.build();
 		getDatastore().put(entity.build());
@@ -125,6 +136,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		if (null != entity) {
 			setBookmarked(entity.getBoolean(AuthorConstants.BOOKMARKED));
 			setName(entity.getString(AuthorConstants.NAME));
+			setStyle(entity.getString(AuthorConstants.STYLE));
 			setLanguage(entity.getString(AuthorConstants.LANGUAGE));
 			setShortDescription(entity.getString(AuthorConstants.SHORTDESC));
 			setLongDescription(entity.getString(AuthorConstants.LONGDESC));
@@ -135,7 +147,8 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + AuthorConstants.DELETED + "="
 				+ isDeleted() + ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
 				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + AuthorConstants.NAME + "=" + name + ", "
-				+ AuthorConstants.LANGUAGE + "=" + language + ", " + AuthorConstants.SHORTDESC + "=" + shortDescription
+				+ AuthorConstants.LANGUAGE + "=" + language + ", " + AuthorConstants.STYLE + "=" + style
+				+ ", " + AuthorConstants.SHORTDESC + "=" + shortDescription
 				+ ", " + AuthorConstants.LONGDESC + "=" + longDescription + ", " + '}';
 	}
 

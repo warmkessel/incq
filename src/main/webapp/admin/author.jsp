@@ -43,8 +43,9 @@ try {
 long authorDate = 0;
 
 String name = (String) request.getParameter(JspConstants.NAME);
-String deleted = (String) request.getParameter(JspConstants.DELETED);
-String bookmarked = (String) request.getParameter(JspConstants.BOOKMARKED);
+Boolean deleted = Boolean.FALSE;
+Boolean bookmarked = Boolean.FALSE;
+String style = (String) request.getParameter(JspConstants.STYLE);
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 String shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 
@@ -58,31 +59,35 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 	save = true;
 }
 
-if (null != request.getParameter(JspConstants.BOOKMARKED)
-		&& request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
-	bookmarked = (String) request.getParameter(JspConstants.BOOKMARKED);
-	author.setBookmarked(bookmarked);
-	dirty = true;
-}
-
 if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(JspConstants.DELETED).length() > 0) {
-	deleted = (String) request.getParameter(JspConstants.DELETED);
+	deleted = Boolean.valueOf(request.getParameter(JspConstants.DELETED));
 	author.setDeleted(deleted);
 	dirty = true;
 }
 
+if (null != request.getParameter(JspConstants.BOOKMARKED) && request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
+	bookmarked = Boolean.valueOf(request.getParameter(JspConstants.BOOKMARKED));
+	author.setBookmarked(bookmarked);
+	dirty = true;
+}
+
 if (null != request.getParameter(JspConstants.NAME) && request.getParameter(JspConstants.NAME).length() > 0) {
-	name = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.NAME));
+	name = (String) request.getParameter(JspConstants.NAME);
 	author.setName(name);
 	dirty = true;
 }
+if (null != request.getParameter(JspConstants.STYLE) && request.getParameter(JspConstants.STYLE).length() > 0) {
+	style = (String) request.getParameter(JspConstants.STYLE);
+	author.setStyle(style);
+	dirty = true;
+}
 if (null != request.getParameter(JspConstants.SHORTDESC) && request.getParameter(JspConstants.SHORTDESC).length() > 0) {
-	shortDesc = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.SHORTDESC));
+	shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 	author.setShortDescription(shortDesc);
 	dirty = true;
 }
 if (null != request.getParameter(JspConstants.LONGDESC) && request.getParameter(JspConstants.LONGDESC).length() > 0) {
-	longDesc = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.LONGDESC));
+	longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 	author.setLongDescription(longDesc);
 	dirty = true;
 }
@@ -114,17 +119,18 @@ if (dirty && save) {
 	<form method=post action="./author.jsp">
 		<input
 			type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		Deleted:<input type="checkbox" name="<%=JspConstants.DELETED%>"
-			<%=author.isDeleted() ? "checked" : ""%> value="true"><br>
-		Bookmark:<input type="checkbox" name="<%=JspConstants.BOOKMARKED%>"
-			<%=author.isBookmarked() ? "checked" : ""%> value="true"><br>
+		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>" value="true" <%=author.isDeleted() ? "checked" : ""%>> True
+<input type="radio" name="<%=JspConstants.DELETED%>" value="false" <%=!author.isDeleted() ? "checked" : ""%>> False<br>
+		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="true" <%=author.isBookmarked() ? "checked" : ""%>> True
+<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="false" <%=!author.isBookmarked() ? "checked" : ""%>> False<br>
 		Name:<input type="text" name="<%=JspConstants.NAME%>"
 			value="<%=author.getName()%>" size="50"><br>
-			
+		Style:
+		<textarea name="<%=JspConstants.STYLE%>" rows="20" cols="80"><%=author.getStyle()%></textarea><br>
 		Short Description:
-		<textarea name="<%=JspConstants.SHORTDESC%>" rows="20" cols="80"><%=author.getShortDescription()%></textarea>
+		<textarea name="<%=JspConstants.SHORTDESC%>" rows="20" cols="80"><%=author.getShortDescription()%></textarea><br>
 		<br> Long Description:
-		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=author.getLongDescription()%></textarea>
+		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=author.getLongDescription()%></textarea><br>
 				<br> <input type=hidden name=save value="save"> <input
 			type=submit value="save">
 	</form>

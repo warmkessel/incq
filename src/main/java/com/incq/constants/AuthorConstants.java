@@ -12,6 +12,8 @@ public class AuthorConstants extends BaseEntityConstants{
 
 	public static final String LANGUAGE = "Language";
 	
+	public static final String STYLE = "Style";
+
 	public static final String SHORTDESC = "ShortDescription";
 
 	public static final String LONGDESC = "LongDescription";

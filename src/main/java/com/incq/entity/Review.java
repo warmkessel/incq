@@ -296,7 +296,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			setUserId(entity.getLong(ReviewConstants.USERID));
 			setTags(entity.getList(ReviewConstants.TAGS));
 			setMeta(entity.getList(ReviewConstants.META));
-			setAuthor(ReviewConstants.AUTHOR);
+			setAuthor(entity.getString(ReviewConstants.AUTHOR));
 			setMedia(entity.getList(ReviewConstants.MEDIA));
 			setLink(entity.getString(ReviewConstants.LINK));
 

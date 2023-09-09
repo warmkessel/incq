@@ -46,12 +46,13 @@ Set<String> tag = new HashSet<String>();
 Set<String> meta = new HashSet<String>();
 String link = (String) request.getParameter(JspConstants.LINK);
 String summary = (String) request.getParameter(JspConstants.SUMMARY);
-String deleted = (String) request.getParameter(JspConstants.DELETED);
-String bookmarked = (String) request.getParameter(JspConstants.BOOKMARKED);
+Boolean deleted = Boolean.FALSE;
+Boolean bookmarked = Boolean.FALSE;
 Set<String> media = new HashSet<String>();
 
 String title = (String) request.getParameter(JspConstants.TITLE);
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
+String author = (String) request.getParameter(JspConstants.AUTHOR);
 
 boolean dirty = false;
 boolean save = false;
@@ -83,16 +84,15 @@ if (null != request.getParameter(JspConstants.META) && request.getParameter(JspC
 	}
 	review.setMeta(meta);
 }
-if (null != request.getParameter(JspConstants.BOOKMARKED)
-		&& request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
-	bookmarked = (String) request.getParameter(JspConstants.BOOKMARKED);
-	review.setBookmarked(bookmarked);
+if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(JspConstants.DELETED).length() > 0) {
+	deleted = Boolean.valueOf(request.getParameter(JspConstants.DELETED));
+	review.setDeleted(deleted);
 	dirty = true;
 }
 
-if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(JspConstants.DELETED).length() > 0) {
-	deleted = (String) request.getParameter(JspConstants.DELETED);
-	review.setDeleted(deleted);
+if (null != request.getParameter(JspConstants.BOOKMARKED) && request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
+	bookmarked = Boolean.valueOf(request.getParameter(JspConstants.BOOKMARKED));
+	review.setBookmarked(bookmarked);
 	dirty = true;
 }
 
@@ -107,22 +107,27 @@ if (null != request.getParameter(JspConstants.MEDIA) && request.getParameter(Jsp
 	review.setMedia(media);
 }
 if (null != request.getParameter(JspConstants.LINK) && request.getParameter(JspConstants.LINK).length() > 0) {
-	link = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.LINK));
+	link = (String) request.getParameter(JspConstants.LINK);
 	review.setLink(link);
 	dirty = true;
 }
 if (null != request.getParameter(JspConstants.SUMMARY) && request.getParameter(JspConstants.SUMMARY).length() > 0) {
-	summary = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.SUMMARY));
+	summary = (String) request.getParameter(JspConstants.SUMMARY);
 	review.getReviewDetails().setSummary(summary);
 	dirty = true;
 }
 if (null != request.getParameter(JspConstants.TITLE) && request.getParameter(JspConstants.TITLE).length() > 0) {
-	title = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.TITLE));
+	title = (String) request.getParameter(JspConstants.TITLE);
 	review.getReviewDetails().setTitle(title);
 	dirty = true;
 }
+if (null != request.getParameter(JspConstants.AUTHOR) && request.getParameter(JspConstants.AUTHOR).length() > 0) {
+	author = (String) request.getParameter(JspConstants.AUTHOR);
+	review.setAuthor(author);
+	dirty = true;
+}
 if (null != request.getParameter(JspConstants.LONGDESC) && request.getParameter(JspConstants.LONGDESC).length() > 0) {
-	longDesc = (String) CaseControl.cleanHTML(request.getParameter(JspConstants.LONGDESC));
+	longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 	review.getReviewDetails().setLongDesc(longDesc);
 	dirty = true;
 }
@@ -153,14 +158,17 @@ if (dirty && save) {
 	<form method=post action="./review.jsp">
 		<input
 			type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		Deleted:<input type="checkbox" name="<%=JspConstants.DELETED%>"
-			<%=review.isDeleted() ? "checked" : ""%> value="true"><br>
-		Bookmark:<input type="checkbox" name="<%=JspConstants.BOOKMARKED%>"
-			<%=review.isBookmarked() ? "checked" : ""%> value="true"><br>
+		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>" value="true" <%=review.isDeleted() ? "checked" : ""%>> True
+<input type="radio" name="<%=JspConstants.DELETED%>" value="false" <%=!review.isDeleted() ? "checked" : ""%>> False<br>
+		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="true" <%=review.isBookmarked() ? "checked" : ""%>> True
+<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="false" <%=!review.isBookmarked() ? "checked" : ""%>> False<br>
 		Link:<input type="text" name="<%=JspConstants.LINK%>"
 			value="<%=review.getLink()%>" size="50"><br> Title:<input
 			type="text" name="<%=JspConstants.TITLE%>"
 			value="<%=review.getReviewDetails().getTitle()%>" size="50"><br>
+			Title:<input
+			type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getAuthor()%>" size="50"><br>
 		Summary:
 		<textarea name="<%=JspConstants.SUMMARY%>" rows="20" cols="80"><%=review.getReviewDetails().getSummary()%></textarea>
 		<br> Long Description:
