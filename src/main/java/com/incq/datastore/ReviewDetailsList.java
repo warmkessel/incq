@@ -25,8 +25,7 @@ public class ReviewDetailsList {
 			theReturn = entities.get(0);
 		}
 		else {
-			theReturn = datastore.get(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEWDETAILS, ReviewConstants.DEFAULTID).build());
-
+			theReturn = fetchEventDetails(key, Language.ENGLISH);
 		}
 		return theReturn;
 	}

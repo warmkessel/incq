@@ -8,9 +8,6 @@
 <%@ page import="com.google.cloud.datastore.*"%>
 
 <%
-String userAgent = request.getHeader("User-Agent");
-boolean isMobile = userAgent.matches(".*Mobile.*");
-
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
@@ -20,22 +17,21 @@ if (null != langString && langString.length() > 0) {
 	lang = Language.findByCode(langString);
 }
 
-
 ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
-
-
-
 %><!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
-<script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<script async=true
+	src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
 
-  gtag('config', 'G-PMGYN3L4QF');
+	gtag('config', 'G-PMGYN3L4QF');
 </script>
 
 
@@ -53,7 +49,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
+			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
 				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -79,18 +75,42 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang%>" method="get" id="languageForm">
-            			<select name="la" onchange="document.getElementById('languageForm').submit();">
-      				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
-					<%}%>
-    </select></form></li>
+					<li class="nav-item"><form
+							action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get"
+							id="languageForm">
+							<select name="la"
+								onchange="document.getElementById('languageForm').submit();">
+								<%
+								for (Language langEnum : Language.values()) {
+								%>
+								<option value="<%=langEnum.code%>"
+									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+									<%=langEnum.name%></option>
+								<%}%>
+							</select>
+						</form></li>
 				</ul>
+				<%
+				if (currentUser != null) {
+				%>
+				<a
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<%
+				} else {
+				%>
+				<a
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Login/Register</a>
+				<%}%>
 			</div>
 		</div>
 	</nav>
@@ -98,23 +118,31 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	<!-- Menu Section -->
 	<section class="has-img-bg" id="insite">
 		<div class="container">
-			<h6 class="section-subtitle text-center">Here is a menu of INCQ reviews</h6>
+			<h6 class="section-subtitle text-center">Here is a menu of INCQ
+				reviews</h6>
 			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">
-					<%  for(int x=0; x < theList.size(); x++){%>					
+						<%
+						for (int x = 0; x < theList.size(); x++) {
+						%>
 						<div class="col-md-6 my-4">
-								<div class="d-flex">
-									<div class="flex-grow-1">
-									<a href="<%= JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getReviewDetails().getTitle() %></a>
-										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%= JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%= theList.get(x).getReviewDetails().getSummary()%></a></p>
-									</div>
-								</div>	
+							<div class="d-flex">
+								<div class="flex-grow-1">
+									<a
+										href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"
+										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
+									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
+										<a
+											href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%=theList.get(x).getReviewDetails().getSummary()%></a>
+									</p>
+								</div>
+							</div>
 						</div>
-					<%
-					}
-					%>
+						<%
+						}
+						%>
 					</div>
 				</div>
 			</div>
@@ -128,13 +156,17 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
+						src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Home</small></a> <a
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Authors</small></a> <a
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small
+						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -150,17 +182,9 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
-						<%
-						if (currentUser != null) {
-						%> <a
-						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
-						<%
-						} else {
-						%> <a
-						href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Login/Register</a> <%}%>
+						, INCQ All rights reserved - As an Amazon Associate we earn from
+						qualifying purchases. -
+						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">

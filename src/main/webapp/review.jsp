@@ -8,8 +8,8 @@
 <%@ page import="com.incq.constants.*"%>
 
 <%
-String userAgent = request.getHeader("User-Agent");
-boolean isMobile = userAgent.matches(".*Mobile.*");
+UserService userService = UserServiceFactory.getUserService();
+User currentUser = userService.getCurrentUser();
 
 Review review = new Review();
 Author author = new Author();
@@ -33,8 +33,6 @@ try {
 } catch (NumberFormatException e) {
 	idLong = 0L; // Set value to 0 in case of NumberFormatException
 }
-
-
 
 %><!DOCTYPE html>
 <html lang="en">
@@ -89,9 +87,9 @@ try {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact
 							Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
@@ -102,6 +100,19 @@ try {
 					<%}%>
     </select><input type=hidden name=id value="<%=idLong%>"></form></li>
 				</ul>
+				<%
+				if (currentUser != null) {
+				%>
+				<a
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<%
+				} else {
+				%>
+				<a
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Login/Register</a>
+				<%}%>
 			</div>
 		</div>
 	</nav>
@@ -155,9 +166,9 @@ try {
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>

@@ -272,12 +272,6 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void loadEvent(long key, Language lang) {
-		Entity event = ReviewDetailsList.fetchEventDetails(key, lang);
-		if(null != event) {
-			ReviewDetails rd = new ReviewDetails();
-			rd.loadFromEntity(event);
-			setReviewDetails(rd);
-		}
 		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, key).build(), lang);
 	}
 	

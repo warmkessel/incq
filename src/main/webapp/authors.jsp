@@ -8,9 +8,6 @@
 <%@ page import="com.google.cloud.datastore.*"%>
 
 <%
-String userAgent = request.getHeader("User-Agent");
-boolean isMobile = userAgent.matches(".*Mobile.*");
-
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
@@ -75,9 +72,9 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang%>" method="get" id="languageForm">
@@ -87,6 +84,19 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 					<%}%>
     </select></form></li>
 				</ul>
+				<%
+				if (currentUser != null) {
+				%>
+				<a
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<%
+				} else {
+				%>
+				<a
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Login/Register</a>
+				<%}%>
 			</div>
 		</div>
 	</nav>
@@ -128,9 +138,9 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>

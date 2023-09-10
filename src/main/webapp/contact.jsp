@@ -3,15 +3,13 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.constants.*"%>
-<%@ page import="com.incq.datastore.*"%>
-<%@ page import="com.incq.entity.*"%>
 <%@ page import="javax.mail.*"%>
 <%@ page import="javax.mail.internet.*"%>
 <%@ page import="com.google.cloud.datastore.*"%>
 
 <%
-String userAgent = request.getHeader("User-Agent");
-boolean isMobile = userAgent.matches(".*Mobile.*");
+UserService userService = UserServiceFactory.getUserService();
+User currentUser = userService.getCurrentUser();
 
 Language lang = Language.ENGLISH;
 
@@ -20,7 +18,6 @@ if (null != langString && langString.length() > 0) {
 	lang = Language.findByCode(langString);
 }
 
-ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 //Get the subject and body parameters from the request
 String subject = request.getParameter(JspConstants.SUBJECT);
 String from = request.getParameter(JspConstants.FROM);
@@ -29,16 +26,16 @@ String pageurl = request.getParameter(JspConstants.PAGEURL);
 
 
 String emailResp = null;
-if ((null != from) && subject != null && body != null) {
+if ((null != currentUser) && subject != null && body != null) {
     Properties props = new Properties();
     Session mailSession = Session.getDefaultInstance(props, null);
 
     try {
         // Create a new email message
         Message msg = new MimeMessage(mailSession);
-        msg.setFrom(new InternetAddress(from, from));
-        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("jr@warmkessel.com", "Incq"));
-        msg.setSubject("INCQ:" + subject);
+        msg.setFrom(new InternetAddress(currentUser.getEmail(), currentUser.getNickname()));
+        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("comment@shrineoflostsecrets.com", "Shrine of Lost Secrets"));
+        msg.setSubject("SOLS:" + subject);
         msg.setText(body + "\r" + pageurl);
 
         // Send the email
@@ -81,7 +78,7 @@ if ((null != from) && subject != null && body != null) {
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
+			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
 				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -107,30 +104,50 @@ if ((null != from) && subject != null && body != null) {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang%>" method="get" id="languageForm">
+					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
       				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
     </select></form></li>
 				</ul>
+				<%
+				if (currentUser != null) {
+				%>
+				<a
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<%
+				} else {
+				%>
+				<a
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					class="btn btn-primary btn-sm">Login/Register</a>
+				<%}%>
 			</div>
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
 	<!-- Menu Section --> 
 	<!-- Contact Section -->
-	<section id="" class="bg-white">
+
+
+<%
+						if (currentUser != null) {
+						%> 
+	<!-- Contact Section -->
+	<section class="bg-white">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
 					<img src="assets/imgs/logo.jpg"
-						alt="Shrine of Lost Secrets Landing page">
+						alt="INCQ Review Contact"
+						class="w-100 rounded shadow">
 				</div>
 				<div class="col-md-6">
 					<h3 class="section-title mb-5 text-center" id="reponse"></h3>
@@ -142,9 +159,6 @@ if ((null != from) && subject != null && body != null) {
 							<input type="text" class="form-control" id="name"
 								aria-describedby="emailHelp" placeholder="Subject"
 								name="subject">
-							<input type="text" class="form-control" id="from"
-								aria-describedby="emailHelp" placeholder="From"
-								name="from">
 							<textarea class="form-control" id="message"
 								aria-describedby="emailHelp"
 								placeholder="Your comment or question" name="body" rows="4"
@@ -152,7 +166,7 @@ if ((null != from) && subject != null && body != null) {
 						</div>
 						<button type="submit" class="btn btn-primary btn-block">Share
 							your thoughts</button>
-						<small class="form-text text-muted mt-3">We appreciate
+					 <small class="form-text text-muted mt-3">We appreciate
 							your interest. Check our <a
 							href="<%=JspConstants.PRIVACY%>">Privacy
 								Policy</a>
@@ -170,6 +184,34 @@ if ((null != from) && subject != null && body != null) {
 		</div>
 	</section>
 	<!-- End OF Contact Section -->
+	<%
+						} else {
+						%>
+							<section class="bg-white">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-md-6 d-none d-md-block">
+					<img src="assets/imgs/contact.jpg"
+						alt="Shrine of Lost Secrets Landing page"
+						class="w-100 rounded shadow">
+				</div>
+				<div class="col-md-6">				
+					<h3 class="section-title mb-5 text-center" id="reponse">We'd love to hear your thoughts. Kindly login so we can receive your message.</h3>
+					<a href="<%=userService.createLoginURL(JspConstants.CONTACT)%>"
+						class="btn btn-primary btn-sm">Login</a> 
+						<br>
+						<small class="form-text text-muted mt-3">We appreciate
+							your interest. Check our <a
+							href="<%=JspConstants.PRIVACY%>">Privacy
+								Policy</a>
+						</small>
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<%} %>
+	<!-- End OF Contact Section -->
 	<!-- End of Menu Section -->
 	<!-- Prefooter Section  -->
 	<div
@@ -178,13 +220,13 @@ if ((null != from) && subject != null && body != null) {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>

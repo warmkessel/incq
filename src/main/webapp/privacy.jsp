@@ -79,9 +79,9 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang%>" method="get" id="languageForm">
@@ -112,11 +112,19 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 		<div class="container">
 			<div
 				class="row justify-content-between align-items-center text-center">
+				<div class="col-md-3 text-md-left mb-3 mb-md-0">
+					<a href="<%=JspConstants.INDEX%>"><img src="assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
+						class="mb-0"></a>
+				</div>
+				<div class="col-md-9 text-md-right">
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+				</div>
 			</div>
 		</div>
 	</div>
 	<!-- End of PreFooter Section -->
-
 	<!-- Page Footer -->
 	<footer
 		class="border border-dark border-left-0 border-right-0 border-bottom-0 p-4 bg-dark">

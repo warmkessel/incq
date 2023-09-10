@@ -14,11 +14,11 @@ boolean isMobile = userAgent.matches(".*Mobile.*");
 Author author = new Author();
 
 
-String lang = Language.ENGLISH.code;
+Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString).code;
+	lang = Language.findByCode(langString);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
@@ -29,7 +29,7 @@ if (null != id && id.length() > 0) {
 else{
 	String name = (String) request.getParameter(JspConstants.NAME);
 	if (null != name && name.length() > 0) {
-		author.loadFromEntity(AuthorList.fetchAuthor(name, Language.findByCode(lang)));
+		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
 	}
 	else{
 		author.loadAuthor(AuthorConstants.DEFAULTID);
@@ -97,16 +97,16 @@ try {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact
 							Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.code.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
+      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
     </select><input type=hidden name=id value="<%=idLong%>"></form></li>
 				</ul>
@@ -139,9 +139,9 @@ try {
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>

@@ -13,8 +13,9 @@
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
 if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
-%><jsp:forward page="/" />
-<%
+	RequestDispatcher requestDispatcher = request.getRequestDispatcher("/");
+	requestDispatcher.forward(request, response);
+	return; // Important to stop further page processing
 }
 %>
 <!DOCTYPE html>
@@ -90,7 +91,8 @@ if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(J
 	dirty = true;
 }
 
-if (null != request.getParameter(JspConstants.BOOKMARKED) && request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
+if (null != request.getParameter(JspConstants.BOOKMARKED)
+		&& request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
 	bookmarked = Boolean.valueOf(request.getParameter(JspConstants.BOOKMARKED));
 	review.setBookmarked(bookmarked);
 	dirty = true;
@@ -141,7 +143,8 @@ if (dirty && save) {
 		ID: <a href="<%=JspConstants.ADMINREVIEW%>?id=<%=idLong%>"><%=idLong%></a>
 	</h1>
 	Language:
-	<form action="<%=JspConstants.ADMINREVIEW%>" method="get" id="languageForm">
+	<form action="<%=JspConstants.ADMINREVIEW%>" method="get"
+		id="languageForm">
 		<select name="la"
 			onchange="document.getElementById('languageForm').submit();">
 			<%
@@ -156,20 +159,21 @@ if (dirty && save) {
 	<br>
 
 	<form method=post action="./review.jsp">
-		<input
-			type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>" value="true" <%=review.isDeleted() ? "checked" : ""%>> True
-<input type="radio" name="<%=JspConstants.DELETED%>" value="false" <%=!review.isDeleted() ? "checked" : ""%>> False<br>
-		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="true" <%=review.isBookmarked() ? "checked" : ""%>> True
-<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="false" <%=!review.isBookmarked() ? "checked" : ""%>> False<br>
-		Link:<input type="text" name="<%=JspConstants.LINK%>"
+		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
+		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
+			value="true" <%=review.isDeleted() ? "checked" : ""%>> True <input
+			type="radio" name="<%=JspConstants.DELETED%>" value="false"
+			<%=!review.isDeleted() ? "checked" : ""%>> False<br>
+		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>"
+			value="true" <%=review.isBookmarked() ? "checked" : ""%>>
+		True <input type="radio" name="<%=JspConstants.BOOKMARKED%>"
+			value="false" <%=!review.isBookmarked() ? "checked" : ""%>>
+		False<br> Link:<input type="text" name="<%=JspConstants.LINK%>"
 			value="<%=review.getLink()%>" size="50"><br> Title:<input
 			type="text" name="<%=JspConstants.TITLE%>"
 			value="<%=review.getReviewDetails().getTitle()%>" size="50"><br>
-			Title:<input
-			type="text" name="<%=JspConstants.AUTHOR%>"
-			value="<%=review.getAuthor()%>" size="50"><br>
-		Summary:
+		Title:<input type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getAuthor()%>" size="50"><br> Summary:
 		<textarea name="<%=JspConstants.SUMMARY%>" rows="20" cols="80"><%=review.getReviewDetails().getSummary()%></textarea>
 		<br> Long Description:
 		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getLongDesc()%></textarea>
