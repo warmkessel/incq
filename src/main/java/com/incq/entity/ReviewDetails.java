@@ -58,6 +58,10 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		return language;
 	}
 
+	public void setLanguage(Language lang) {
+		setLanguage(lang.code);
+	}
+	
 	public void setLanguage(String language) {
 		this.language = language;
 	}

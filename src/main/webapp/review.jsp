@@ -98,7 +98,7 @@ try {
       				<% for (Language langEnum : Language.values()) {%>
       				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
-    </select><input type=hidden name=id value="<%=idLong%>"></form></li>
+    </select><input type=hidden name="<%=JspConstants.ID %>" value="<%=idLong%>"></form></li>
 				</ul>
 				<%
 				if (currentUser != null) {

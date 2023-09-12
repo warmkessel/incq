@@ -97,8 +97,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/grpc/grpc-google-cloud-datastore-admin-v1/2.17.0/grpc-google-cloud-datastore-admin-v1-2.17.0-sources.jar",
-      "path": "com/google/api/grpc/grpc-google-cloud-datastore-admin-v1/2.17.0/grpc-google-cloud-datastore-admin-v1-2.17.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/grpc-google-cloud-datastore-admin-v1/2.17.1/grpc-google-cloud-datastore-admin-v1-2.17.1-sources.jar",
+      "path": "com/google/api/grpc/grpc-google-cloud-datastore-admin-v1/2.17.1/grpc-google-cloud-datastore-admin-v1-2.17.1.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -118,7 +118,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.17.0"
+          "value": "2.17.1"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -128,8 +128,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-datastore-admin-v1/2.17.0/proto-google-cloud-datastore-admin-v1-2.17.0-sources.jar",
-      "path": "com/google/api/grpc/proto-google-cloud-datastore-admin-v1/2.17.0/proto-google-cloud-datastore-admin-v1-2.17.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-datastore-admin-v1/2.17.1/proto-google-cloud-datastore-admin-v1-2.17.1-sources.jar",
+      "path": "com/google/api/grpc/proto-google-cloud-datastore-admin-v1/2.17.1/proto-google-cloud-datastore-admin-v1-2.17.1.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -149,7 +149,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.17.0"
+          "value": "2.17.1"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -159,8 +159,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-datastore-v1/0.108.0/proto-google-cloud-datastore-v1-0.108.0-sources.jar",
-      "path": "com/google/api/grpc/proto-google-cloud-datastore-v1/0.108.0/proto-google-cloud-datastore-v1-0.108.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-datastore-v1/0.108.1/proto-google-cloud-datastore-v1-0.108.1-sources.jar",
+      "path": "com/google/api/grpc/proto-google-cloud-datastore-v1/0.108.1/proto-google-cloud-datastore-v1-0.108.1.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -180,7 +180,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "0.108.0"
+          "value": "0.108.1"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -190,8 +190,101 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-common-protos/2.23.0/proto-google-common-protos-2.23.0-sources.jar",
-      "path": "com/google/api/grpc/proto-google-common-protos/2.23.0/proto-google-common-protos-2.23.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-tasks-v2/2.23.0/proto-google-cloud-tasks-v2-2.23.0-sources.jar",
+      "path": "com/google/api/grpc/proto-google-cloud-tasks-v2/2.23.0/proto-google-cloud-tasks-v2-2.23.0.jar",
+      "attributes": [
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
+          "value": "central"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.groupid",
+          "value": "com.google.api.grpc"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.artifactId",
+          "value": "proto-google-cloud-tasks-v2"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.type",
+          "value": "jar"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
+          "value": "2.23.0"
+        },
+        {
+          "name": "org.eclipse.jst.component.dependency",
+          "value": "/WEB-INF/lib"
+        }
+      ]
+    },
+    {
+      "accessRules": [],
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-tasks-v2beta2/0.113.0/proto-google-cloud-tasks-v2beta2-0.113.0-sources.jar",
+      "path": "com/google/api/grpc/proto-google-cloud-tasks-v2beta2/0.113.0/proto-google-cloud-tasks-v2beta2-0.113.0.jar",
+      "attributes": [
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
+          "value": "central"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.groupid",
+          "value": "com.google.api.grpc"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.artifactId",
+          "value": "proto-google-cloud-tasks-v2beta2"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.type",
+          "value": "jar"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
+          "value": "0.113.0"
+        },
+        {
+          "name": "org.eclipse.jst.component.dependency",
+          "value": "/WEB-INF/lib"
+        }
+      ]
+    },
+    {
+      "accessRules": [],
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-cloud-tasks-v2beta3/0.113.0/proto-google-cloud-tasks-v2beta3-0.113.0-sources.jar",
+      "path": "com/google/api/grpc/proto-google-cloud-tasks-v2beta3/0.113.0/proto-google-cloud-tasks-v2beta3-0.113.0.jar",
+      "attributes": [
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
+          "value": "central"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.groupid",
+          "value": "com.google.api.grpc"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.artifactId",
+          "value": "proto-google-cloud-tasks-v2beta3"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.type",
+          "value": "jar"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
+          "value": "0.113.0"
+        },
+        {
+          "name": "org.eclipse.jst.component.dependency",
+          "value": "/WEB-INF/lib"
+        }
+      ]
+    },
+    {
+      "accessRules": [],
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-common-protos/2.24.0/proto-google-common-protos-2.24.0-sources.jar",
+      "path": "com/google/api/grpc/proto-google-common-protos/2.24.0/proto-google-common-protos-2.24.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -211,7 +304,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.23.0"
+          "value": "2.24.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -221,8 +314,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-iam-v1/1.18.0/proto-google-iam-v1-1.18.0-sources.jar",
-      "path": "com/google/api/grpc/proto-google-iam-v1/1.18.0/proto-google-iam-v1-1.18.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/grpc/proto-google-iam-v1/1.19.0/proto-google-iam-v1-1.19.0-sources.jar",
+      "path": "com/google/api/grpc/proto-google-iam-v1/1.19.0/proto-google-iam-v1-1.19.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -242,7 +335,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "1.18.0"
+          "value": "1.19.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -252,8 +345,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/api-common/2.15.0/api-common-2.15.0-sources.jar",
-      "path": "com/google/api/api-common/2.15.0/api-common-2.15.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/api-common/2.16.0/api-common-2.16.0-sources.jar",
+      "path": "com/google/api/api-common/2.16.0/api-common-2.16.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -273,7 +366,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.15.0"
+          "value": "2.16.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -283,8 +376,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/gax/2.32.0/gax-2.32.0-sources.jar",
-      "path": "com/google/api/gax/2.32.0/gax-2.32.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/gax/2.33.0/gax-2.33.0-sources.jar",
+      "path": "com/google/api/gax/2.33.0/gax-2.33.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -304,7 +397,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.32.0"
+          "value": "2.33.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -314,8 +407,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/gax-grpc/2.32.0/gax-grpc-2.32.0-sources.jar",
-      "path": "com/google/api/gax-grpc/2.32.0/gax-grpc-2.32.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/gax-grpc/2.33.0/gax-grpc-2.33.0-sources.jar",
+      "path": "com/google/api/gax-grpc/2.33.0/gax-grpc-2.33.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -335,7 +428,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.32.0"
+          "value": "2.33.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -345,8 +438,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/api/gax-httpjson/2.32.0/gax-httpjson-2.32.0-sources.jar",
-      "path": "com/google/api/gax-httpjson/2.32.0/gax-httpjson-2.32.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/api/gax-httpjson/2.33.0/gax-httpjson-2.33.0-sources.jar",
+      "path": "com/google/api/gax-httpjson/2.33.0/gax-httpjson-2.33.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -366,7 +459,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.32.0"
+          "value": "2.33.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -521,8 +614,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/cloud/datastore/datastore-v1-proto-client/2.17.0/datastore-v1-proto-client-2.17.0-sources.jar",
-      "path": "com/google/cloud/datastore/datastore-v1-proto-client/2.17.0/datastore-v1-proto-client-2.17.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/cloud/datastore/datastore-v1-proto-client/2.17.1/datastore-v1-proto-client-2.17.1-sources.jar",
+      "path": "com/google/cloud/datastore/datastore-v1-proto-client/2.17.1/datastore-v1-proto-client-2.17.1.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -542,7 +635,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.17.0"
+          "value": "2.17.1"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -552,8 +645,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-core/2.22.0/google-cloud-core-2.22.0-sources.jar",
-      "path": "com/google/cloud/google-cloud-core/2.22.0/google-cloud-core-2.22.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-core/2.23.0/google-cloud-core-2.23.0-sources.jar",
+      "path": "com/google/cloud/google-cloud-core/2.23.0/google-cloud-core-2.23.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -573,7 +666,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.22.0"
+          "value": "2.23.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -583,8 +676,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-core-http/2.22.0/google-cloud-core-http-2.22.0-sources.jar",
-      "path": "com/google/cloud/google-cloud-core-http/2.22.0/google-cloud-core-http-2.22.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-core-http/2.23.0/google-cloud-core-http-2.23.0-sources.jar",
+      "path": "com/google/cloud/google-cloud-core-http/2.23.0/google-cloud-core-http-2.23.0.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -604,7 +697,7 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.22.0"
+          "value": "2.23.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -614,8 +707,8 @@
     },
     {
       "accessRules": [],
-      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-datastore/2.17.0/google-cloud-datastore-2.17.0-sources.jar",
-      "path": "com/google/cloud/google-cloud-datastore/2.17.0/google-cloud-datastore-2.17.0.jar",
+      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-datastore/2.17.1/google-cloud-datastore-2.17.1-sources.jar",
+      "path": "com/google/cloud/google-cloud-datastore/2.17.1/google-cloud-datastore-2.17.1.jar",
       "attributes": [
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
@@ -635,7 +728,38 @@
         },
         {
           "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
-          "value": "2.17.0"
+          "value": "2.17.1"
+        },
+        {
+          "name": "org.eclipse.jst.component.dependency",
+          "value": "/WEB-INF/lib"
+        }
+      ]
+    },
+    {
+      "accessRules": [],
+      "sourceAttachmentPath": "BIN/com/google/cloud/google-cloud-tasks/2.23.0/google-cloud-tasks-2.23.0-sources.jar",
+      "path": "com/google/cloud/google-cloud-tasks/2.23.0/google-cloud-tasks-2.23.0.jar",
+      "attributes": [
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.repository",
+          "value": "central"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.groupid",
+          "value": "com.google.cloud"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.artifactId",
+          "value": "google-cloud-tasks"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.type",
+          "value": "jar"
+        },
+        {
+          "name": "com.google.cloud.tools.eclipse.appengine.libraries.version",
+          "value": "2.23.0"
         },
         {
           "name": "org.eclipse.jst.component.dependency",
@@ -2023,7 +2147,7 @@
         "repository": "central",
         "groupId": "com.google.api.grpc",
         "artifactId": "grpc-google-cloud-datastore-admin-v1",
-        "version": "2.17.0",
+        "version": "2.17.1",
         "type": "jar"
       },
       "export": true,
@@ -2036,7 +2160,7 @@
         "repository": "central",
         "groupId": "com.google.api.grpc",
         "artifactId": "proto-google-cloud-datastore-admin-v1",
-        "version": "2.17.0",
+        "version": "2.17.1",
         "type": "jar"
       },
       "export": true,
@@ -2049,7 +2173,7 @@
         "repository": "central",
         "groupId": "com.google.api.grpc",
         "artifactId": "proto-google-cloud-datastore-v1",
-        "version": "0.108.0",
+        "version": "0.108.1",
         "type": "jar"
       },
       "export": true,
@@ -2061,7 +2185,7 @@
       "mavenCoordinates": {
         "repository": "central",
         "groupId": "com.google.api.grpc",
-        "artifactId": "proto-google-common-protos",
+        "artifactId": "proto-google-cloud-tasks-v2",
         "version": "2.23.0",
         "type": "jar"
       },
@@ -2074,8 +2198,47 @@
       "mavenCoordinates": {
         "repository": "central",
         "groupId": "com.google.api.grpc",
+        "artifactId": "proto-google-cloud-tasks-v2beta2",
+        "version": "0.113.0",
+        "type": "jar"
+      },
+      "export": true,
+      "fixedVersion": false,
+      "pinned": false
+    },
+    {
+      "filters": [],
+      "mavenCoordinates": {
+        "repository": "central",
+        "groupId": "com.google.api.grpc",
+        "artifactId": "proto-google-cloud-tasks-v2beta3",
+        "version": "0.113.0",
+        "type": "jar"
+      },
+      "export": true,
+      "fixedVersion": false,
+      "pinned": false
+    },
+    {
+      "filters": [],
+      "mavenCoordinates": {
+        "repository": "central",
+        "groupId": "com.google.api.grpc",
+        "artifactId": "proto-google-common-protos",
+        "version": "2.24.0",
+        "type": "jar"
+      },
+      "export": true,
+      "fixedVersion": false,
+      "pinned": false
+    },
+    {
+      "filters": [],
+      "mavenCoordinates": {
+        "repository": "central",
+        "groupId": "com.google.api.grpc",
         "artifactId": "proto-google-iam-v1",
-        "version": "1.18.0",
+        "version": "1.19.0",
         "type": "jar"
       },
       "export": true,
@@ -2088,7 +2251,7 @@
         "repository": "central",
         "groupId": "com.google.api",
         "artifactId": "api-common",
-        "version": "2.15.0",
+        "version": "2.16.0",
         "type": "jar"
       },
       "export": true,
@@ -2101,7 +2264,7 @@
         "repository": "central",
         "groupId": "com.google.api",
         "artifactId": "gax",
-        "version": "2.32.0",
+        "version": "2.33.0",
         "type": "jar"
       },
       "export": true,
@@ -2114,7 +2277,7 @@
         "repository": "central",
         "groupId": "com.google.api",
         "artifactId": "gax-grpc",
-        "version": "2.32.0",
+        "version": "2.33.0",
         "type": "jar"
       },
       "export": true,
@@ -2127,7 +2290,7 @@
         "repository": "central",
         "groupId": "com.google.api",
         "artifactId": "gax-httpjson",
-        "version": "2.32.0",
+        "version": "2.33.0",
         "type": "jar"
       },
       "export": true,
@@ -2210,7 +2373,7 @@
         "repository": "central",
         "groupId": "com.google.cloud.datastore",
         "artifactId": "datastore-v1-proto-client",
-        "version": "2.17.0",
+        "version": "2.17.1",
         "type": "jar"
       },
       "export": true,
@@ -2223,7 +2386,7 @@
         "repository": "central",
         "groupId": "com.google.cloud",
         "artifactId": "google-cloud-core",
-        "version": "2.22.0",
+        "version": "2.23.0",
         "type": "jar"
       },
       "export": true,
@@ -2236,7 +2399,7 @@
         "repository": "central",
         "groupId": "com.google.cloud",
         "artifactId": "google-cloud-core-http",
-        "version": "2.22.0",
+        "version": "2.23.0",
         "type": "jar"
       },
       "export": true,
@@ -2249,7 +2412,20 @@
         "repository": "central",
         "groupId": "com.google.cloud",
         "artifactId": "google-cloud-datastore",
-        "version": "2.17.0",
+        "version": "2.17.1",
+        "type": "jar"
+      },
+      "export": true,
+      "fixedVersion": true,
+      "pinned": false
+    },
+    {
+      "filters": [],
+      "mavenCoordinates": {
+        "repository": "central",
+        "groupId": "com.google.cloud",
+        "artifactId": "google-cloud-tasks",
+        "version": "2.23.0",
         "type": "jar"
       },
       "export": true,

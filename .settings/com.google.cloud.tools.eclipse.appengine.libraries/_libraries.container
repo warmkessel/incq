@@ -1,4 +1,5 @@
 [
   "appengine-api",
-  "clouddatastore"
+  "clouddatastore",
+  "googlecloudtasks"
 ]

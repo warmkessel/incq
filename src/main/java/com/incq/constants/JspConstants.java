@@ -15,6 +15,7 @@ public class JspConstants {
 	
 	
 	public static final String LANGUAGE = "la";
+	public static final String LANGUAGELIST = "list";
 
 	
 	

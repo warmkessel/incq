@@ -183,7 +183,74 @@ if (dirty && save) {
 		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>
 		<br> Meta
 		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
+		<br>
+
+		<table>
+			<%
+			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(idLong);
+			for (Language langEnum : Language.values()) {
+			%>
+			<tr>
+				<td><a href=""><%=langEnum.name%></a></td>
+				<td><%=state.get(langEnum)%></td>
+				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
+					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
+			</tr>
+			<%}%>
+		</table><br> 
+		<button id="toggleButton">Toggle Checkboxes</button><br> 
+		
 		<br> <input type=hidden name=save value="save"> <input
 			type=submit value="save">
 	</form>
+	
+<script type="text/javascript">
+	// Function to toggle checkboxes
+	var state =0;
+	function toggleCheckboxes() {
+		
+		// Define a list of values you want to toggle
+		const toggleList = ["en", "ar"];
+		//const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
+
+		// Get all checkboxes with name="list"
+		const checkboxes = document.querySelectorAll('input[name="list"]');
+
+		// Iterate through each checkbox
+		checkboxes.forEach((checkbox) => {
+			switch(state){
+			case 0:
+				if (toggleList.includes(checkbox.value)) {
+					checkbox.checked = false;
+				}
+				else{
+					checkbox.checked = true;
+
+				}
+			break;
+			case 1:
+			checkbox.checked = false;
+			break;
+			case 2:
+			checkbox.checked = true;
+			break;
+			}
+			/* // If the checkbox value is in the toggleList
+			if (toggleList.includes(checkbox.value)) {
+				// Toggle the checkbox state
+				checkbox.checked = !checkbox.checked;
+			} else {
+				// If it's not in the toggleList, then make sure it's unchecked
+				checkbox.checked = false;
+			} */
+		});
+		state = state + 1;
+		if(state > 2){
+			state = 0;
+		}
+	}
+
+	// Attach the toggle function to the button click event
+	document.getElementById('toggleButton').addEventListener('click', toggleCheckboxes);
+</script>
 </body>

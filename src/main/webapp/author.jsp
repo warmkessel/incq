@@ -29,7 +29,7 @@ if (null != id && id.length() > 0) {
 else{
 	String name = (String) request.getParameter(JspConstants.NAME);
 	if (null != name && name.length() > 0) {
-		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
+		author.loadFromEntity(AuthorList.fetchAuthor(name, lang, true));
 	}
 	else{
 		author.loadAuthor(AuthorConstants.DEFAULTID);
@@ -103,12 +103,12 @@ try {
 							Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>" method="get" id="languageForm">
+					<li class="nav-item"><form action="<%=JspConstants.AUTHOR%>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
       				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
-    </select><input type=hidden name=id value="<%=idLong%>"></form></li>
+    </select><input type=hidden name="<%=JspConstants.NAME %>" value="<%=author.getName()%>"></form></li>
 				</ul>
 			</div>
 		</div>

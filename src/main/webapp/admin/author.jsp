@@ -23,11 +23,11 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 <%
 Author author = new Author();
 
-String lang = Language.ENGLISH.code;
+Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString).code;
+	lang = Language.findByCode(langString);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
@@ -49,6 +49,7 @@ String style = (String) request.getParameter(JspConstants.STYLE);
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 String shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 
+String[] langList = {};
 boolean dirty = false;
 boolean save = false;
 
@@ -65,7 +66,8 @@ if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(J
 	dirty = true;
 }
 
-if (null != request.getParameter(JspConstants.BOOKMARKED) && request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
+if (null != request.getParameter(JspConstants.BOOKMARKED)
+		&& request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
 	bookmarked = Boolean.valueOf(request.getParameter(JspConstants.BOOKMARKED));
 	author.setBookmarked(bookmarked);
 	dirty = true;
@@ -91,9 +93,18 @@ if (null != request.getParameter(JspConstants.LONGDESC) && request.getParameter(
 	author.setLongDescription(longDesc);
 	dirty = true;
 }
+if (null != request.getParameter(JspConstants.LANGUAGE) && request.getParameter(JspConstants.LANGUAGE).length() > 0) {
+	lang = Language.findByCode((String) request.getParameter(JspConstants.LANGUAGE));
+	author.setLanguage(lang);
+	dirty = true;
+}
 
 if (dirty && save) {
 	author.save();
+}
+if (null != request.getParameter(JspConstants.LANGUAGELIST)
+	&& request.getParameter(JspConstants.LANGUAGELIST).length() > 0) {
+	AuthorList.expandLanguage(author.getName(),request.getParameterValues(JspConstants.LANGUAGELIST), false);
 }
 %>
 </head>
@@ -101,37 +112,103 @@ if (dirty && save) {
 	<h1>
 		ID: <a href="<%=JspConstants.ADMINAUTHOR%>?id=<%=idLong%>"><%=idLong%></a>
 	</h1>
-	Language:
-	<form action="<%=JspConstants.ADMINREVIEW%>" method="get" id="languageForm">
-		<select name="la"
+	<br>
+	<form method=post name="auth" action="<%=JspConstants.ADMINAUTHOR%>">
+		<input type=hidden name=id value="<%=idLong%>"> <select
+			name="la"
 			onchange="document.getElementById('languageForm').submit();">
 			<%
 			for (Language langEnum : Language.values()) {
 			%>
 			<option value="<%=langEnum.code%>"
-				<%=langEnum.code.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 				<%=langEnum.name%></option>
 			<%}%>
-		</select><input type=hidden name=id value="<%=idLong%>">
-	</form>
-	<br>
+		</select><br> <input type="hidden" name="<%=JspConstants.ID%>"
+			value="<%=idLong%>"> Deleted:<input type="radio"
+			name="<%=JspConstants.DELETED%>" value="true"
+			<%=author.isDeleted() ? "checked" : ""%>> True <input
+			type="radio" name="<%=JspConstants.DELETED%>" value="false"
+			<%=!author.isDeleted() ? "checked" : ""%>> False<br>
+		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>"
+			value="true" <%=author.isBookmarked() ? "checked" : ""%>>
+		True <input type="radio" name="<%=JspConstants.BOOKMARKED%>"
+			value="false" <%=!author.isBookmarked() ? "checked" : ""%>>
+		False<br> Name:<input type="text" name="<%=JspConstants.NAME%>"
+			value="<%=author.getName()%>" size="50"><br> Style:
+		<textarea name="<%=JspConstants.STYLE%>" rows="20" cols="80"><%=author.getStyle()%></textarea>
+		<br> Short Description:
+		<textarea name="<%=JspConstants.SHORTDESC%>" rows="20" cols="80"><%=author.getShortDescription()%></textarea>
+		<br> <br> Long Description:
+		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=author.getLongDescription()%></textarea>
+		<br>
 
-	<form method=post action="./author.jsp">
-		<input
-			type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>" value="true" <%=author.isDeleted() ? "checked" : ""%>> True
-<input type="radio" name="<%=JspConstants.DELETED%>" value="false" <%=!author.isDeleted() ? "checked" : ""%>> False<br>
-		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="true" <%=author.isBookmarked() ? "checked" : ""%>> True
-<input type="radio" name="<%=JspConstants.BOOKMARKED%>" value="false" <%=!author.isBookmarked() ? "checked" : ""%>> False<br>
-		Name:<input type="text" name="<%=JspConstants.NAME%>"
-			value="<%=author.getName()%>" size="50"><br>
-		Style:
-		<textarea name="<%=JspConstants.STYLE%>" rows="20" cols="80"><%=author.getStyle()%></textarea><br>
-		Short Description:
-		<textarea name="<%=JspConstants.SHORTDESC%>" rows="20" cols="80"><%=author.getShortDescription()%></textarea><br>
-		<br> Long Description:
-		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=author.getLongDescription()%></textarea><br>
-				<br> <input type=hidden name=save value="save"> <input
-			type=submit value="save">
+		<table>
+			<%
+			Map<Language, Boolean> state = AuthorList.checkAuthorLanguages(author.getName());
+			for (Language langEnum : Language.values()) {
+			%>
+			<tr>
+				<td><a href=""><%=langEnum.name%></a></td>
+				<td><%=state.get(langEnum)%></td>
+				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
+					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
+			</tr>
+			<%}%>
+		</table><br> 
+		<button id="toggleButton">Toggle Checkboxes</button><br> 
+		<input type=hidden name=save value="save"> <input
+			type=submit value="save"><br> 
 	</form>
+	
+
+<script type="text/javascript">
+	// Function to toggle checkboxes
+	var state =0;
+	function toggleCheckboxes() {
+		
+		// Define a list of values you want to toggle
+		const toggleList = ["en", "ar"];
+		//const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
+
+		// Get all checkboxes with name="list"
+		const checkboxes = document.querySelectorAll('input[name="list"]');
+
+		// Iterate through each checkbox
+		checkboxes.forEach((checkbox) => {
+			switch(state){
+			case 0:
+				if (toggleList.includes(checkbox.value)) {
+					checkbox.checked = false;
+				}
+				else{
+					checkbox.checked = true;
+
+				}
+			break;
+			case 1:
+			checkbox.checked = false;
+			break;
+			case 2:
+			checkbox.checked = true;
+			break;
+			}
+			/* // If the checkbox value is in the toggleList
+			if (toggleList.includes(checkbox.value)) {
+				// Toggle the checkbox state
+				checkbox.checked = !checkbox.checked;
+			} else {
+				// If it's not in the toggleList, then make sure it's unchecked
+				checkbox.checked = false;
+			} */
+		});
+		state = state + 1;
+		if(state > 2){
+			state = 0;
+		}
+	}
+
+	// Attach the toggle function to the button click event
+	document.getElementById('toggleButton').addEventListener('click', toggleCheckboxes);
+</script>
 </body>
