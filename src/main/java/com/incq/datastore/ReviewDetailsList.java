@@ -13,7 +13,7 @@ import com.google.common.collect.Lists;
 import com.incq.constants.*;
 import com.incq.entity.ReviewDetails;
 
-import ai.AIManager;
+import com.incq.ai.AIManager;
 
 public class ReviewDetailsList {
     static Logger logger = Logger.getLogger(ReviewDetailsList.class.getName());

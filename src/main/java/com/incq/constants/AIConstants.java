@@ -16,7 +16,7 @@ public class AIConstants {
 //	public static final String AIGENERATEEVENT = "Imagine an event:  Some possible events are listed:  Marriage - with the names of the bride and groom, Death with full name and cause (Very common), Birth with the Child full name and the Mother full name and Fathers full name, Person moves or leaves,  A child becomes and adult and takes up a profession,  Business is established or closed  in the Village. (rare), Wandering brigands set up camp(rare)";
 //	public static final String AIIMAGE = "Generate an detailed drawing of: ";	
 
-	public static final String AILANG = "Respond only with the provided text in ";	
+	public static final String AILANG = "Respond only with the provided text in the same format as provided in ";	
 
 	public static final String AIERROR = "The spirits are resless, ask your qustions again.";	
 

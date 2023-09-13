@@ -24,7 +24,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the Shrine of Lost Secrets">
+<meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="warmkessel">
 <!-- font icons -->
 <link rel="stylesheet"
@@ -42,7 +42,7 @@
 		<div class="container">
 			<a class="navbar-brand"
 				href="">
-				<img src="assets/imgs/logo-sm.jpg" alt="Shrine of Lost Secrets">
+				<img src="assets/imgs/logo-sm.jpg" alt="Incq">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0"></h6>

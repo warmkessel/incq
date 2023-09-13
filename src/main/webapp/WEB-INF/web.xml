@@ -22,6 +22,11 @@
 		<servlet-class>com.incq.servlet.Openapi
 		</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>expandLanguageTask</servlet-name>
+		<servlet-class>com.incq.servlet.cloudTask.ExpandLanguageTask
+		</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>AiPlugin</servlet-name>
 		<url-pattern>/.well-known/ai-plugin.json</url-pattern>
@@ -29,6 +34,10 @@
 	<servlet-mapping>
 		<servlet-name>Openapi</servlet-name>
 		<url-pattern>/ai/openapi.yaml</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>expandLanguageTask</servlet-name>
+		<url-pattern>/tasks/expandLanguage</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

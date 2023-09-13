@@ -34,7 +34,7 @@ if ((null != currentUser) && subject != null && body != null) {
         // Create a new email message
         Message msg = new MimeMessage(mailSession);
         msg.setFrom(new InternetAddress(currentUser.getEmail(), currentUser.getNickname()));
-        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("comment@shrineoflostsecrets.com", "Shrine of Lost Secrets"));
+        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("comment@incq.com", "INCQ"));
         msg.setSubject("SOLS:" + subject);
         msg.setText(body + "\r" + pageurl);
 
@@ -192,7 +192,7 @@ if ((null != currentUser) && subject != null && body != null) {
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
 					<img src="assets/imgs/contact.jpg"
-						alt="Shrine of Lost Secrets Landing page"
+						alt="INCQ Landing Page"
 						class="w-100 rounded shadow">
 				</div>
 				<div class="col-md-6">				

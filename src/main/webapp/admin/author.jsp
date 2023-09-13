@@ -8,6 +8,7 @@
 <%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.google.cloud.datastore.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
+<%@ page import="com.incq.enqueue.*"%>
 
 <%
 UserService userService = UserServiceFactory.getUserService();
@@ -102,9 +103,10 @@ if (null != request.getParameter(JspConstants.LANGUAGE) && request.getParameter(
 if (dirty && save) {
 	author.save();
 }
-if (null != request.getParameter(JspConstants.LANGUAGELIST)
-	&& request.getParameter(JspConstants.LANGUAGELIST).length() > 0) {
-	AuthorList.expandLanguage(author.getName(),request.getParameterValues(JspConstants.LANGUAGELIST), false);
+langList = request.getParameterValues(JspConstants.LANGUAGELIST);
+
+if (null != langList && langList.length > 0) {
+	AuthorList.expandLanguage(name, langList);
 }
 %>
 </head>
@@ -115,8 +117,7 @@ if (null != request.getParameter(JspConstants.LANGUAGELIST)
 	<br>
 	<form method=post name="auth" action="<%=JspConstants.ADMINAUTHOR%>">
 		<input type=hidden name=id value="<%=idLong%>"> <select
-			name="la"
-			onchange="document.getElementById('languageForm').submit();">
+			name="la">
 			<%
 			for (Language langEnum : Language.values()) {
 			%>
@@ -155,57 +156,41 @@ if (null != request.getParameter(JspConstants.LANGUAGELIST)
 					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
 			</tr>
 			<%}%>
-		</table><br> 
-		<button id="toggleButton">Toggle Checkboxes</button><br> 
-		<input type=hidden name=save value="save"> <input
-			type=submit value="save"><br> 
+		</table>
+		<br>
+		Toggle Checkboxes<input type=button value=toggle id="toggleButton">
+		<br> <input type=hidden name=save value="save"> <input
+			type=submit value="save"><br>
 	</form>
-	
 
-<script type="text/javascript">
+
+	<script type="text/javascript">
 	// Function to toggle checkboxes
-	var state =0;
+	var state = true;
 	function toggleCheckboxes() {
-		
 		// Define a list of values you want to toggle
-		const toggleList = ["en", "ar"];
-		//const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
+		//const toggleList = ["en", "ar"];
+		const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
 
 		// Get all checkboxes with name="list"
 		const checkboxes = document.querySelectorAll('input[name="list"]');
 
 		// Iterate through each checkbox
 		checkboxes.forEach((checkbox) => {
-			switch(state){
-			case 0:
+			if(state){
 				if (toggleList.includes(checkbox.value)) {
-					checkbox.checked = false;
+					checkbox.checked = true;
 				}
 				else{
-					checkbox.checked = true;
+					checkbox.checked = false;
 
 				}
-			break;
-			case 1:
-			checkbox.checked = false;
-			break;
-			case 2:
-			checkbox.checked = true;
-			break;
 			}
-			/* // If the checkbox value is in the toggleList
-			if (toggleList.includes(checkbox.value)) {
-				// Toggle the checkbox state
-				checkbox.checked = !checkbox.checked;
-			} else {
-				// If it's not in the toggleList, then make sure it's unchecked
-				checkbox.checked = false;
-			} */
+			else{
+			checkbox.checked = false;
+			}
 		});
-		state = state + 1;
-		if(state > 2){
-			state = 0;
-		}
+		state = !state;
 	}
 
 	// Attach the toggle function to the button click event

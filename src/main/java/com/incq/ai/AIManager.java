@@ -1,27 +1,26 @@
-package ai;
+package com.incq.ai;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.*;
 
-import com.google.appengine.api.urlfetch.HTTPHeader;
-import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPRequest;
-import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.URLFetchService;
-import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
+import com.google.appengine.api.urlfetch.*;
 import com.incq.constants.*;
 
 public class AIManager {
-	private static final Logger log = Logger.getLogger(AIManager.class.getName());
+    static Logger logger = Logger.getLogger(AIManager.class.getName());
 
 	public static String removeUnusal(String input) {
 		return input.replaceAll("\r", ". ").replaceAll("\n", "").replaceAll("'", "\'").replaceAll("\"", "\\\\\"");
 	}
 	public static String editText(String input, String instruction, String errorMessage) {
-		return extactText(edit(input, instruction), errorMessage);
+		return extactText(edit(input, instruction, true), errorMessage);
+	}
+	public static String editText3(String input, String instruction, String errorMessage) {
+		return extactText(edit(input, instruction, false), errorMessage);
 	}
 
-	public static String edit(String input, String instruction ) {
+	public static String edit(String input, String instruction, boolean current) {
 		String theReturn = "";
 		input = removeUnusal(input);
 
@@ -43,14 +42,17 @@ public class AIManager {
 			String endpoint = "https://api.openai.com/v1/chat/completions";
 			
 			String requestBody = "{\"model\":\"gpt-4\",\"messages\": [{\"role\": \"user\", \"content\": \"" + input + ". "+ instruction + "\"}]}";
-			//String requestBody = "{\"model\":\"gpt-3.5-turbo\",\"messages\": [{\"role\": \"user\", \"content\": \"" + input + ". "+ instruction + "\"}]}";
+			if(!current) {
+				requestBody = "{\"model\":\"gpt-3.5-turbo\",\"messages\": [{\"role\": \"user\", \"content\": \"" + input + ". "+ instruction + "\"}]}";
+			}
 			URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-			HTTPRequest httpRequest = new HTTPRequest(new java.net.URL(endpoint), HTTPMethod.POST);
-			httpRequest.getFetchOptions().setDeadline(240000d);
+			HTTPRequest httpRequest = new HTTPRequest(new java.net.URL(endpoint), HTTPMethod.POST, FetchOptions.Builder.withDeadline(600d));
+
+			//httpRequest.getFetchOptions().setDeadline(240000d);
 			httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json"));
 			httpRequest.addHeader(new HTTPHeader("Authorization", auth));
 			httpRequest.setPayload(requestBody.getBytes());
-			log.info("requestBody:" + requestBody);
+			logger.log(Level.INFO, "requestBody " + requestBody);
 
 //            String endpoint = "https://api.openai.com/v1/edits";
 
@@ -67,10 +69,10 @@ public class AIManager {
 			// Get the response
 			HTTPResponse httpResponse = urlFetchService.fetch(httpRequest);
 			theReturn = new String(httpResponse.getContent()).trim();
-			log.info("theReturn:" + theReturn);
+			logger.log(Level.INFO, "httpResponse " + theReturn);
 
 		} catch (Exception e) {
-			log.warning("Failed to execute OpenAI API request: " + e.getMessage());
+			logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " + e.getMessage());
 		}
 		return theReturn;
 	}
@@ -92,7 +94,7 @@ public class AIManager {
 				theReturn = text;
 			}
 		} catch (JSONException e) {
-			log.info("jsonStr" + jsonStr);
+			logger.log(Level.SEVERE, "JSONException: " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally{

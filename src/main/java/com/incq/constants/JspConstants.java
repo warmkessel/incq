@@ -32,6 +32,8 @@ public class JspConstants {
 	
 	public static final String ID = "id";
 
+	public static final String STEP = "step";
+
 	public static final String RESET = "reset";
 	public static final String LIST = "list";
 	public static final String COUNT = "count";
