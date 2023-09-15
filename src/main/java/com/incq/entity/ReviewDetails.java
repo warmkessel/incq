@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.incq.constants.Constants;
 import com.incq.constants.Language;
 import com.incq.constants.ReviewConstants;
+import com.incq.datastore.ReviewDetailsList;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.ListValue;
@@ -133,17 +134,17 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		return Arrays.asList(ListValue.of(stringValues));
 	}
 
-	public void loadEvent(String key) {
-		loadEvent(new Long(key).longValue());
+	public void loadEvent(String key, Language lang) {
+		loadEvent(new Long(key).longValue(), lang);
 	}
 
-	public void loadEvent(long key) {
-		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, key).build());
+	public void loadEvent(long key, Language lang) {
+		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEWDETAILS, key).build(), lang);
 	}
 
-	public void loadEvent(Key key) {
+	public void loadEvent(Key key, Language lang) {
 		// log.info("key " + key.toString());
-		Entity event = getDatastore().get(key);
+		Entity event = ReviewDetailsList.fetchEventDetails(key.getId(), lang);
 		loadFromEntity(event);
 
 	}
@@ -156,6 +157,8 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 			setReviewBody(entity.getString(ReviewConstants.REVIEWBODY));
 			setConclusion(entity.getString(ReviewConstants.CONCLUSION));
 			setSummary(entity.getString(ReviewConstants.SUMMARY));
+			setReviewId(entity.getLong(ReviewConstants.REVIEW));
+
 			try {
 				setLanguage(entity.getString(ReviewConstants.LANGUAGE));
 			} catch (NumberFormatException nfe) {

@@ -14,7 +14,14 @@ public class AIManager {
 	public static String removeUnusal(String input) {
 		return input.replaceAll("\r", ". ").replaceAll("\n", "").replaceAll("'", "\'").replaceAll("\"", "\\\\\"");
 	}
-
+	public static String editTextChunk(String input, String instruction, String style, String errorMessage, String delim) {
+		StringBuffer theReturn = new StringBuffer();
+		String[] inputArr = input.split(delim);
+		for(int x=0; x < inputArr.length; x++) {
+			theReturn.append(extactText(edit(delim + inputArr[x], instruction, style, true), errorMessage));
+		}
+		return theReturn.toString();
+	}
 	public static String editText(String input, String instruction, String style, String errorMessage) {
 		return extactText(edit(input, instruction, style, true), errorMessage);
 	}
@@ -70,7 +77,7 @@ public class AIManager {
 
 	        logger.log(Level.INFO, "httpResponse " + theReturn);
 	    } catch (Exception e) {
-	        logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " + e.getMessage());
+	        logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " +  e.getMessage());
 	    }
         logger.log(Level.INFO, "finish edit " + LocalDateTime.now());
 

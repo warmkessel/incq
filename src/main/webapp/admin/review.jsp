@@ -58,6 +58,7 @@ String conclusiondesc = (String) request.getParameter(JspConstants.CONCLUSIONDES
 String author = (String) request.getParameter(JspConstants.AUTHOR);
 String source = (String) request.getParameter(JspConstants.SOURCE);
 
+String[] langList = {};
 boolean dirty = false;
 boolean save = false;
 
@@ -157,6 +158,11 @@ if (null != request.getParameter(JspConstants.CONCLUSIONDESC)
 if (dirty && save) {
 	review.save();
 }
+langList = request.getParameterValues(JspConstants.LANGUAGELIST);
+
+if (null != langList && langList.length > 0) {
+	ReviewDetailsList.expandLanugage(review.getKeyLong(), langList);
+}
 %>
 </head>
 <body>
@@ -165,7 +171,7 @@ if (dirty && save) {
 			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
 	</h1>
 	Language:
-	<form action="<%=JspConstants.ADMINREVIEW%>" method="get"
+	<form action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%><%=Language.ENGLISH.equals(lang) ? "" : "?" + JspConstants.LANGUAGE + "=" + lang.code%>" method="get"
 		id="languageForm">
 		<select name="la"
 			onchange="document.getElementById('languageForm').submit();">
@@ -193,49 +199,111 @@ if (dirty && save) {
 		False<br> Link:<input type="text" name="<%=JspConstants.LINK%>"
 			value="<%=review.getLink()%>" size="50"><br> Title:<input
 			type="text" name="<%=JspConstants.TITLE%>"
-			value="<%=review.getReviewDetails().getTitle()%>" size="50"><input
-			type="button" value="Step 3 - Extract Title and Media from source"
-			onclick="appendToUrlAndFetch('step3')"><br> Author:<input
-			type="text" name="<%=JspConstants.AUTHOR%>"
-			value="<%=review.getAuthor()%>" size="50"><input
-			type="button" value="Step
+			value="<%=review.getReviewDetails().getTitle()%>" size="50">
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 3 - Extract Title and Media from source"
+			onclick="appendToUrlAndFetch('step3')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 5 - Translate Title"
+			onclick="appendToUrlAndFetch('step5')">
+		<%}%>
+		<br> Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getAuthor()%>" size="50">
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step
 			Step 2 - Determine Author"
-			onclick="appendToUrlAndFetch('step1')"><br> <br>
-		Source:
+			onclick="appendToUrlAndFetch('step2')">
+		<%}%><br> Source:
 		<textarea name="<%=JspConstants.SOURCE%>" rows="20" cols="80"><%=review.getSource()%></textarea>
-		<input type="button" value="Step 1 - Fetch the Source"
-			onclick="appendToUrlAndFetch('step1')"> <br> Summary:
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 1 - Fetch the Source"
+			onclick="appendToUrlAndFetch('step1')">
+		<%}%><br> Summary:
 		<textarea name="<%=JspConstants.SUMMARY%>" rows="20" cols="80"><%=review.getReviewDetails().getSummary()%></textarea>
-		<input type="button" value="Step 9 - Write a summary"
-			onclick="appendToUrlAndFetch('step9')"><br>
-		Introduction:
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 9 - Write a summary"
+			onclick="appendToUrlAndFetch('step9')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 4 - Translate Summary"
+			onclick="appendToUrlAndFetch('step4')">
+		<%}%>
+		<br> Introduction:
 		<textarea name="<%=JspConstants.INTRODUCTIONDESC%>" rows="20"
 			cols="80"><%=review.getReviewDetails().getIntroduction()%></textarea>
-		<input type="button" value="Step 7 - Write the introductions"
-			onclick="appendToUrlAndFetch('step7')"> <br> ReviewBody:
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 7 - Write the introductions"
+			onclick="appendToUrlAndFetch('step7')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 1 - Translate Introduction"
+			onclick="appendToUrlAndFetch('step1')">
+		<%}%>
+		<br> ReviewBody:
 		<textarea name="<%=JspConstants.REVIEWBODYDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getReviewBody()%></textarea>
-		<input type="button" value="Step 6 - Write the Review Body"
-			onclick="appendToUrlAndFetch('step6')"> <br> Conclusion:
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 6 - Write the Review Body"
+			onclick="appendToUrlAndFetch('step6')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 2 - Translate Review"
+			onclick="appendToUrlAndFetch('step2')">
+		<%}%>
+		<br> Conclusion:
 		<textarea name="<%=JspConstants.CONCLUSIONDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getConclusion()%></textarea>
-		<input type="button" value="Step 8 - Write the Conclusion"
-			onclick="appendToUrlAndFetch('step8')"> <br> Media
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 8 - Write the Conclusion"
+			onclick="appendToUrlAndFetch('step8')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 3 - Translate Conclusion"
+			onclick="appendToUrlAndFetch('step3')">
+		<%}%>
+		<br> Media
 		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
 		<br> Tags
 		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>
-		<input type="button" value="Step 5 - Determine the Tags"
-			onclick="appendToUrlAndFetch('step5')"> <br> Meta
+		<%
+		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 5 - Determine the Tags"
+			onclick="appendToUrlAndFetch('step5')">
+		<%}%><br> Meta
 		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
-		<input type="button" value="Step 4 - Determine the Meta"
-			onclick="appendToUrlAndFetch('step4')"><br> <br>
+		<%
+		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 4 - Determine the Meta"
+			onclick="appendToUrlAndFetch('step4')">
+		<%}%><br>
 
 		<table>
 			<%
 			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(idLong);
+			Map<Language, Boolean> ready = ReviewDetailsList.checkReviewDetailsReady(idLong);
 			for (Language langEnum : Language.values()) {
 			%>
 			<tr>
-				<td><a href=""><%=langEnum.name%></a></td>
-				<td><%=state.get(langEnum)%></td>
+				<td><a href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>"><%=langEnum.name%></a></td>
+				<td><%=state.get(langEnum) ? "Instantiated" : ""%></td>
+				<td><%=ready.get(langEnum) ? "Ready" : ""%></td>
 				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
 					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
 			</tr>
@@ -298,14 +366,20 @@ if (dirty && save) {
 	
 	async function appendToUrlAndFetch(str) {
 		  // Append the string to the current URL
-		  const newUrl = "<%=JspConstants.EXPANDREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=review.getReviewDetails().getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
-		  try {
+		  <%if (Language.ENGLISH.equals(lang)) {%>
+		const newUrl = "<%=JspConstants.EXPANDREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=review.getReviewDetails().getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
+		<%} else {%>
+			const newUrl = "<%=JspConstants.EXPANDREVIEWDETAILS%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=lang.code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
+		<%}%>
+			try {
 		    // Perform an asynchronous HTTP request
 		    const response = await fetch(newUrl+str);
 		    // Check if the request was successful
 		    if (response.ok) {
-		      window.location.reload();
-		    } else {
+		    	 setTimeout(() => {
+		    	        window.location.reload();
+		    	      }, 5000); // 5000 milliseconds = 5 seconds
+		    	     } else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);
 		    }
 		  } catch (error) {
