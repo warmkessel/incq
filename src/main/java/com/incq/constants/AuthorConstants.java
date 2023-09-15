@@ -18,4 +18,6 @@ public class AuthorConstants extends BaseEntityConstants{
 
 	public static final String LONGDESC = "LongDescription";
 
+	public static final String TAGS = "Tags";
+
 }

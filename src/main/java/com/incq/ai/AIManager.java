@@ -1,5 +1,6 @@
 package com.incq.ai;
 
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.*;
@@ -8,73 +9,72 @@ import com.google.appengine.api.urlfetch.*;
 import com.incq.constants.*;
 
 public class AIManager {
-    static Logger logger = Logger.getLogger(AIManager.class.getName());
+	static Logger logger = Logger.getLogger(AIManager.class.getName());
 
 	public static String removeUnusal(String input) {
 		return input.replaceAll("\r", ". ").replaceAll("\n", "").replaceAll("'", "\'").replaceAll("\"", "\\\\\"");
 	}
+
+	public static String editText(String input, String instruction, String style, String errorMessage) {
+		return extactText(edit(input, instruction, style, true), errorMessage);
+	}
+	public static String editText3(String input, String instruction, String style, String errorMessage) {
+		return extactText(edit(input, instruction, style, false), errorMessage);
+	}
 	public static String editText(String input, String instruction, String errorMessage) {
-		return extactText(edit(input, instruction, true), errorMessage);
+		return extactText(edit(input, instruction, "", true), errorMessage);
 	}
 	public static String editText3(String input, String instruction, String errorMessage) {
-		return extactText(edit(input, instruction, false), errorMessage);
+		return extactText(edit(input, instruction, "", false), errorMessage);
 	}
+	
+	public static String edit(String input, String instruction, String style, boolean current) {
+        logger.log(Level.INFO, "start edit " + LocalDateTime.now());
+    String theReturn = "";
+	    //input = removeUnusual(input);
 
-	public static String edit(String input, String instruction, boolean current) {
-		String theReturn = "";
-		input = removeUnusal(input);
+	    if (style.length() > 0) {
+	        style = AIConstants.AIMANAGERSTYLE + style;
+	    }
 
-		try {
+	    try {
+	        String apiKey = AIKey.API_KEY;
+	        String auth = "Bearer " + apiKey;
+	        String endpoint = "https://api.openai.com/v1/chat/completions";
 
-			// Encode the API key in Base64 format and set it as Authorization header
-			String apiKey = AIKey.API_KEY;
-			String auth = "Bearer " + apiKey;
+	        JSONArray messagesArray = new JSONArray();
+	        JSONObject messageObject = new JSONObject();
+	        messageObject.put("role", "user");
+	        messageObject.put("content", instruction + " " + style + " " + input);
+	        messagesArray.put(messageObject);
 
-//            curl https://api.openai.com/v1/chat/completions \
-//            	  -H "Content-Type: application/json" \
-//            	  -H "Authorization: Bearer $OPENAI_API_KEY" \
-//            	  -d '{
-//            	    "model": "gpt-3.5-turbo",
-//            	    "messages": [{"role": "user", "content": "Hello!"}]
-//            	  }'
-//        
-//        
-			String endpoint = "https://api.openai.com/v1/chat/completions";
-			
-			String requestBody = "{\"model\":\"gpt-4\",\"messages\": [{\"role\": \"user\", \"content\": \"" + input + ". "+ instruction + "\"}]}";
-			if(!current) {
-				requestBody = "{\"model\":\"gpt-3.5-turbo\",\"messages\": [{\"role\": \"user\", \"content\": \"" + input + ". "+ instruction + "\"}]}";
-			}
-			URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-			HTTPRequest httpRequest = new HTTPRequest(new java.net.URL(endpoint), HTTPMethod.POST, FetchOptions.Builder.withDeadline(600d));
+	        JSONObject mainObject = new JSONObject();
+	        mainObject.put("model", current ? "gpt-4" : "gpt-3.5-turbo");
+	        mainObject.put("messages", messagesArray);
 
-			//httpRequest.getFetchOptions().setDeadline(240000d);
-			httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json"));
-			httpRequest.addHeader(new HTTPHeader("Authorization", auth));
-			httpRequest.setPayload(requestBody.getBytes());
-			logger.log(Level.INFO, "requestBody " + requestBody);
+	        URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+	        HTTPRequest httpRequest = new HTTPRequest(
+	            new java.net.URL(endpoint),
+	            HTTPMethod.POST,
+	            FetchOptions.Builder.withDeadline(600d)
+	        );
 
-//            String endpoint = "https://api.openai.com/v1/edits";
+	        httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json"));
+	        httpRequest.addHeader(new HTTPHeader("Authorization", auth));
+	        httpRequest.setPayload(mainObject.toString().getBytes());
 
-			// Set the request body
-//            String requestBody = "{\"model\":\"text-davinci-edit-001\",\"input\":\"" + input + "\",\"instruction\":\"" + instruction + "\"}";            
-//            URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
-//            HTTPRequest httpRequest = new HTTPRequest(new java.net.URL(endpoint), HTTPMethod.POST);
-//            httpRequest.getFetchOptions().setDeadline(60000d);
-//            httpRequest.addHeader(new HTTPHeader("Content-Type", "application/json"));
-//            httpRequest.addHeader(new HTTPHeader("Authorization", auth));
-//            httpRequest.setPayload(requestBody.getBytes());
-//        	log.info("requestBody:" + requestBody);
+	        logger.log(Level.INFO, "requestBody " + mainObject.toString());
 
-			// Get the response
-			HTTPResponse httpResponse = urlFetchService.fetch(httpRequest);
-			theReturn = new String(httpResponse.getContent()).trim();
-			logger.log(Level.INFO, "httpResponse " + theReturn);
+	        HTTPResponse httpResponse = urlFetchService.fetch(httpRequest);
+	        theReturn = new String(httpResponse.getContent()).trim();
 
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " + e.getMessage());
-		}
-		return theReturn;
+	        logger.log(Level.INFO, "httpResponse " + theReturn);
+	    } catch (Exception e) {
+	        logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " + e.getMessage());
+	    }
+        logger.log(Level.INFO, "finish edit " + LocalDateTime.now());
+
+	    return theReturn;
 	}
 
 	public static String extactText(String jsonStr, String errorMessage) {
@@ -88,7 +88,6 @@ public class AIManager {
 				JSONObject model = choice1.getJSONObject("message");
 				String text = model.getString("content");
 
-				
 //				String text = choices.getJSONObject(0).getString("content");
 				// String text = choices.getJSONObject(0).getString("text");
 				theReturn = text;
@@ -96,11 +95,12 @@ public class AIManager {
 		} catch (JSONException e) {
 			logger.log(Level.SEVERE, "JSONException: " + e.getMessage());
 			e.printStackTrace();
-		}
-		finally{
-			if( theReturn.length() == 0) {
+		} finally {
+			if (theReturn.length() == 0) {
+				logger.log(Level.SEVERE, "AIManager: " + jsonStr);
+
 				theReturn = errorMessage;
-			}		
+			}
 		}
 		return theReturn;
 	}

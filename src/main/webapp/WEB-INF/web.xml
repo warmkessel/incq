@@ -23,8 +23,18 @@
 		</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>expandLanguageTask</servlet-name>
-		<servlet-class>com.incq.servlet.cloudTask.ExpandLanguageTask
+		<servlet-name>expandAuthor</servlet-name>
+		<servlet-class>com.incq.servlet.cloudTask.ExpandAuthorTask
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>expandReview</servlet-name>
+		<servlet-class>com.incq.servlet.cloudTask.ExpandReviewTask
+		</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>expandReviewDetails</servlet-name>
+		<servlet-class>com.incq.servlet.cloudTask.ExpandReviewDetailsTask
 		</servlet-class>
 	</servlet>
 	<servlet-mapping>
@@ -35,10 +45,20 @@
 		<servlet-name>Openapi</servlet-name>
 		<url-pattern>/ai/openapi.yaml</url-pattern>
 	</servlet-mapping>
-		<servlet-mapping>
-		<servlet-name>expandLanguageTask</servlet-name>
-		<url-pattern>/tasks/expandLanguage</url-pattern>
+	<servlet-mapping>
+		<servlet-name>expandReview</servlet-name>
+		<url-pattern>/tasks/expandReview</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>expandReviewDetails</servlet-name>
+		<url-pattern>/tasks/expandReviewDetails</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>expandAuthor</servlet-name>
+		<url-pattern>/tasks/expandAuthor</url-pattern>
+	</servlet-mapping>
+
+
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>

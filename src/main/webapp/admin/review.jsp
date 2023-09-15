@@ -32,7 +32,7 @@ if (null != langString && langString.length() > 0) {
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
-if (null != id && id.length() > 0) {
+if (null != id && id.length() > 0 && !id.equals("0")) {
 	review.loadEvent(new Long(id).longValue(), lang);
 }
 long idLong = 0L;
@@ -52,8 +52,11 @@ Boolean bookmarked = Boolean.FALSE;
 Set<String> media = new HashSet<String>();
 
 String title = (String) request.getParameter(JspConstants.TITLE);
-String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
+String introductiondesc = (String) request.getParameter(JspConstants.INTRODUCTIONDESC);
+String reviewbodydesc = (String) request.getParameter(JspConstants.REVIEWBODYDESC);
+String conclusiondesc = (String) request.getParameter(JspConstants.CONCLUSIONDESC);
 String author = (String) request.getParameter(JspConstants.AUTHOR);
+String source = (String) request.getParameter(JspConstants.SOURCE);
 
 boolean dirty = false;
 boolean save = false;
@@ -68,7 +71,7 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspConstants.TAGS).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGS));
 	for (String str : list) {
-		String[] split = str.split(" ");
+		String[] split = str.split(",");
 		for (int x = 0; x < split.length; x++) {
 	tag.add(split[x]);
 		}
@@ -78,7 +81,7 @@ if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspC
 if (null != request.getParameter(JspConstants.META) && request.getParameter(JspConstants.META).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.META));
 	for (String str : list) {
-		String[] split = str.split(" ");
+		String[] split = str.split(",");
 		for (int x = 0; x < split.length; x++) {
 	meta.add(split[x]);
 		}
@@ -128,9 +131,27 @@ if (null != request.getParameter(JspConstants.AUTHOR) && request.getParameter(Js
 	review.setAuthor(author);
 	dirty = true;
 }
-if (null != request.getParameter(JspConstants.LONGDESC) && request.getParameter(JspConstants.LONGDESC).length() > 0) {
-	longDesc = (String) request.getParameter(JspConstants.LONGDESC);
-	review.getReviewDetails().setLongDesc(longDesc);
+if (null != request.getParameter(JspConstants.SOURCE) && request.getParameter(JspConstants.SOURCE).length() > 0) {
+	source = (String) request.getParameter(JspConstants.SOURCE);
+	review.setSource(source);
+	dirty = true;
+}
+if (null != request.getParameter(JspConstants.INTRODUCTIONDESC)
+		&& request.getParameter(JspConstants.INTRODUCTIONDESC).length() > 0) {
+	introductiondesc = (String) request.getParameter(JspConstants.INTRODUCTIONDESC);
+	review.getReviewDetails().setIntroduction(introductiondesc);
+	dirty = true;
+}
+if (null != request.getParameter(JspConstants.REVIEWBODYDESC)
+		&& request.getParameter(JspConstants.REVIEWBODYDESC).length() > 0) {
+	reviewbodydesc = (String) request.getParameter(JspConstants.REVIEWBODYDESC);
+	review.getReviewDetails().setReviewBody(reviewbodydesc);
+	dirty = true;
+}
+if (null != request.getParameter(JspConstants.CONCLUSIONDESC)
+		&& request.getParameter(JspConstants.CONCLUSIONDESC).length() > 0) {
+	conclusiondesc = (String) request.getParameter(JspConstants.CONCLUSIONDESC);
+	review.getReviewDetails().setConclusion(conclusiondesc);
 	dirty = true;
 }
 if (dirty && save) {
@@ -140,7 +161,8 @@ if (dirty && save) {
 </head>
 <body>
 	<h1>
-		ID: <a href="<%=JspConstants.ADMINREVIEW%>?id=<%=idLong%>"><%=idLong%></a>
+		ID: <a
+			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
 	</h1>
 	Language:
 	<form action="<%=JspConstants.ADMINREVIEW%>" method="get"
@@ -154,7 +176,7 @@ if (dirty && save) {
 				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 				<%=langEnum.name%></option>
 			<%}%>
-		</select><input type=hidden name=id value="<%=idLong%>">
+		</select><input type=hidden name=id value="<%=review.getKeyLong()%>">
 	</form>
 	<br>
 
@@ -171,19 +193,40 @@ if (dirty && save) {
 		False<br> Link:<input type="text" name="<%=JspConstants.LINK%>"
 			value="<%=review.getLink()%>" size="50"><br> Title:<input
 			type="text" name="<%=JspConstants.TITLE%>"
-			value="<%=review.getReviewDetails().getTitle()%>" size="50"><br>
-		Title:<input type="text" name="<%=JspConstants.AUTHOR%>"
-			value="<%=review.getAuthor()%>" size="50"><br> Summary:
+			value="<%=review.getReviewDetails().getTitle()%>" size="50"><input
+			type="button" value="Step 3 - Extract Title and Media from source"
+			onclick="appendToUrlAndFetch('step3')"><br> Author:<input
+			type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getAuthor()%>" size="50"><input
+			type="button" value="Step
+			Step 2 - Determine Author"
+			onclick="appendToUrlAndFetch('step1')"><br> <br>
+		Source:
+		<textarea name="<%=JspConstants.SOURCE%>" rows="20" cols="80"><%=review.getSource()%></textarea>
+		<input type="button" value="Step 1 - Fetch the Source"
+			onclick="appendToUrlAndFetch('step1')"> <br> Summary:
 		<textarea name="<%=JspConstants.SUMMARY%>" rows="20" cols="80"><%=review.getReviewDetails().getSummary()%></textarea>
-		<br> Long Description:
-		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getLongDesc()%></textarea>
-		<br> Media
+		<input type="button" value="Step 9 - Write a summary"
+			onclick="appendToUrlAndFetch('step9')"><br>
+		Introduction:
+		<textarea name="<%=JspConstants.INTRODUCTIONDESC%>" rows="20"
+			cols="80"><%=review.getReviewDetails().getIntroduction()%></textarea>
+		<input type="button" value="Step 7 - Write the introductions"
+			onclick="appendToUrlAndFetch('step7')"> <br> ReviewBody:
+		<textarea name="<%=JspConstants.REVIEWBODYDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getReviewBody()%></textarea>
+		<input type="button" value="Step 6 - Write the Review Body"
+			onclick="appendToUrlAndFetch('step6')"> <br> Conclusion:
+		<textarea name="<%=JspConstants.CONCLUSIONDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getConclusion()%></textarea>
+		<input type="button" value="Step 8 - Write the Conclusion"
+			onclick="appendToUrlAndFetch('step8')"> <br> Media
 		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
 		<br> Tags
 		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>
-		<br> Meta
+		<input type="button" value="Step 5 - Determine the Tags"
+			onclick="appendToUrlAndFetch('step5')"> <br> Meta
 		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
-		<br>
+		<input type="button" value="Step 4 - Determine the Meta"
+			onclick="appendToUrlAndFetch('step4')"><br> <br>
 
 		<table>
 			<%
@@ -197,14 +240,14 @@ if (dirty && save) {
 					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
 			</tr>
 			<%}%>
-		</table><br> 
-		<button id="toggleButton">Toggle Checkboxes</button><br> 
-		
-		<br> <input type=hidden name=save value="save"> <input
-			type=submit value="save">
+		</table>
+		<br>
+		<button id="toggleButton">Toggle Checkboxes</button>
+		<br> <br> <input type=hidden name=save value="save">
+		<input type=submit value="save">
 	</form>
-	
-<script type="text/javascript">
+
+	<script type="text/javascript">
 	// Function to toggle checkboxes
 	var state =0;
 	function toggleCheckboxes() {
@@ -252,5 +295,23 @@ if (dirty && save) {
 
 	// Attach the toggle function to the button click event
 	document.getElementById('toggleButton').addEventListener('click', toggleCheckboxes);
+	
+	async function appendToUrlAndFetch(str) {
+		  // Append the string to the current URL
+		  const newUrl = "<%=JspConstants.EXPANDREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=review.getReviewDetails().getLanguage().code%>&<%=JspConstants.STEP%>=";
+		  try {
+		    // Perform an asynchronous HTTP request
+		    const response = await fetch(newUrl+str);
+		    // Check if the request was successful
+		    if (response.ok) {
+		      window.location.reload();
+		    } else {
+		      console.error("Error fetching the URL:", response.status, response.statusText);
+		    }
+		  } catch (error) {
+		    // Handle network errors or other issues
+		    console.error("There was a problem with the fetch operation:", error);
+		  }
+		}
 </script>
 </body>

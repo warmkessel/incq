@@ -95,6 +95,7 @@ public class AuthorList {
 				if (Language.ENGLISH != lang && null == fetchAuthor(name, lang, false)) {
 					authSub = new Author();
 					authSub.setName(auth.getName());
+					authSub.setTags(auth.getTags());
 					authSub.setLanguage(lang);
 					authSub.setStyle(auth.getStyle());
 					authSub.setBookmarked(auth.isBookmarked());
@@ -108,7 +109,7 @@ public class AuthorList {
 
 					authSub.setDeleted(true);
 					authSub.save();
-					EnqueueAuthor.enqueueTranslateAuthorLanguageTask(authSub.getKeyLong(), lang, AuthorStep.STEP1);
+					EnqueueAuthor.enqueueAuthorTask(authSub.getKeyLong(), lang, AuthorStep.STEP1);
 				}
 			}
 
@@ -118,49 +119,55 @@ public class AuthorList {
 		}
 	}
 
-	public static void expandLanguageSteps(String key, String lang, String step) {
-		expandLanguageSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step));
+	public static void expandAuthorSteps(String key, String lang, String step) {
+		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step));
 
 	}
 
-	public static void expandLanguageSteps(Long key, Language lang, AuthorStep step) {
-		logger.log(Level.WARNING, "key " + key + " lang " + lang + " step " + step);
-
+	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step) {
 		Author auth = new Author();
 		auth.loadAuthor(key);
 		switch (step) {
-		case STEP1:
-			logger.log(Level.WARNING, "STEP1 Start");
+		case STEP1:// Suggest an Authors Name
+			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			break;
+		case STEP2:// Suggest a Style
+			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE, auth.getStyle()));
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			break;
+		case STEP3:// Suggest some Tags
+			auth.setTags(AIManager.editText(auth.getStyle() + auth.getTagsString(), AIConstants.AITAGS,
+					auth.getTagsString()));
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			break;
+		case STEP4:// Suggest Long Description"
+			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG, auth.getStyle(), auth.getLongDescription()));
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			break;
+		case STEP5://Suggest Short Description"
+			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT, auth.getStyle(), auth.getShortDescription()));
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			break;
+		case STEP6:// Translate Short Description
 
 			auth.setShortDescription(AIManager.editText(auth.getShortDescription(), AIConstants.AILANG + lang.name,
 					auth.getShortDescription()));
-			logger.log(Level.WARNING, "Step 1 translated");
-
-			EnqueueAuthor.enqueueTranslateAuthorLanguageTask(key, lang, AuthorStep.STEP2);
-			logger.log(Level.WARNING, "Step 1 enqueueTranslateAuthorLanguageTask " + AuthorStep.STEP2);
-
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
 			break;
-		case STEP2:
-			logger.log(Level.WARNING, "STEP2 Start");
-
+		case STEP7:// Translate Long Description"
 			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AILANG + lang.name,
 					auth.getLongDescription()));
-			logger.log(Level.WARNING, "Step 2 translated");
-
-			EnqueueAuthor.enqueueTranslateAuthorLanguageTask(key, lang, AuthorStep.STEP3);
-
-			logger.log(Level.WARNING, "Step 2 enqueueTranslateAuthorLanguageTask " + AuthorStep.STEP3);
-
+			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
 			break;
-
-		case STEP3:
-			logger.log(Level.WARNING, "STEP3 Start");
+		case STEP8:// Enable
 			auth.setDeleted(false);
-			logger.log(Level.WARNING, "STEP3 Done");
-
+			break;
+		case FAIL:
+			logger.log(Level.SEVERE, "AuthorStep Fail key " + key + " lang " + lang + " step " + step);
 			break;
 		default:
-			logger.log(Level.SEVERE, "Fail key " + key + " lang " + lang + " step " + step);
+			logger.log(Level.SEVERE, "Default Fail key " + key + " lang " + lang + " step " + step);
 
 		}
 		auth.save();

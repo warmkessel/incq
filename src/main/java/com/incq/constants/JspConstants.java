@@ -8,6 +8,11 @@ public class JspConstants {
 	public static final String AUTHOR = "/author.jsp";
 	public static final String AUTHORS = "/authors.jsp";
 
+	public static final String EXPANDREVIEW = "/tasks/expandReview";
+	public static final String EXPANDREVIEWDETAILS = "/tasks/expandReviewDetails";
+	public static final String EXPANDAUTHOR = "/tasks/expandAuthor";
+	
+	
 	
 	public static final String ADMINREVIEW = "/admin/review.jsp";
 	public static final String ADMINAUTHOR = "/admin/author.jsp";
@@ -48,14 +53,19 @@ public class JspConstants {
 	public static final String NAME = "name";
 	public static final String STYLE = "style";
 	public static final String SHORTDESC = "shortDescription";
+	public static final String LONGDESC = "longDescription";
 	
 	
 	public static final String PROMOTE= "promote";
 	public static final String TITLE = "title";
 	public static final String LINK = "link";
-	public static final String LONGDESC = "longDesc";
+	public static final String INTRODUCTIONDESC = "introductionDesc";
+	public static final String REVIEWBODYDESC = "reviewBodyDesc";
+	public static final String CONCLUSIONDESC = "conclusionDesc";
+	public static final String SUMMARYDESC = "summaryDesc";
 	public static final String DELETED = "deleted";
 	public static final String BOOKMARKED = "bookmarked";
+	public static final String SOURCE = "source";
 	public static final String MEDIA = "media";
 	public static final String SUMMARY = "summary";	
 	

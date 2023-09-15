@@ -13,7 +13,11 @@ public class ReviewConstants extends BaseEntityConstants{
 
 	public static final String MEDIA = "Media";
 
-	public static final String LONGDESC = "LongDesc";
+	public static final String INTRODUCTION = "Introduction";
+
+	public static final String REVIEWBODY = "ReviewBody";
+	
+	public static final String CONCLUSION = "Conclusion";
 
 	public static final String COMPACTDESC = "CompactDesc";
 
@@ -22,6 +26,8 @@ public class ReviewConstants extends BaseEntityConstants{
 	public static final String SUMMARY = "Summary";
 
 	public static final String LINK = "Link";
+
+	public static final String SOURCE = "Source";
 
 	public static final String AUTHOR = "Author";
 

@@ -2,7 +2,6 @@ package com.incq.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -17,7 +16,7 @@ public  abstract class BaseEntity implements  Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 7160882192926634429L;
-	private static final Logger log = Logger.getLogger(BaseEntity.class.getName());
+//	private static final Logger logger = Logger.getLogger(BaseEntity.class.getName());
 
 
 	private Key key = null;
@@ -63,7 +62,6 @@ public  abstract class BaseEntity implements  Serializable {
 		return key;
 	}
 	public Long getKeyLong() {
-		log.info("getKey " + ((getKey() == null) ? "null" : "not Null"));
 		return getKey().getId();
 	}
 	public String getKeyString() {

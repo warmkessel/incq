@@ -11,8 +11,8 @@ import com.incq.constants.JspConstants;
 import com.incq.datastore.AuthorList;
 
 //@WebServlet(name = "expandLanguageTask", urlPatterns = { "/tasks/expandLanguage" })
-public class ExpandLanguageTask extends HttpServlet {
-    static Logger logger = Logger.getLogger(ExpandLanguageTask.class.getName());
+public class ExpandReviewDetailsTask extends HttpServlet {
+    static Logger logger = Logger.getLogger(ExpandReviewDetailsTask.class.getName());
 
 	/**
 	* 
@@ -31,7 +31,7 @@ public class ExpandLanguageTask extends HttpServlet {
 
 		
 		// Call your method here
-		AuthorList.expandLanguageSteps(keyString, langString, stepString);
+		AuthorList.expandAuthorSteps(keyString, langString, stepString);
 		
 	}
 }

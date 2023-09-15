@@ -7,9 +7,15 @@ import java.util.logging.Logger;
 
 public enum AuthorStep {
 	FAIL("fail"), // "Failure"
-	STEP1("step1"), // "Short Description"
-	STEP2("step2"), // "Long Description"
-	STEP3("step3");// "Enable"
+	STEP1("step1"), // "Suggest an Authors Name
+	STEP2("step2"), // "Suggest a Style"
+	STEP3("step3"), // "Suggest some Tags"
+	STEP4("step4"), // "Suggest Long Description"
+	STEP5("step5"), // "Suggest Short Description"
+	STEP6("step6"), // "translate Short Description"
+	STEP7("step7"), // "translate Long Description"
+	STEP8("step8"); // "Enable"
+	
 
 	static Logger logger = Logger.getLogger(AuthorStep.class.getName());
 

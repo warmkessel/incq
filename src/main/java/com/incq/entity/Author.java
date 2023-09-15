@@ -3,6 +3,14 @@ package com.incq.entity;
 //import java.util.logging.Logger;
 
 import com.incq.constants.*;
+import com.incq.datastore.AuthorList;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.google.cloud.datastore.*;
 
 public class Author extends BaseEntity implements Comparable<Author> {
@@ -21,6 +29,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	private String style = "";
 	private String shortDescription = "";
 	private String longDescription = "";
+	private List<? extends Value<?>> tags = null;
 
 	public Author() {
 	}
@@ -85,6 +94,50 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		this.language = language;
 	}
 
+	public String getTagsEncodedString() {
+		if (getTags().size() == 0) {
+			return "";
+		} else {
+			List<String> tagStrings = getTags().stream().map(Value::get).map(Object::toString)
+					.collect(Collectors.toList());
+			return String.join("&tags=", tagStrings);
+		}
+	}
+
+	public List<String> getTagsList() {
+		return getTags().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+	}
+
+	public String getTagsString() {
+		if (getTags().size() == 0) {
+			return "";
+		} else {
+			return String.join(" ", getTagsList());
+		}
+	}
+
+	public List<? extends Value<?>> getTags() {
+
+		if (null == tags) {
+			tags = new ArrayList<>();
+		}
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		String[] tagsArray = tags.toLowerCase().split(" ");
+		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTags(Set<String> tags) {
+		String[] tagsArray = tags.toArray(new String[tags.size()]);
+		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTags(List<? extends Value<?>> tags) {
+		this.tags = tags;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -105,6 +158,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		result = 31 * result + language.hashCode();
 		result = 31 * result + shortDescription.hashCode();
 		result = 31 * result + longDescription.hashCode();
+		result = 31 * result + getTags().hashCode();
 
 		return result;
 	}
@@ -115,17 +169,23 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		entity.set(AuthorConstants.DELETED, isDeleted()).set(AuthorConstants.BOOKMARKED, isBookmarked())
 				.set(AuthorConstants.CREATEDDATE, getCreatedDate()).set(AuthorConstants.UPDATEDDATE, getUpdatedDate())
 				.set(AuthorConstants.NAME, getName())
-				.set(AuthorConstants.LONGDESC, StringValue.newBuilder(getLongDescription()).setExcludeFromIndexes(true).build())
-				.set(AuthorConstants.SHORTDESC, StringValue.newBuilder(getShortDescription()).setExcludeFromIndexes(true).build())
+				.set(AuthorConstants.LONGDESC,
+						StringValue.newBuilder(getLongDescription()).setExcludeFromIndexes(true).build())
+				.set(AuthorConstants.SHORTDESC,
+						StringValue.newBuilder(getShortDescription()).setExcludeFromIndexes(true).build())
+				.set(ReviewConstants.TAGS, getTags())
 				.set(AuthorConstants.STYLE, StringValue.newBuilder(getStyle()).setExcludeFromIndexes(true).build())
-				.set(AuthorConstants.LANGUAGE, getLanguageSring())
-				.build();
+				.set(AuthorConstants.LANGUAGE, getLanguageSring()).build();
 		getDatastore().put(entity.build());
 	}
-	
+
+	public void loadAuthor(String name, Language lang) {
+		loadFromEntity(AuthorList.fetchAuthor(name, lang));
+	}
 	public void loadAuthor(long key) {
 		loadAuthor(Key.newBuilder(Constants.INCQ, ReviewConstants.AUTHOR, key).build());
 	}
+
 	public void loadAuthor(Key key) {
 		Entity event = getDatastore().get(key);
 		loadFromEntity(event);
@@ -140,16 +200,20 @@ public class Author extends BaseEntity implements Comparable<Author> {
 			setLanguage(entity.getString(AuthorConstants.LANGUAGE));
 			setShortDescription(entity.getString(AuthorConstants.SHORTDESC));
 			setLongDescription(entity.getString(AuthorConstants.LONGDESC));
+			if (entity.contains(AuthorConstants.TAGS)) {
+				setTags(entity.getList(AuthorConstants.TAGS));
+			}
+
 		}
 	}
 
 	public String toString() {
 		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + AuthorConstants.DELETED + "="
 				+ isDeleted() + ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + AuthorConstants.NAME + "=" + name + ", "
-				+ AuthorConstants.LANGUAGE + "=" + language + ", " + AuthorConstants.STYLE + "=" + style
-				+ ", " + AuthorConstants.SHORTDESC + "=" + shortDescription
-				+ ", " + AuthorConstants.LONGDESC + "=" + longDescription + ", " + '}';
+				+ '\'' + ", \" + TAGS + \"='" + getTags() + ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", "
+				+ AuthorConstants.NAME + "=" + name + ", " + AuthorConstants.LANGUAGE + "=" + language + ", "
+				+ AuthorConstants.STYLE + "=" + style + ", " + AuthorConstants.SHORTDESC + "=" + shortDescription + ", "
+				+ AuthorConstants.LONGDESC + "=" + longDescription + ", " + '}';
 	}
 
 	public int compareTo(Author other) {

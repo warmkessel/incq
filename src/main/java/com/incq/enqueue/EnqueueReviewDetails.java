@@ -10,11 +10,11 @@ import com.incq.constants.AuthorStep;
 import com.incq.constants.JspConstants;
 import com.incq.constants.Language;
 
-public class EnqueueAuthor {
+public class EnqueueReviewDetails {
 
-	static Logger logger = Logger.getLogger(EnqueueAuthor.class.getName());
+	static Logger logger = Logger.getLogger(EnqueueReviewDetails.class.getName());
 
-	static public void enqueueAuthorTask(Long key, Language lang, AuthorStep step) {
+	static public void enqueueTranslateAuthorLanguageTask(Long key, Language lang, AuthorStep step) {
 		try (CloudTasksClient client = CloudTasksClient.create()) {
 
 			String parent = "projects/incq-397620/locations/us-west1/queues/Incq";
@@ -22,7 +22,7 @@ public class EnqueueAuthor {
 			// Prepare POST parameters
 			String postData = JspConstants.ID + "=" + key + "&" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.STEP + "=" + step.name;
 			HttpRequest httpRequest = HttpRequest.newBuilder().setBody(ByteString.copyFromUtf8(postData))
-					.setHttpMethod(HttpMethod.POST).setUrl("https://incq-397620.appspot.com" + JspConstants.EXPANDAUTHOR)
+					.setHttpMethod(HttpMethod.POST).setUrl("https://incq-397620.appspot.com" + JspConstants.EXPANDREVIEWDETAILS)
 					.putHeaders("Content-Type", "application/x-www-form-urlencoded") // Important for POST parameters
 					.build();
 

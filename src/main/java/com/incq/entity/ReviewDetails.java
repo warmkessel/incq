@@ -2,42 +2,33 @@ package com.incq.entity;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 //import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import org.json.*;
-
 import com.incq.constants.Constants;
 import com.incq.constants.Language;
 import com.incq.constants.ReviewConstants;
-import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.ListValue;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
+
 public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetails> {
 
 	private static final long serialVersionUID = -361472214131790072L;
-	 //private static final Logger log = Logger.getLogger(Event.class.getName());
+	// private static final Logger log = Logger.getLogger(Event.class.getName());
 
-	private String language = Language.ENGLISH.code;
+	private Language language = Language.ENGLISH;
 	private String title = "";
 	private String summary = "";
-	private String longDesc = "";
+	private String introduction = "";
+	private String reviewBody = "";
+	private String conclusion = "";
 	private long reviewId = 0l;
 
 	public ReviewDetails() {
 	}
-	public ReviewDetails(Key key, boolean deleted, Timestamp createdDate, Timestamp updatedDate, String title, String compactDesc,
-			String longDesc, long reviewId) {
-		super(key, deleted, createdDate, updatedDate);
-		this.title = Objects.requireNonNull(title);
-		this.longDesc = Objects.requireNonNull(longDesc);
-		this.reviewId = Objects.requireNonNull(reviewId);
-	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -54,36 +45,50 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		this.summary = summary;
 	}
 
-	public String getLanguage() {
+	public String getIntroduction() {
+		return introduction;
+	}
+
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
+
+	public String getReviewBody() {
+		return reviewBody;
+	}
+
+	public void setReviewBody(String review) {
+		this.reviewBody = review;
+	}
+
+	public String getConclusion() {
+		return conclusion;
+	}
+
+	public void setConclusion(String conclusion) {
+		this.conclusion = conclusion;
+	}
+
+	public Language getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(Language lang) {
-		setLanguage(lang.code);
-	}
-	
 	public void setLanguage(String language) {
+		setLanguage(Language.findByCode(language));
+	}
+
+	public void setLanguage(Language language) {
 		this.language = language;
 	}
-	
-	public JSONObject getLongJSON() {
-		JSONTokener tokener = new JSONTokener(getLongDesc());
-		return new JSONObject(tokener);
-	}
-	public String getLongDesc() {
-		return longDesc;
-	}
-	public void setLongDesc(String longDesc) {
-		this.longDesc = longDesc;
-	}
-	
+
 	public long getReviewId() {
 		return reviewId;
 	}
+
 	public void setReviewId(long reviewId) {
 		this.reviewId = reviewId;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -102,7 +107,9 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		result = 31 * result + language.hashCode();
 		result = 31 * result + title.hashCode();
 		result = 31 * result + summary.hashCode();
-		result = 31 * result + longDesc.hashCode();
+		result = 31 * result + introduction.hashCode();
+		result = 31 * result + reviewBody.hashCode();
+		result = 31 * result + conclusion.hashCode();
 		return result;
 	}
 
@@ -110,8 +117,14 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		Entity.Builder entity = Entity.newBuilder(getKey());
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
 				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.SUMMARY, getSummary())
-				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage()).set(ReviewConstants.REVIEW, getReviewId())
-				.set(ReviewConstants.LONGDESC, StringValue.newBuilder(getLongDesc()).setExcludeFromIndexes(true).build());
+				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage().code)
+				.set(ReviewConstants.REVIEW, getReviewId())
+				.set(ReviewConstants.INTRODUCTION,
+						StringValue.newBuilder(getIntroduction()).setExcludeFromIndexes(true).build())
+				.set(ReviewConstants.REVIEWBODY,
+						StringValue.newBuilder(getReviewBody()).setExcludeFromIndexes(true).build())
+				.set(ReviewConstants.CONCLUSION,
+						StringValue.newBuilder(getConclusion()).setExcludeFromIndexes(true).build());
 		getDatastore().put(entity.build());
 	}
 
@@ -139,24 +152,25 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		super.loadFromEntity(entity);
 		if (null != entity) {
 			setTitle(entity.getString(ReviewConstants.TITLE));
-			setLongDesc(entity.getString(ReviewConstants.LONGDESC));
+			setIntroduction(entity.getString(ReviewConstants.INTRODUCTION));
+			setReviewBody(entity.getString(ReviewConstants.REVIEWBODY));
+			setConclusion(entity.getString(ReviewConstants.CONCLUSION));
 			setSummary(entity.getString(ReviewConstants.SUMMARY));
-			try{
+			try {
 				setLanguage(entity.getString(ReviewConstants.LANGUAGE));
-			}
-			catch(NumberFormatException nfe) {
+			} catch (NumberFormatException nfe) {
 				setLanguage(Language.ENGLISH.code);
 			}
 		}
 	}
 
 	public String toString() {
-		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "=" + isDeleted()
-				+ ", \" + CREATEDDATE + \"=" + getCreatedDate()+ ", \" + SUMMARY + \"=" + getSummary()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", "
-				+ '\'' + ", \" + TITLE + \"='" + title + '\''
-				+ ", \" + KINGDOM + \"='" + ReviewConstants.COMPACTDESC + '\''  + '\''
-				+ ", \" + LONGDESC + \"='" + longDesc + '\'' + ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
+		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "="
+				+ isDeleted() + ", \" + CREATEDDATE + \"=" + getCreatedDate() + ", \" + SUMMARY + \"=" + getSummary()
+				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + '\'' + ", \" + TITLE + \"='" + title + '\''
+				+ ", \" + KINGDOM + \"='" + ReviewConstants.COMPACTDESC + '\'' + '\'' + ", \" + INTRODUCTION + \"='"
+				+ introduction + '\'' + ", \" + REVIEWBODY + \"='" + reviewBody + '\'' + ", \" + CONCLUSION + \"='"
+				+ conclusion + '\'' + ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
 	}
 
 	public int compareTo(ReviewDetails other) {
@@ -170,6 +184,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 			return this.title.compareTo(other.title);
 		}
 	}
+
 	public String getKind() {
 		return ReviewConstants.REVIEWDETAILS;
 	}

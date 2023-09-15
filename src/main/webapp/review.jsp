@@ -122,26 +122,12 @@ try {
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-						<%JSONObject json = review.getReviewDetails().getLongJSON(); %>
 						<h4><a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a> by - <a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName() %></a>
 						</h4>
 						<img border="0" src="<%=review.getMediaList().get(0)%>">
-						<p><%= json.getJSONObject("review").getString("introduction")%></p>
-						<%  
-						
-						JSONArray faqArray = json.getJSONArray("faq");
-						for (Object obj : faqArray) {
-						    if (obj instanceof JSONObject) {
-						        JSONObject faq = (JSONObject) obj;
-							%>
-							<h4><%= faq.getString("question") %></h4>
-							<p><%= faq.getString("answer") %></p>
-							<%
-						    }
-						}
-						%>
+						<p><%= review.getReviewDetails().getReviewBody()%>
 						<h4>Conclusion</h4>
-						<p><%= json.getJSONObject("review").getString("conclusion")%></p>
+						<p><%= review.getReviewDetails().getConclusion()%></p>
 						<h4><a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author - <%=author.getName() %></a></h4>
 						<p><%=author.getShortDescription() %></p>
 						<p>

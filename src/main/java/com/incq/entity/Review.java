@@ -1,16 +1,15 @@
 package com.incq.entity;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 //import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.incq.constants.*;
 import com.incq.datastore.*;
-import com.google.cloud.*;
 import com.google.cloud.datastore.*;
 public class Review extends BaseEntity implements Comparable<Review> {
 	/**
@@ -28,22 +27,11 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	private ReviewDetails reviewDetails = null;
 	private String link = "";
 	private String author = "";
+	private String source = "";
 
 	
 	public Review() {
 		setReviewDetails(new ReviewDetails());
-	}
-	public Review(Key key, boolean deleted, boolean bookmarked, Timestamp createdDate, Timestamp updatedDate, int userId, List<? extends Value<?>> tags, List<? extends Value<?>> meta, String author, String title, String compactDesc,
-			String longDesc, String link, List<? extends Value<?>> media) {
-		super(key, deleted, createdDate, updatedDate);
-		this.bookmarked = bookmarked;
-		this.userId = userId;
-		this.tags = Objects.requireNonNull(tags);
-		this.meta = Objects.requireNonNull(tags);
-		this.author = Objects.requireNonNull(author);
-		this.media = Objects.requireNonNull(media);
-		this.link = Objects.requireNonNull(link);
-
 	}
 
 	public boolean isBookmarked() {
@@ -85,7 +73,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			return "";
 		}
 		else {
-			return String.join(" ", getTagsList());
+			return String.join(",", getTagsList());
 		}
 	}
 
@@ -98,7 +86,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void setTags(String tags) {
-		String[] tagsArray = tags.toLowerCase().split(" ");
+		String[] tagsArray = tags.toLowerCase().split(",");
 		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
 	}
 
@@ -130,7 +118,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			return "";
 		}
 		else {
-			return String.join(" ", getMetaList());
+			return String.join(",", getMetaList());
 		}
 	}
 
@@ -144,7 +132,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void setMeta(String meta) {
-		String[] metaArray = meta.toLowerCase().split(" ");
+		String[] metaArray = meta.toLowerCase().split(",");
 		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
 
@@ -162,6 +150,14 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	public String getSource() {
+		byte[] b = source.getBytes(StandardCharsets.UTF_8);
+		return  new String(b, StandardCharsets.UTF_8);
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 	public String getLink() {
 		return link;
@@ -202,6 +198,11 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void setMedia(String media) {
 		String[] mediaArray = media.toLowerCase().split(" ");
+		setMedia(mediaArray);
+		}
+	
+	
+	public void setMedia(String[] mediaArray) {
 		setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
 	
@@ -241,6 +242,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		result = 31 * result + (bookmarked ? 1 : 0);
 		result = 31 * result + new Long(userId).intValue();
 		result = 31 * result + getTags().hashCode();
+		result = 31 * result + source.hashCode();
 		result = 31 * result + author.hashCode();
 		result = 31 * result + media.hashCode();
 		result = 31 * result + link.hashCode();
@@ -257,7 +259,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		Entity.Builder entity = Entity.newBuilder(key);
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
 				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.USERID, getUserId())
-				.set(ReviewConstants.TAGS, getTags()).set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor()).set(ReviewConstants.LINK, getLink())
+				.set(ReviewConstants.TAGS, getTags()).set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor()).set(ReviewConstants.SOURCE, StringValue.newBuilder(getSource()).setExcludeFromIndexes(true).build()).set(ReviewConstants.LINK, getLink())
 				.set(ReviewConstants.MEDIA, getMedia()).build();
 		getDatastore().put(entity.build());
 	}
@@ -293,6 +295,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			setAuthor(entity.getString(ReviewConstants.AUTHOR));
 			setMedia(entity.getList(ReviewConstants.MEDIA));
 			setLink(entity.getString(ReviewConstants.LINK));
+			setSource(entity.getString(ReviewConstants.SOURCE));
 
 		}
 		Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang);
