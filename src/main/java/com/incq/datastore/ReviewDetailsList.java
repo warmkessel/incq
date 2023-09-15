@@ -20,7 +20,6 @@ public class ReviewDetailsList {
 
 	public static Entity fetchEventDetails(long key, Language lang) {
 		return fetchEventDetails(key, lang, true);
-
 	}
 
 	public static Entity fetchEventDetails(long key, Language lang, boolean guarantee) {
@@ -52,7 +51,7 @@ public class ReviewDetailsList {
 		if (entities.size() > 0) {
 			theReturn = entities.get(0);
 		} else if (guarantee) {
-			theReturn = fetchEventDetails(key, Language.ENGLISH);
+			theReturn = fetchEventDetails(key, Language.ENGLISH, true, false);
 		}
 		return theReturn;
 	}

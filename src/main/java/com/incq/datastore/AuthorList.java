@@ -192,8 +192,8 @@ public class AuthorList {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
 			}			break;
 		case STEP7:// Translate Long Description"
-			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AILANG + lang.name,
-					auth.getLongDescription()));
+			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(), AIConstants.AILANG + lang.name,"",
+					auth.getLongDescription(), AIConstants.AIDELIM));
 			if(continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
 			}			break;
