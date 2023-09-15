@@ -37,7 +37,7 @@ String name = (String) request.getParameter(JspConstants.NAME);
 if (null != id && id.length() > 0 && !id.equals("0")) {
 	author.loadAuthor(new Long(id).longValue());
 } else if (null != name && name.length() > 0) {
-	author.loadAuthor(name, lang);
+	author.loadAuthorAdmin(name, lang);
 }
 long authorDate = 0;
 
@@ -176,12 +176,14 @@ if (null != langList && langList.length > 0) {
 		<table>
 			<%
 			Map<Language, Boolean> state = AuthorList.checkAuthorLanguages(author.getName());
+			Map<Language, Boolean> ready = AuthorList.checkAuthorReady(author.getName());
 			for (Language langEnum : Language.values()) {
 			%>
 			<tr>
 				<td><a
 					href="<%=JspConstants.ADMINAUTHOR%>?<%=JspConstants.NAME%>=<%=author.getName()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>"><%=langEnum.name%></a></td>
-				<td><%=state.get(langEnum)%></td>
+				<td><%=state.get(langEnum) ? "Instantiated" : ""%></td>
+				<td><%=ready.get(langEnum) ? "Ready" : ""%></td>
 				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
 					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
 			</tr>
@@ -227,7 +229,7 @@ if (null != langList && langList.length > 0) {
 	
 	async function appendToUrlAndFetch(str) {
 		  // Append the string to the current URL
-		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.STEP%>=";
+		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
 		  try {
 		    // Perform an asynchronous HTTP request
 		    const response = await fetch(newUrl+str);

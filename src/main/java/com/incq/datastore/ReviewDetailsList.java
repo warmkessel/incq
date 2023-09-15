@@ -11,6 +11,7 @@ import com.google.cloud.datastore.*;
 import com.google.cloud.datastore.StructuredQuery.*;
 import com.google.common.collect.Lists;
 import com.incq.constants.*;
+import com.incq.enqueue.EnqueueReviewDetails;
 import com.incq.entity.Review;
 import com.incq.entity.ReviewDetails;
 
@@ -76,12 +77,12 @@ public class ReviewDetailsList {
 		}
 		return theReturn;
 	}
-	public static void expandReviewDetailSteps(String key, String lang, String step) {
-		expandReviewDetailSteps(Long.valueOf(key), Language.findByCode(lang), ReviewDetailsStep.findByName(step));
+	public static void expandReviewDetailSteps(String key, String lang, String step,String continueExpand) {
+		expandReviewDetailSteps(Long.valueOf(key), Language.findByCode(lang), ReviewDetailsStep.findByName(step), Boolean.valueOf(continueExpand));
 
 	}
 
-	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step) {
+	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step, boolean continueExpand) {
 		Review review = new Review();
 		review.loadEvent(key, lang);
 		switch (step) {
@@ -90,8 +91,9 @@ public class ReviewDetailsList {
 //			auth.setShortDescription(AIManager.editText(auth.getShortDescription(), AIConstants.AILANG + lang.name,
 //					auth.getShortDescription()));
 //
-//			EnqueueAuthor.enqueueTranslateAuthorLanguageTask(key, lang, step.next());
-//
+			if(continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP2:
 

@@ -29,7 +29,7 @@ if (null != id && id.length() > 0) {
 else{
 	String name = (String) request.getParameter(JspConstants.NAME);
 	if (null != name && name.length() > 0) {
-		author.loadFromEntity(AuthorList.fetchAuthor(name, lang, true));
+		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
 	}
 	else{
 		author.loadAuthor(AuthorConstants.DEFAULTID);

@@ -48,12 +48,13 @@ public class ReviewList {
 		return theReturn;
 	}
 
-	public static void expandReviewSteps(String key, String lang, String step) {
-		expandReviewSteps(Long.valueOf(key), Language.findByCode(lang), ReviewStep.findByName(step));
+	public static void expandReviewSteps(String key, String lang, String step, String continueExpand) {
+		expandReviewSteps(Long.valueOf(key), Language.findByCode(lang), ReviewStep.findByName(step),
+				Boolean.valueOf(continueExpand));
 
 	}
 
-	public static void expandReviewSteps(Long key, Language lang, ReviewStep step) {
+	public static void expandReviewSteps(Long key, Language lang, ReviewStep step, boolean continueExpand) {
 		Review review = new Review();
 		Author author = new Author();
 
@@ -76,43 +77,59 @@ public class ReviewList {
 				logger.log(Level.SEVERE, "We had an exception " + e.getMessage());
 
 			}
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP2:// Determine the Author
 			review.setAuthor(AIManager.editText(review.getSource(), AIConstants.AIAUTHOR + review.getSource(),
 					review.getAuthor()));
-			EnqueueReview.enqueueReviewTask(key, lang, step.next());
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP3:// Extract Title and Media from source
 
 			SourceHelper helper = new SourceHelper(review.getSource());
 			review.getReviewDetails().setTitle(helper.fetchTitle());
 			review.setMedia(helper.fetchImages());
-			// EnqueueReview.enqueueReviewTask(key, step.next());
-
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 
 		case STEP4:// Determine the Meta Tags
 			review.setMeta(AIManager.editText(review.getSource(), AIConstants.AIMETA + review.getSource(), ""));
-			EnqueueReview.enqueueReviewTask(key, lang, step.next());
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP5:// Determine the Tags
 			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + review.getSource(), ""));
-			EnqueueReview.enqueueReviewTask(key, lang, step.next());
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP6:// Write the introductions
 			review.getReviewDetails().setReviewBody(AIManager.editText(review.getSource(), AIConstants.AIIREVIEW,
 					author.getStyle(), review.getReviewDetails().getReviewBody()));
-			// EnqueueReview.enqueueReviewTask(key, step.next());
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP7:// Write the introductions
-			review.getReviewDetails().setIntroduction(AIManager.editText(review.getReviewDetails().getReviewBody(), AIConstants.AIINTRODUCTION,
-					author.getStyle(), review.getReviewDetails().getIntroduction()));
-			// EnqueueReview.enqueueReviewTask(key, step.next());
+			review.getReviewDetails().setIntroduction(AIManager.editText(review.getReviewDetails().getReviewBody(),
+					AIConstants.AIINTRODUCTION, author.getStyle(), review.getReviewDetails().getIntroduction()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP8:// Write the Review Body
-			review.getReviewDetails().setConclusion(AIManager.editText(review.getReviewDetails().getReviewBody(), AIConstants.AICONCLUSION,
-					author.getStyle(), review.getReviewDetails().getConclusion()));
-			// EnqueueReview.enqueueReviewTask(key, step.next());
+			review.getReviewDetails().setConclusion(AIManager.editText(review.getReviewDetails().getReviewBody(),
+					AIConstants.AICONCLUSION, author.getStyle(), review.getReviewDetails().getConclusion()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP9:// Write the Conclusion
 			review.getReviewDetails()
@@ -120,7 +137,9 @@ public class ReviewList {
 							review.getReviewDetails().getIntroduction() + review.getReviewDetails().getReviewBody()
 									+ review.getReviewDetails().getConclusion(),
 							AIConstants.AISUMMARY, author.getStyle(), review.getReviewDetails().getSummary()));
-			// EnqueueReview.enqueueReviewTask(key, step.next());
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP10:// Mark the Review Active
 			review.setDeleted(false);

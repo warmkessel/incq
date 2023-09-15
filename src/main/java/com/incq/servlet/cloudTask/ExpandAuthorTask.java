@@ -27,10 +27,10 @@ public class ExpandAuthorTask extends HttpServlet {
 		String keyString = req.getParameter(JspConstants.ID);
 		String langString = req.getParameter(JspConstants.LANGUAGE);
 		String stepString = req.getParameter(JspConstants.STEP);
-
+		String contString = req.getParameter(JspConstants.CONTINUE);
 		
 		// Call your method here
-		AuthorList.expandAuthorSteps(keyString, langString, stepString);
+		AuthorList.expandAuthorSteps(keyString, langString, stepString, contString);
 		
 	}
 }

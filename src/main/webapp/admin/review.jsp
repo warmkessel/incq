@@ -298,7 +298,7 @@ if (dirty && save) {
 	
 	async function appendToUrlAndFetch(str) {
 		  // Append the string to the current URL
-		  const newUrl = "<%=JspConstants.EXPANDREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=review.getReviewDetails().getLanguage().code%>&<%=JspConstants.STEP%>=";
+		  const newUrl = "<%=JspConstants.EXPANDREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=review.getReviewDetails().getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
 		  try {
 		    // Perform an asynchronous HTTP request
 		    const response = await fetch(newUrl+str);

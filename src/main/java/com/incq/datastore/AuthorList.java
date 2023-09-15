@@ -46,17 +46,32 @@ public class AuthorList {
 	}
 
 	public static Entity fetchAuthor(String name, Language lang) {
-		return fetchAuthor(name, lang, true);
+		return fetchAuthor(name, lang, true, false);
+	}
+	public static Entity fetchAuthor(String name, Language lang, boolean guarantee) {
+		return fetchAuthor(name, lang, guarantee, false);
 	}
 
-	public static Entity fetchAuthor(String name, Language lang, boolean guarantee) {
+	public static Entity fetchAuthorAdmin(String name, Language lang, boolean guarantee) {
+		return fetchAuthor(name, lang, guarantee, true);
+	}
+
+	public static Entity fetchAuthor(String name, Language lang, boolean guarantee, boolean admin) {
 		Entity theReturn = null;
+		Query<Entity> query = null;
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		Query<Entity> query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
-				.setFilter(CompositeFilter.and(PropertyFilter.eq(AuthorConstants.NAME, name),
-						PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
-						PropertyFilter.eq(AuthorConstants.DELETED, false)))
-				.build();
+		if (admin) {
+			query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(AuthorConstants.NAME, name),
+							PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code)))
+					.build();
+		} else {
+			query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(AuthorConstants.NAME, name),
+							PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
+							PropertyFilter.eq(AuthorConstants.DELETED, false)))
+					.build();
+		}
 
 		// Run the query and retrieve a list of matching entities
 		QueryResults<Entity> results = datastore.run(query);
@@ -71,10 +86,23 @@ public class AuthorList {
 		return theReturn;
 	}
 
-	public static Map<Language, Boolean> checkAuthorLanguages(String name) {
+	public static Map<Language, Boolean> checkAuthorReady(String name) {
 		HashMap<Language, Boolean> theReturn = new HashMap<Language, Boolean>();
 		for (Language langEnum : Language.values()) {
 			if (null == fetchAuthor(name, langEnum, false)) {
+				theReturn.put(langEnum, false);
+			} else {
+				theReturn.put(langEnum, true);
+
+			}
+		}
+		return theReturn;
+	}
+	
+	public static Map<Language, Boolean> checkAuthorLanguages(String name) {
+		HashMap<Language, Boolean> theReturn = new HashMap<Language, Boolean>();
+		for (Language langEnum : Language.values()) {
+			if (null == fetchAuthorAdmin(name, langEnum, false)) {
 				theReturn.put(langEnum, false);
 			} else {
 				theReturn.put(langEnum, true);
@@ -88,11 +116,11 @@ public class AuthorList {
 		if (null != name && name.length() > 0 && null != langList && langList.length > 0) {
 			for (int x = 0; x < langList.length; x++) {
 				Author auth = new Author();
-				auth.loadFromEntity(fetchAuthor(name, Language.ENGLISH, true));
+				auth.loadFromEntity(fetchAuthorAdmin(name, Language.ENGLISH, true));
 				Author authSub = null;
 
 				Language lang = Language.findByCode(langList[x]);
-				if (Language.ENGLISH != lang && null == fetchAuthor(name, lang, false)) {
+				if (Language.ENGLISH != lang && null == fetchAuthorAdmin(name, lang, false)) {
 					authSub = new Author();
 					authSub.setName(auth.getName());
 					authSub.setTags(auth.getTags());
@@ -109,7 +137,7 @@ public class AuthorList {
 
 					authSub.setDeleted(true);
 					authSub.save();
-					EnqueueAuthor.enqueueAuthorTask(authSub.getKeyLong(), lang, AuthorStep.STEP1);
+					EnqueueAuthor.enqueueAuthorTask(authSub.getKeyLong(), lang, AuthorStep.STEP6, true);
 				}
 			}
 
@@ -119,47 +147,56 @@ public class AuthorList {
 		}
 	}
 
-	public static void expandAuthorSteps(String key, String lang, String step) {
-		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step));
-
+	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand) {
+		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step), Boolean.valueOf(continueExpand));
 	}
 
-	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step) {
+	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand) {
 		Author auth = new Author();
 		auth.loadAuthor(key);
 		switch (step) {
 		case STEP1:// Suggest an Authors Name
 			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}
 			break;
 		case STEP2:// Suggest a Style
 			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE, auth.getStyle()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
 		case STEP3:// Suggest some Tags
 			auth.setTags(AIManager.editText(auth.getStyle() + auth.getTagsString(), AIConstants.AITAGS,
 					auth.getTagsString()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
 		case STEP4:// Suggest Long Description"
-			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG, auth.getStyle(), auth.getLongDescription()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
-		case STEP5://Suggest Short Description"
-			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT, auth.getStyle(), auth.getShortDescription()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
+			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG,
+					auth.getStyle(), auth.getLongDescription()));
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
+		case STEP5:// Suggest Short Description"
+			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
+					auth.getStyle(), auth.getShortDescription()));
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
 		case STEP6:// Translate Short Description
 
 			auth.setShortDescription(AIManager.editText(auth.getShortDescription(), AIConstants.AILANG + lang.name,
 					auth.getShortDescription()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
 		case STEP7:// Translate Long Description"
 			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AILANG + lang.name,
 					auth.getLongDescription()));
-			//EnqueueAuthor.enqueueAuthorTask(key, lang, step.next());
-			break;
+			if(continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+			}			break;
 		case STEP8:// Enable
 			auth.setDeleted(false);
 			break;

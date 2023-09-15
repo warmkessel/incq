@@ -14,13 +14,13 @@ public class EnqueueAuthor {
 
 	static Logger logger = Logger.getLogger(EnqueueAuthor.class.getName());
 
-	static public void enqueueAuthorTask(Long key, Language lang, AuthorStep step) {
+	static public void enqueueAuthorTask(Long key, Language lang, AuthorStep step, boolean continueExpand) {
 		try (CloudTasksClient client = CloudTasksClient.create()) {
 
 			String parent = "projects/incq-397620/locations/us-west1/queues/Incq";
 
 			// Prepare POST parameters
-			String postData = JspConstants.ID + "=" + key + "&" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.STEP + "=" + step.name;
+			String postData = JspConstants.ID + "=" + key + "&" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.STEP + "=" + step.name + "&" + JspConstants.CONTINUE + "=" + continueExpand;
 			HttpRequest httpRequest = HttpRequest.newBuilder().setBody(ByteString.copyFromUtf8(postData))
 					.setHttpMethod(HttpMethod.POST).setUrl("https://incq-397620.appspot.com" + JspConstants.EXPANDAUTHOR)
 					.putHeaders("Content-Type", "application/x-www-form-urlencoded") // Important for POST parameters

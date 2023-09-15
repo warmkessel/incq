@@ -182,6 +182,9 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	public void loadAuthor(String name, Language lang) {
 		loadFromEntity(AuthorList.fetchAuthor(name, lang));
 	}
+	public void loadAuthorAdmin(String name, Language lang) {
+		loadFromEntity(AuthorList.fetchAuthorAdmin(name, lang, true));
+	}
 	public void loadAuthor(long key) {
 		loadAuthor(Key.newBuilder(Constants.INCQ, ReviewConstants.AUTHOR, key).build());
 	}
