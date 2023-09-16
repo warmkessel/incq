@@ -274,18 +274,24 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void loadEvent(long key, Language lang) {
-		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, key).build(), lang);
+		loadEvent(key, lang, false);
+	}
+	public void loadEvent(long key, Language lang, boolean admin) {
+		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, key).build(), lang, admin);
 	}
 	
 
-	public void loadEvent(Key key, Language lang) {
+	public void loadEvent(Key key, Language lang, boolean admin) {
 		// log.info("key " + key.toString());
 		Entity event = getDatastore().get(key);
-		loadFromEntity(event, lang);
+		loadFromEntity(event, lang, admin);
 
 	}
 
 	public void loadFromEntity(Entity entity, Language lang) {
+		loadFromEntity(entity, lang, false);
+	}
+	public void loadFromEntity(Entity entity, Language lang, boolean admin) {
 		super.loadFromEntity(entity);
 		if (null != entity) {
 			setBookmarked(entity.getBoolean(ReviewConstants.BOOKMARKED));
@@ -298,7 +304,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			setSource(entity.getString(ReviewConstants.SOURCE));
 
 		}
-		Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang);
+		Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang, true, admin);
 		if(null != event) {
 			ReviewDetails rd = new ReviewDetails();
 			rd.loadFromEntity(event);

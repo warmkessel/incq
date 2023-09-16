@@ -135,16 +135,16 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	}
 
 	public void loadEvent(String key, Language lang) {
-		loadEvent(new Long(key).longValue(), lang);
+		loadEvent(new Long(key).longValue(), lang, false);
 	}
 
-	public void loadEvent(long key, Language lang) {
-		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEWDETAILS, key).build(), lang);
+	public void loadEvent(long key, Language lang, boolean admin) {
+		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEWDETAILS, key).build(), lang, admin);
 	}
 
-	public void loadEvent(Key key, Language lang) {
+	public void loadEvent(Key key, Language lang, boolean admin) {
 		// log.info("key " + key.toString());
-		Entity event = ReviewDetailsList.fetchEventDetails(key.getId(), lang);
+		Entity event = ReviewDetailsList.fetchEventDetails(key.getId(), lang, true, admin);
 		loadFromEntity(event);
 
 	}

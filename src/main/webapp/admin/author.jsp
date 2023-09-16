@@ -118,7 +118,14 @@ if (null != langList && langList.length > 0) {
 }
 %>
 </head>
-<body>
+<body>Language Selection:
+	<form action="<%=JspConstants.ADMINAUTHOR%>" method="get" id="languageForm">
+            			<select name="la" onchange="document.getElementById('languageForm').submit();">
+      				<% for (Language langEnum : Language.values()) {%>
+      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
+					<%}%>
+    </select><input type=hidden name="<%=JspConstants.NAME %>" value="<%=author.getName()%>"></form>
+    
 	<h1>
 		ID: <a
 			href="<%=JspConstants.ADMINAUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getKeyLong()%></a>

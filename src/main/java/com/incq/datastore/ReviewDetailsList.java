@@ -75,8 +75,8 @@ public class ReviewDetailsList {
 				rdetailSub.setReviewBody(rdetail.getReviewBody());
 				rdetailSub.setConclusion(rdetail.getConclusion());
 				rdetailSub.save();
-				// EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getKeyLong(), lang,
-				// ReviewDetailsStep.STEP1, true);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getKeyLong(), lang,
+				 ReviewDetailsStep.STEP1, true);
 
 			}
 		}
@@ -116,7 +116,7 @@ public class ReviewDetailsList {
 	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step,
 			boolean continueExpand) {
 		ReviewDetails reviewDetails = new ReviewDetails();
-		reviewDetails.loadEvent(key, lang);
+		reviewDetails.loadEvent(key, lang, true);
 		switch (step) {
 		case STEP1: // translate Introduction"
 			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),

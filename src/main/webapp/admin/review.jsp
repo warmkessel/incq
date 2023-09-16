@@ -33,7 +33,7 @@ if (null != langString && langString.length() > 0) {
 
 String id = (String) request.getParameter(JspConstants.ID);
 if (null != id && id.length() > 0 && !id.equals("0")) {
-	review.loadEvent(new Long(id).longValue(), lang);
+	review.loadEvent(new Long(id).longValue(), lang, true);
 }
 long idLong = 0L;
 try {
@@ -69,7 +69,8 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 	save = true;
 }
 
-if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspConstants.TAGS).length() > 0) {
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.TAGS)
+		&& request.getParameter(JspConstants.TAGS).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGS));
 	for (String str : list) {
 		String[] split = str.split(",");
@@ -79,7 +80,8 @@ if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspC
 	}
 	review.setTags(tag);
 }
-if (null != request.getParameter(JspConstants.META) && request.getParameter(JspConstants.META).length() > 0) {
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.META)
+		&& request.getParameter(JspConstants.META).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.META));
 	for (String str : list) {
 		String[] split = str.split(",");
@@ -90,19 +92,24 @@ if (null != request.getParameter(JspConstants.META) && request.getParameter(JspC
 	review.setMeta(meta);
 }
 if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(JspConstants.DELETED).length() > 0) {
+	if (Language.ENGLISH.equals(lang)) {
+		deleted = Boolean.valueOf(request.getParameter(JspConstants.DELETED));
+		review.setDeleted(deleted);
+	}
 	deleted = Boolean.valueOf(request.getParameter(JspConstants.DELETED));
-	review.setDeleted(deleted);
+	review.getReviewDetails().setDeleted(deleted);
 	dirty = true;
 }
 
-if (null != request.getParameter(JspConstants.BOOKMARKED)
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.BOOKMARKED)
 		&& request.getParameter(JspConstants.BOOKMARKED).length() > 0) {
 	bookmarked = Boolean.valueOf(request.getParameter(JspConstants.BOOKMARKED));
 	review.setBookmarked(bookmarked);
 	dirty = true;
 }
 
-if (null != request.getParameter(JspConstants.MEDIA) && request.getParameter(JspConstants.MEDIA).length() > 0) {
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.MEDIA)
+		&& request.getParameter(JspConstants.MEDIA).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.MEDIA));
 	for (String str : list) {
 		String[] split = str.split(" ");
@@ -112,7 +119,8 @@ if (null != request.getParameter(JspConstants.MEDIA) && request.getParameter(Jsp
 	}
 	review.setMedia(media);
 }
-if (null != request.getParameter(JspConstants.LINK) && request.getParameter(JspConstants.LINK).length() > 0) {
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.LINK)
+		&& request.getParameter(JspConstants.LINK).length() > 0) {
 	link = (String) request.getParameter(JspConstants.LINK);
 	review.setLink(link);
 	dirty = true;
@@ -166,12 +174,8 @@ if (null != langList && langList.length > 0) {
 %>
 </head>
 <body>
-	<h1>
-		ID: <a
-			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
-	</h1>
-	Language:
-	<form action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%><%=Language.ENGLISH.equals(lang) ? "" : "?" + JspConstants.LANGUAGE + "=" + lang.code%>" method="get"
+	Language Selection:
+	<form action="<%=JspConstants.ADMINREVIEW%>" method="get"
 		id="languageForm">
 		<select name="la"
 			onchange="document.getElementById('languageForm').submit();">
@@ -182,11 +186,16 @@ if (null != langList && langList.length > 0) {
 				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 				<%=langEnum.name%></option>
 			<%}%>
-		</select><input type=hidden name=id value="<%=review.getKeyLong()%>">
+		</select><input type=hidden name="<%=JspConstants.ID%>" value="<%=idLong%>">
 	</form>
+	<h1>
+		ID: <a
+			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
+	</h1>
 	<br>
 
-	<form method=post action="./review.jsp">
+	<form method=post action="./review.jsp<%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
+		<input type="hidden" name="<%=JspConstants.LANGUAGE%>" value="Language.ENGLISH">
 		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
 		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
 			value="true" <%=review.isDeleted() ? "checked" : ""%>> True <input
@@ -197,22 +206,8 @@ if (null != langList && langList.length > 0) {
 		True <input type="radio" name="<%=JspConstants.BOOKMARKED%>"
 			value="false" <%=!review.isBookmarked() ? "checked" : ""%>>
 		False<br> Link:<input type="text" name="<%=JspConstants.LINK%>"
-			value="<%=review.getLink()%>" size="50"><br> Title:<input
-			type="text" name="<%=JspConstants.TITLE%>"
-			value="<%=review.getReviewDetails().getTitle()%>" size="50">
-		<%
-		if (Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 3 - Extract Title and Media from source"
-			onclick="appendToUrlAndFetch('step3')">
-		<%}%>
-		<%
-		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 5 - Translate Title"
-			onclick="appendToUrlAndFetch('step5')">
-		<%}%>
-		<br> Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getLink()%>" size="50"><br> <br>
+		Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
 			value="<%=review.getAuthor()%>" size="50">
 		<%
 		if (Language.ENGLISH.equals(lang)) {
@@ -225,7 +220,73 @@ if (null != langList && langList.length > 0) {
 		if (Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 1 - Fetch the Source"
 			onclick="appendToUrlAndFetch('step1')">
-		<%}%><br> Summary:
+		<%}%>
+		<br> Media
+		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
+		<br> Tags
+		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>
+		<%
+		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 5 - Determine the Tags"
+			onclick="appendToUrlAndFetch('step5')">
+		<%}%><br> Meta
+		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
+		<br> Source:
+		<textarea name="<%=JspConstants.SOURCE%>" rows="20" cols="80"><%=review.getSource()%></textarea>
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 1 - Fetch the Source"
+			onclick="appendToUrlAndFetch('step1')">
+		<%}%>
+		<br>
+		<%
+		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 4 - Determine the Meta"
+			onclick="appendToUrlAndFetch('step4')">
+		<%}%><br> <br> <br> <input type=hidden name=save
+			value="save">
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%>
+		<input type=submit value="save">
+		<%
+		}
+		%>
+	</form>
+	<hr>
+	<form method=post action="./review.jsp<%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
+		<select name="la"
+			onchange="document.getElementById('languageForm').submit();">
+			<%
+			for (Language langEnum : Language.values()) {
+			%>
+			<option value="<%=langEnum.code%>"
+				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+				<%=langEnum.name%></option>
+			<%}%>
+		</select><input type=hidden name=id value="<%=review.getKeyLong()%>">
+	<br>
+		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
+		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
+			value="true"
+			<%=review.getReviewDetails().isDeleted() ? "checked" : ""%>>
+		True <input type="radio" name="<%=JspConstants.DELETED%>"
+			value="false"
+			<%=!review.getReviewDetails().isDeleted() ? "checked" : ""%>>
+		False<br>Title:<input type="text" name="<%=JspConstants.TITLE%>"
+			value="<%=review.getReviewDetails().getTitle()%>" size="50">
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button"
+			value="Step 3 - Extract Title and Media from source"
+			onclick="appendToUrlAndFetch('step3')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 5 - Translate Title"
+			onclick="appendToUrlAndFetch('step5')">
+		<%}%>
+		<br> Summary:
 		<textarea name="<%=JspConstants.SUMMARY%>" rows="20" cols="80"><%=review.getReviewDetails().getSummary()%></textarea>
 		<%
 		if (Language.ENGLISH.equals(lang)) {
@@ -234,8 +295,7 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 4 - Translate Summary"
+		%><input type="button" value="Step 4 - Translate Summary"
 			onclick="appendToUrlAndFetch('step4')">
 		<%}%>
 		<br> Introduction:
@@ -248,8 +308,7 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 1 - Translate Introduction"
+		%><input type="button" value="Step 1 - Translate Introduction"
 			onclick="appendToUrlAndFetch('step1')">
 		<%}%>
 		<br> ReviewBody:
@@ -261,8 +320,7 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 2 - Translate Review"
+		%><input type="button" value="Step 2 - Translate Review"
 			onclick="appendToUrlAndFetch('step2')">
 		<%}%>
 		<br> Conclusion:
@@ -274,26 +332,10 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button"
-			value="Step 3 - Translate Conclusion"
+		%><input type="button" value="Step 3 - Translate Conclusion"
 			onclick="appendToUrlAndFetch('step3')">
 		<%}%>
-		<br> Media
-		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
-		<br> Tags
-		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>
-		<%
-		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
-		%><input type="button" value="Step 5 - Determine the Tags"
-			onclick="appendToUrlAndFetch('step5')">
-		<%}%><br> Meta
-		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
-		<%
-		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
-		%><input type="button" value="Step 4 - Determine the Meta"
-			onclick="appendToUrlAndFetch('step4')">
-		<%}%><br>
-
+		<br>
 		<table>
 			<%
 			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(idLong);
@@ -301,7 +343,8 @@ if (null != langList && langList.length > 0) {
 			for (Language langEnum : Language.values()) {
 			%>
 			<tr>
-				<td><a href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>"><%=langEnum.name%></a></td>
+				<td><a
+					href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>"><%=langEnum.name%></a></td>
 				<td><%=state.get(langEnum) ? "Instantiated" : ""%></td>
 				<td><%=ready.get(langEnum) ? "Ready" : ""%></td>
 				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
@@ -314,52 +357,35 @@ if (null != langList && langList.length > 0) {
 		<br> <br> <input type=hidden name=save value="save">
 		<input type=submit value="save">
 	</form>
-
 	<script type="text/javascript">
 	// Function to toggle checkboxes
-	var state =0;
+	var state = true;
 	function toggleCheckboxes() {
-		
 		// Define a list of values you want to toggle
-		const toggleList = ["en", "ar"];
-		//const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
+		//const toggleList = ["en", "ar"];
+		const toggleList = [<%for (Language langEnum : Language.values()) {%><%=state.get(langEnum) ? "" : "\"" + langEnum.code + "\", "%><%}%>];
 
 		// Get all checkboxes with name="list"
 		const checkboxes = document.querySelectorAll('input[name="list"]');
 
 		// Iterate through each checkbox
 		checkboxes.forEach((checkbox) => {
-			switch(state){
-			case 0:
+			if(state){
 				if (toggleList.includes(checkbox.value)) {
-					checkbox.checked = false;
+					checkbox.checked = true;
 				}
 				else{
-					checkbox.checked = true;
+					checkbox.checked = false;
 
 				}
-			break;
-			case 1:
-			checkbox.checked = false;
-			break;
-			case 2:
-			checkbox.checked = true;
-			break;
 			}
-			/* // If the checkbox value is in the toggleList
-			if (toggleList.includes(checkbox.value)) {
-				// Toggle the checkbox state
-				checkbox.checked = !checkbox.checked;
-			} else {
-				// If it's not in the toggleList, then make sure it's unchecked
-				checkbox.checked = false;
-			} */
+			else{
+			checkbox.checked = false;
+			}
 		});
-		state = state + 1;
-		if(state > 2){
-			state = 0;
-		}
+		state = !state;
 	}
+
 
 	// Attach the toggle function to the button click event
 	document.getElementById('toggleButton').addEventListener('click', toggleCheckboxes);
