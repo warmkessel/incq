@@ -15,6 +15,7 @@ import com.incq.ai.AIManager;
 import com.incq.constants.*;
 import com.incq.enqueue.EnqueueAuthor;
 import com.incq.entity.Author;
+import com.incq.exception.IncqServletException;
 
 public class AuthorList {
 
@@ -147,11 +148,11 @@ public class AuthorList {
 		}
 	}
 
-	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand) {
+	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand)throws IncqServletException{
 		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step), Boolean.valueOf(continueExpand));
 	}
 
-	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand) {
+	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand)throws IncqServletException {
 		Author auth = new Author();
 		auth.loadAuthor(key);
 		switch (step) {
@@ -192,8 +193,8 @@ public class AuthorList {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
 			}			break;
 		case STEP7:// Translate Long Description"
-			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(), AIConstants.AILANG + lang.name,"",
-					auth.getLongDescription(), AIConstants.AIDELIM));
+//			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(), AIConstants.AILANG + lang.name,"",
+//					auth.getLongDescription()));
 			if(continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
 			}			break;

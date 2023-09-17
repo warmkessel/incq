@@ -20,12 +20,14 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	// private static final Logger log = Logger.getLogger(Event.class.getName());
 
 	private Language language = Language.ENGLISH;
+	private String desc = "";
 	private String title = "";
 	private String summary = "";
 	private String introduction = "";
 	private String reviewBody = "";
 	private String conclusion = "";
 	private long reviewId = 0l;
+	private String name = "";
 
 	public ReviewDetails() {
 	}
@@ -36,6 +38,22 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getDesc() {
+		return desc;
 	}
 
 	public String getSummary() {
@@ -53,14 +71,15 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
-
 	public String getReviewBody() {
 		return reviewBody;
 	}
 
-	public void setReviewBody(String review) {
-		this.reviewBody = review;
+	public void setReviewBody(String reviewBody) {
+		this.reviewBody = reviewBody;
 	}
+	
+	
 
 	public String getConclusion() {
 		return conclusion;
@@ -107,6 +126,8 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		int result = super.hashCode();
 		result = 31 * result + language.hashCode();
 		result = 31 * result + title.hashCode();
+		result = 31 * result + desc.hashCode();
+		result = 31 * result + name.hashCode();
 		result = 31 * result + summary.hashCode();
 		result = 31 * result + introduction.hashCode();
 		result = 31 * result + reviewBody.hashCode();
@@ -119,7 +140,8 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
 				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.SUMMARY, getSummary())
 				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage().code)
-				.set(ReviewConstants.REVIEW, getReviewId())
+				.set(ReviewConstants.REVIEW, getReviewId()).set(ReviewConstants.NAME, getName())
+				.set(ReviewConstants.DESC, getDesc())
 				.set(ReviewConstants.INTRODUCTION,
 						StringValue.newBuilder(getIntroduction()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.REVIEWBODY,
@@ -152,6 +174,12 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void loadFromEntity(Entity entity) {
 		super.loadFromEntity(entity);
 		if (null != entity) {
+			if (entity.contains(ReviewConstants.NAME)) {
+				setName(entity.getString(ReviewConstants.NAME));
+			}
+			if (entity.contains(ReviewConstants.DESC)) {
+				setDesc(entity.getString(ReviewConstants.DESC));
+			}
 			setTitle(entity.getString(ReviewConstants.TITLE));
 			setIntroduction(entity.getString(ReviewConstants.INTRODUCTION));
 			setReviewBody(entity.getString(ReviewConstants.REVIEWBODY));
@@ -170,10 +198,11 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public String toString() {
 		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "="
 				+ isDeleted() + ", \" + CREATEDDATE + \"=" + getCreatedDate() + ", \" + SUMMARY + \"=" + getSummary()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + '\'' + ", \" + TITLE + \"='" + title + '\''
-				+ ", \" + KINGDOM + \"='" + ReviewConstants.COMPACTDESC + '\'' + '\'' + ", \" + INTRODUCTION + \"='"
-				+ introduction + '\'' + ", \" + REVIEWBODY + \"='" + reviewBody + '\'' + ", \" + CONCLUSION + \"='"
-				+ conclusion + '\'' + ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
+				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + '\'' + ", \" + NAME + \"='" + name + '\''
+				+ ", \" + DESC + \"='" + desc + '\'' + ", \" + TITLE + \"='" + title + '\''
+				+ ReviewConstants.COMPACTDESC + '\'' + '\'' + ", \" + INTRODUCTION + \"='" + introduction + '\''
+				+ ", \" + REVIEWBODY + \"='" + getReviewBody() + '\'' + ", \" + CONCLUSION + \"='" + conclusion
+				+ '\'' + ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
 	}
 
 	public int compareTo(ReviewDetails other) {

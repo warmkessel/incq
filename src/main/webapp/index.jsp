@@ -38,8 +38,8 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the INCQ Reviews">
-<meta name="author" content="Incq.com">
+<meta name="description" content="INCQ Reviews on all kinds of products">
+<meta name="author" content="INCQ">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="assets/css/sols.css">
 <title>INCQ Reviews</title>
@@ -49,7 +49,8 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
+			<a class="navbar-brand"
+				href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
 				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -133,9 +134,10 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 									<a
 										href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
+									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>"
+										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
 									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
-										<a
-											href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%=theList.get(x).getReviewDetails().getSummary()%></a>
+										<a href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br>More...</a>
 									</p>
 								</div>
 							</div>

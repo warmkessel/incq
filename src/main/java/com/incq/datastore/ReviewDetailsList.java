@@ -14,6 +14,7 @@ import com.incq.ai.AIManager;
 import com.incq.constants.*;
 import com.incq.enqueue.EnqueueReviewDetails;
 import com.incq.entity.ReviewDetails;
+import com.incq.exception.IncqServletException;
 
 public class ReviewDetailsList {
 	static Logger logger = Logger.getLogger(ReviewDetailsList.class.getName());
@@ -56,7 +57,7 @@ public class ReviewDetailsList {
 		return theReturn;
 	}
 
-	public static void expandLanugage(long key, String[] langList) {
+	public static void expandReviewDetails(long key, String[] langList) {
 
 		ReviewDetails rdetail = new ReviewDetails();
 		rdetail.loadFromEntity(fetchEventDetails(key, Language.ENGLISH, true));
@@ -66,6 +67,8 @@ public class ReviewDetailsList {
 			Language lang = Language.findByCode(langList[x]);
 			if (Language.ENGLISH != lang && null == fetchEventDetails(key, lang, false)) {
 				rdetailSub = new ReviewDetails();
+				rdetailSub.setName(rdetail.getName());
+				rdetailSub.setDesc(rdetail.getDesc());
 				rdetailSub.setLanguage(lang);
 				rdetailSub.setReviewId(rdetail.getReviewId());
 				rdetailSub.setDeleted(true);
@@ -75,7 +78,7 @@ public class ReviewDetailsList {
 				rdetailSub.setReviewBody(rdetail.getReviewBody());
 				rdetailSub.setConclusion(rdetail.getConclusion());
 				rdetailSub.save();
-				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getKeyLong(), lang,
+				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getReviewId(), lang,
 				 ReviewDetailsStep.STEP1, true);
 
 			}
@@ -107,14 +110,14 @@ public class ReviewDetailsList {
 		return theReturn;
 	}
 
-	public static void expandReviewDetailSteps(String key, String lang, String step, String continueExpand) {
+	public static void expandReviewDetailSteps(String key, String lang, String step, String continueExpand) throws IncqServletException {
 		expandReviewDetailSteps(Long.valueOf(key), Language.findByCode(lang), ReviewDetailsStep.findByName(step),
 				Boolean.valueOf(continueExpand));
 
 	}
 
 	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step,
-			boolean continueExpand) {
+			boolean continueExpand) throws IncqServletException {
 		ReviewDetails reviewDetails = new ReviewDetails();
 		reviewDetails.loadEvent(key, lang, true);
 		switch (step) {
@@ -123,15 +126,15 @@ public class ReviewDetailsList {
 					AIConstants.AILANG + lang.name, "", reviewDetails.getIntroduction()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP2: // translate Review"
 			reviewDetails.setReviewBody(AIManager.editTextChunk(reviewDetails.getReviewBody(),
-					AIConstants.AILANG + lang.name, "", reviewDetails.getReviewBody(), AIConstants.AIDELIM));
+					AIConstants.AILANG + lang.name, "", reviewDetails.getReviewBody()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP3: // translate Conclusion"
@@ -139,7 +142,7 @@ public class ReviewDetailsList {
 					AIConstants.AILANG + lang.name, "", reviewDetails.getConclusion()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP4: // translate Summary"
@@ -147,7 +150,7 @@ public class ReviewDetailsList {
 					reviewDetails.getSummary()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP5: // translate Title"
@@ -155,7 +158,7 @@ public class ReviewDetailsList {
 					reviewDetails.getTitle()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(key, lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP6:

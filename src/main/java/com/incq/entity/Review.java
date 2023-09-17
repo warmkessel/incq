@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 import com.incq.constants.*;
 import com.incq.datastore.*;
 import com.google.cloud.datastore.*;
+
 public class Review extends BaseEntity implements Comparable<Review> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -361472214131790072L;
-	 //private static final Logger log = Logger.getLogger(Event.class.getName());
+	// private static final Logger log = Logger.getLogger(Event.class.getName());
 
 	private boolean bookmarked = false;
 
@@ -25,11 +26,11 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	private List<? extends Value<?>> meta = null;
 	private List<? extends Value<?>> media = null;
 	private ReviewDetails reviewDetails = null;
+	private String slug = "";
 	private String link = "";
 	private String author = "";
 	private String source = "";
 
-	
 	public Review() {
 		setReviewDetails(new ReviewDetails());
 	}
@@ -55,32 +56,31 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public String getTagsEncodedString() {
-		if(getTags().size() == 0) {
+		if (getTags().size() == 0) {
 			return "";
-		}
-		else {
-			List<String> tagStrings = getTags().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+		} else {
+			List<String> tagStrings = getTags().stream().map(Value::get).map(Object::toString)
+					.collect(Collectors.toList());
 			return String.join("&tags=", tagStrings);
 		}
 	}
-	
+
 	public List<String> getTagsList() {
 		return getTags().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
 	}
 
 	public String getTagsString() {
-		if(getTags().size() == 0) {
+		if (getTags().size() == 0) {
 			return "";
-		}
-		else {
+		} else {
 			return String.join(",", getTagsList());
 		}
 	}
 
 	public List<? extends Value<?>> getTags() {
 
-		if(null == tags) {
-			tags =  new ArrayList<>();
+		if (null == tags) {
+			tags = new ArrayList<>();
 		}
 		return tags;
 	}
@@ -91,42 +91,38 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void setTags(Set<String> tags) {
-	    String[] tagsArray = tags.toArray(new String[tags.size()]);
+		String[] tagsArray = tags.toArray(new String[tags.size()]);
 		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
 	}
-	
+
 	public void setTags(List<? extends Value<?>> tags) {
 		this.tags = tags;
 	}
-	
-	
+
 	public String getMetaEncodedString() {
-		if(getMeta().size() == 0) {
+		if (getMeta().size() == 0) {
 			return "";
-		}
-		else {
+		} else {
 			return String.join("&tags=", getMetaList());
 		}
 	}
-	
+
 	public List<String> getMetaList() {
 		return getMeta().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
 	}
 
 	public String getMetaString() {
-		if(getMeta().size() == 0) {
+		if (getMeta().size() == 0) {
 			return "";
-		}
-		else {
+		} else {
 			return String.join(",", getMetaList());
 		}
 	}
 
 	public List<? extends Value<?>> getMeta() {
 
-		if(null ==
-				meta) {
-			meta =  new ArrayList<>();
+		if (null == meta) {
+			meta = new ArrayList<>();
 		}
 		return meta;
 	}
@@ -137,13 +133,14 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void setMeta(Set<String> meta) {
-	    String[] metaArray = meta.toArray(new String[meta.size()]);
+		String[] metaArray = meta.toArray(new String[meta.size()]);
 		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
-	
+
 	public void setMeta(List<? extends Value<?>> meta) {
 		this.meta = meta;
 	}
+
 	public String getAuthor() {
 		return author;
 	}
@@ -151,47 +148,58 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
+	}
+
 	public String getSource() {
 		byte[] b = source.getBytes(StandardCharsets.UTF_8);
-		return  new String(b, StandardCharsets.UTF_8);
+		return new String(b, StandardCharsets.UTF_8);
 	}
 
 	public void setSource(String source) {
 		this.source = source;
 	}
+
 	public String getLink() {
 		return link;
 	}
+
 	public void setLink(String link) {
 		this.link = link;
 	}
+
 	public List<String> getMediaList() {
 		return getMedia().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
 	}
+
 	public String getMediaEncodedString() {
-		if(getMedia().size() == 0) {
+		if (getMedia().size() == 0) {
 			return "";
-		}
-		else {
+		} else {
 			return String.join("&media=", getMediaList());
 		}
 	}
-	
 
 	public String getMediaString() {
-		if(getMedia().size() == 0) {
+		if (getMedia().size() == 0) {
 			return "";
-		}
-		else {
-			List<String> mediaStrings = getMedia().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+		} else {
+			List<String> mediaStrings = getMedia().stream().map(Value::get).map(Object::toString)
+					.collect(Collectors.toList());
 			return String.join(" ", mediaStrings);
 		}
 	}
 
 	public List<? extends Value<?>> getMedia() {
 
-		if(null == media) {
-			media =  new ArrayList<>();
+		if (null == media) {
+			media = new ArrayList<>();
 		}
 		return media;
 	}
@@ -199,31 +207,29 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	public void setMedia(String media) {
 		String[] mediaArray = media.toLowerCase().split(" ");
 		setMedia(mediaArray);
-		}
-	
-	
+	}
+
 	public void setMedia(String[] mediaArray) {
 		setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
-	
 
-	
 	public void setMedia(Set<String> media) {
-	    String[] mediaArray = media.toArray(new String[media.size()]);
-	    setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
+		String[] mediaArray = media.toArray(new String[media.size()]);
+		setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
-	
+
 	public void setMedia(List<? extends Value<?>> media) {
 		this.media = media;
 	}
-	
+
 	public ReviewDetails getReviewDetails() {
 		return reviewDetails;
 	}
+
 	public void setReviewDetails(ReviewDetails reviewDetails) {
 		this.reviewDetails = reviewDetails;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -246,21 +252,25 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		result = 31 * result + author.hashCode();
 		result = 31 * result + media.hashCode();
 		result = 31 * result + link.hashCode();
+		result = 31 * result + slug.hashCode();
 
 		return result;
 	}
 
 	public void save() {
 		Key key = getKey();
-		if(null != getReviewDetails()) {
+		if (null != getReviewDetails()) {
 			getReviewDetails().setReviewId(key.getId());
 			getReviewDetails().save();
 		}
 		Entity.Builder entity = Entity.newBuilder(key);
-		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
-				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.USERID, getUserId())
-				.set(ReviewConstants.TAGS, getTags()).set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor()).set(ReviewConstants.SOURCE, StringValue.newBuilder(getSource()).setExcludeFromIndexes(true).build()).set(ReviewConstants.LINK, getLink())
-				.set(ReviewConstants.MEDIA, getMedia()).build();
+		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked())
+				.set(ReviewConstants.CREATEDDATE, getCreatedDate()).set(ReviewConstants.UPDATEDDATE, getUpdatedDate())
+				.set(ReviewConstants.USERID, getUserId()).set(ReviewConstants.TAGS, getTags())
+				.set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor())
+				.set(ReviewConstants.SOURCE, StringValue.newBuilder(getSource()).setExcludeFromIndexes(true).build())
+				.set(ReviewConstants.LINK, getLink()).set(ReviewConstants.MEDIA, getMedia())
+				.set(ReviewConstants.SLUG, getSlug()).build();
 		getDatastore().put(entity.build());
 	}
 
@@ -276,10 +286,10 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	public void loadEvent(long key, Language lang) {
 		loadEvent(key, lang, false);
 	}
+
 	public void loadEvent(long key, Language lang, boolean admin) {
 		loadEvent(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, key).build(), lang, admin);
 	}
-	
 
 	public void loadEvent(Key key, Language lang, boolean admin) {
 		// log.info("key " + key.toString());
@@ -291,6 +301,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	public void loadFromEntity(Entity entity, Language lang) {
 		loadFromEntity(entity, lang, false);
 	}
+
 	public void loadFromEntity(Entity entity, Language lang, boolean admin) {
 		super.loadFromEntity(entity);
 		if (null != entity) {
@@ -301,25 +312,26 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			setAuthor(entity.getString(ReviewConstants.AUTHOR));
 			setMedia(entity.getList(ReviewConstants.MEDIA));
 			setLink(entity.getString(ReviewConstants.LINK));
+			setSlug(entity.getString(ReviewConstants.SLUG));
 			setSource(entity.getString(ReviewConstants.SOURCE));
 
-		}
-		Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang, true, admin);
-		if(null != event) {
-			ReviewDetails rd = new ReviewDetails();
-			rd.loadFromEntity(event);
-			setReviewDetails(rd);
+			Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang, true, admin);
+			if (null != event) {
+				ReviewDetails rd = new ReviewDetails();
+				rd.loadFromEntity(event);
+				setReviewDetails(rd);
+			}
 		}
 	}
 
 	public String toString() {
-		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "=" + isDeleted()
-				+ ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", "+ ReviewConstants.USERID +"=" + userId + ", "
-				+ '\'' + ", \" + TAGS + \"='" + getTags()+ ", \" + META + \"='" + getMeta()
-				+ '\'' + ", \" + AUTHOR + \"='" + author + '\''
-				+ ", \" + KINGDOM + \"='" + ReviewConstants.COMPACTDESC + '\'' + ", \" + LINK + \"='" + link
-				+ '\'' + ", \" + MEDIA + \"'" + media + '\'' + '}';
+		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "="
+				+ isDeleted() + ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
+				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + ReviewConstants.USERID + "=" + userId + ", "
+				+ '\'' + ", \" + TAGS + \"='" + getTags() + ", \" + META + \"='" + getMeta() + '\''
+				+ ", \" + AUTHOR + \"='" + author + '\'' + '\'' + ", \" + SLUG + \"='" + slug + '\''
+				+ ReviewConstants.COMPACTDESC + '\'' + ", \" + LINK + \"='" + link + '\'' + ", \" + MEDIA + \"'" + media
+				+ '\'' + '}';
 	}
 
 	public int compareTo(Review other) {
@@ -333,8 +345,9 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			return this.getKeyLong().compareTo(other.getKeyLong());
 		}
 	}
+
 	public String getKind() {
 		return ReviewConstants.REVIEW;
 	}
-	
+
 }

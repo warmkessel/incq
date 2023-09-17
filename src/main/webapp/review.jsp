@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.json.*"%>
+<%@ page import="com.incq.util.*"%>
 <%@ page import="com.incq.entity.*"%>
 <%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
@@ -49,13 +50,13 @@ try {
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the INCQ Reviews">
-<meta name="author" content="Incq.com">
+<meta name="description" content="Reviews:<%= review.getReviewDetails().getDesc()%>">
+<meta name="author" content="INCQ: <%=review.getAuthor()%>">
 <meta name="keywords" content="<%= review.getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="assets/css/sols.css">
-<title>INCQ Reviews</title>
+<title><%= review.getReviewDetails().getName()%> review</title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 	<!-- First Navigation -->
@@ -124,8 +125,8 @@ try {
 				<div class="card-body px-4 pb-4 text-center">
 						<h4><a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a> by - <a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName() %></a>
 						</h4>
-						<img border="0" src="<%=review.getMediaList().get(0)%>">
-						<p><%= review.getReviewDetails().getReviewBody()%>
+						<img border="0" src="<%=review.getMediaList().get(0)%>" alt="<%=review.getReviewDetails().getDesc()%>">
+						<p><%= HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
 						<h4>Conclusion</h4>
 						<p><%= review.getReviewDetails().getConclusion()%></p>
 						<h4><a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author - <%=author.getName() %></a></h4>

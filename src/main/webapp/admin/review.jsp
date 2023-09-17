@@ -45,6 +45,9 @@ long reviewDate = 0;
 
 Set<String> tag = new HashSet<String>();
 Set<String> meta = new HashSet<String>();
+String name = (String) request.getParameter(JspConstants.NAME);
+String desc = (String) request.getParameter(JspConstants.DESC);
+String slug = (String) request.getParameter(JspConstants.SLUG);
 String link = (String) request.getParameter(JspConstants.LINK);
 String summary = (String) request.getParameter(JspConstants.SUMMARY);
 Boolean deleted = Boolean.FALSE;
@@ -119,6 +122,13 @@ if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.M
 	}
 	review.setMedia(media);
 }
+if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.SLUG)
+		&& request.getParameter(JspConstants.SLUG).length() > 0) {
+	slug = (String) request.getParameter(JspConstants.SLUG);
+	review.setSlug(slug);
+	dirty = true;
+}
+
 if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.LINK)
 		&& request.getParameter(JspConstants.LINK).length() > 0) {
 	link = (String) request.getParameter(JspConstants.LINK);
@@ -130,6 +140,17 @@ if (null != request.getParameter(JspConstants.SUMMARY) && request.getParameter(J
 	review.getReviewDetails().setSummary(summary);
 	dirty = true;
 }
+if (null != request.getParameter(JspConstants.NAME) && request.getParameter(JspConstants.NAME).length() > 0) {
+	name = (String) request.getParameter(JspConstants.NAME);
+	review.getReviewDetails().setName(name);
+	dirty = true;
+}
+if (null != request.getParameter(JspConstants.DESC) && request.getParameter(JspConstants.DESC).length() > 0) {
+	desc = (String) request.getParameter(JspConstants.DESC);
+	review.getReviewDetails().setDesc(desc);
+	dirty = true;
+}
+
 if (null != request.getParameter(JspConstants.TITLE) && request.getParameter(JspConstants.TITLE).length() > 0) {
 	title = (String) request.getParameter(JspConstants.TITLE);
 	review.getReviewDetails().setTitle(title);
@@ -169,7 +190,7 @@ if (dirty && save) {
 langList = request.getParameterValues(JspConstants.LANGUAGELIST);
 
 if (null != langList && langList.length > 0) {
-	ReviewDetailsList.expandLanugage(review.getKeyLong(), langList);
+	ReviewDetailsList.expandReviewDetails(review.getKeyLong(), langList);
 }
 %>
 </head>
@@ -194,11 +215,13 @@ if (null != langList && langList.length > 0) {
 	</h1>
 	<br>
 
-	<form method=post action="./review.jsp<%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
-		<input type="hidden" name="<%=JspConstants.LANGUAGE%>" value="Language.ENGLISH">
-		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
-		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
-			value="true" <%=review.isDeleted() ? "checked" : ""%>> True <input
+	<form method=post
+		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
+		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
+			value="Language.ENGLISH"> <input type="hidden"
+			name="<%=JspConstants.ID%>" value="<%=idLong%>"> Deleted:<input
+			type="radio" name="<%=JspConstants.DELETED%>" value="true"
+			<%=review.isDeleted() ? "checked" : ""%>> True <input
 			type="radio" name="<%=JspConstants.DELETED%>" value="false"
 			<%=!review.isDeleted() ? "checked" : ""%>> False<br>
 		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>"
@@ -206,21 +229,22 @@ if (null != langList && langList.length > 0) {
 		True <input type="radio" name="<%=JspConstants.BOOKMARKED%>"
 			value="false" <%=!review.isBookmarked() ? "checked" : ""%>>
 		False<br> Link:<input type="text" name="<%=JspConstants.LINK%>"
-			value="<%=review.getLink()%>" size="50"><br> <br>
-		Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
-			value="<%=review.getAuthor()%>" size="50">
+			value="<%=review.getLink()%>" size="50"><br> Slug:<input
+			type="text" name="<%=JspConstants.SLUG%>"
+			value="<%=review.getSlug()%>" size="50">
 		<%
 		if (Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step
-			Step 2 - Determine Author"
-			onclick="appendToUrlAndFetch('step2')">
+			Step 11 - Determine Slug"
+			onclick="appendToUrlAndFetch('step11')">
 		<%}%><br> Source:
 		<textarea name="<%=JspConstants.SOURCE%>" rows="20" cols="80"><%=review.getSource()%></textarea>
 		<%
 		if (Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 1 - Fetch the Source"
 			onclick="appendToUrlAndFetch('step1')">
-		<%}%>
+		<%}%><br> Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
+			value="<%=review.getAuthor()%>" size="50">
 		<br> Media
 		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
 		<br> Tags
@@ -231,20 +255,12 @@ if (null != langList && langList.length > 0) {
 			onclick="appendToUrlAndFetch('step5')">
 		<%}%><br> Meta
 		<textarea name="<%=JspConstants.META%>" rows="20" cols="80"><%=review.getMetaString()%></textarea>
-		<br> Source:
-		<textarea name="<%=JspConstants.SOURCE%>" rows="20" cols="80"><%=review.getSource()%></textarea>
-		<%
-		if (Language.ENGLISH.equals(lang)) {
-		%><input type="button" value="Step 1 - Fetch the Source"
-			onclick="appendToUrlAndFetch('step1')">
-		<%}%>
-		<br>
 		<%
 		if (Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
 		%><input type="button" value="Step 4 - Determine the Meta"
 			onclick="appendToUrlAndFetch('step4')">
-		<%}%><br> <br> <br> <input type=hidden name=save
-			value="save">
+		<%}%>
+		<br> <input type=hidden name=save value="save">
 		<%
 		if (Language.ENGLISH.equals(lang)) {
 		%>
@@ -254,7 +270,8 @@ if (null != langList && langList.length > 0) {
 		%>
 	</form>
 	<hr>
-	<form method=post action="./review.jsp<%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
+	<form method=post
+		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
 		<select name="la"
 			onchange="document.getElementById('languageForm').submit();">
 			<%
@@ -264,8 +281,7 @@ if (null != langList && langList.length > 0) {
 				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 				<%=langEnum.name%></option>
 			<%}%>
-		</select><input type=hidden name=id value="<%=review.getKeyLong()%>">
-	<br>
+		</select><input type=hidden name=id value="<%=review.getKeyLong()%>"> <br>
 		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
 		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
 			value="true"
@@ -273,7 +289,30 @@ if (null != langList && langList.length > 0) {
 		True <input type="radio" name="<%=JspConstants.DELETED%>"
 			value="false"
 			<%=!review.getReviewDetails().isDeleted() ? "checked" : ""%>>
-		False<br>Title:<input type="text" name="<%=JspConstants.TITLE%>"
+		False<br>
+		Name:<input type="text" name="<%=JspConstants.NAME%>"
+			value="<%=review.getReviewDetails().getName()%>" size="30">
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 10 - Write Name"
+			onclick="appendToUrlAndFetch('step10')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 6 - Translate Name"
+			onclick="appendToUrlAndFetch('step6')">
+		<%}%><br>
+		 Description:<textarea name="<%=JspConstants.DESC%>" rows="20" cols="80"><%=review.getReviewDetails().getDesc()%></textarea>
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 12 - Write Description"
+			onclick="appendToUrlAndFetch('step12')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 11 - Translate Description"
+			onclick="appendToUrlAndFetch('step11')">
+		<%}%><br> Title:<input type="text" name="<%=JspConstants.TITLE%>"
 			value="<%=review.getReviewDetails().getTitle()%>" size="50">
 		<%
 		if (Language.ENGLISH.equals(lang)) {
@@ -352,10 +391,9 @@ if (null != langList && langList.length > 0) {
 			</tr>
 			<%}%>
 		</table>
-		<br>
-		<button id="toggleButton">Toggle Checkboxes</button>
-		<br> <br> <input type=hidden name=save value="save">
-		<input type=submit value="save">
+		<br> Toggle Checkboxes<input type=button value=toggle
+			id="toggleButton"> <br> <br> <input type=hidden
+			name=save value="save"> <input type=submit value="save">
 	</form>
 	<script type="text/javascript">
 	// Function to toggle checkboxes

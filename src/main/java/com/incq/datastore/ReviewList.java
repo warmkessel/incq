@@ -18,6 +18,7 @@ import com.incq.datastore.helper.FetchSourceHelper;
 import com.incq.datastore.helper.SourceHelper;
 import com.incq.enqueue.EnqueueReview;
 import com.incq.entity.*;
+import com.incq.exception.IncqServletException;
 
 public class ReviewList {
 	static Logger logger = Logger.getLogger(ReviewList.class.getName());
@@ -48,19 +49,21 @@ public class ReviewList {
 		return theReturn;
 	}
 
-	public static void expandReviewSteps(String key, String lang, String step, String continueExpand) {
+	public static void expandReviewSteps(String key, String lang, String step, String continueExpand)
+			throws IncqServletException {
 		expandReviewSteps(Long.valueOf(key), Language.findByCode(lang), ReviewStep.findByName(step),
 				Boolean.valueOf(continueExpand));
 
 	}
 
-	public static void expandReviewSteps(Long key, Language lang, ReviewStep step, boolean continueExpand) {
+	public static void expandReviewSteps(Long key, Language lang, ReviewStep step, boolean continueExpand)
+			throws IncqServletException {
 		Review review = new Review();
 		Author author = new Author();
 
 		review.loadEvent(key, Language.ENGLISH);
 		author.loadAuthor(review.getAuthor(), Language.ENGLISH);
-
+		
 		switch (step) {
 		case STEP1: // Fetch the Source
 			try {
@@ -110,9 +113,9 @@ public class ReviewList {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP6:// Write the introductions
-			review.getReviewDetails().setReviewBody(AIManager.editText(review.getSource(), AIConstants.AIIREVIEW,
-					author.getStyle(), review.getReviewDetails().getReviewBody()));
+		case STEP6:// Write the Review Body
+			review.getReviewDetails().setReviewBody(AIManager.editText(review.getReviewDetails().getReviewBody(), AIConstants.AIREVIEW,
+					author.getStyle(),review.getReviewDetails().getReviewBody()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
@@ -124,7 +127,7 @@ public class ReviewList {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP8:// Write the Review Body
+		case STEP8:// Write the Conclusion
 			review.getReviewDetails().setConclusion(AIManager.editText(review.getReviewDetails().getReviewBody(),
 					AIConstants.AICONCLUSION, author.getStyle(), review.getReviewDetails().getConclusion()));
 			if (continueExpand) {
@@ -134,14 +137,39 @@ public class ReviewList {
 		case STEP9:// Write the Conclusion
 			review.getReviewDetails()
 					.setSummary(AIManager.editText(
-							review.getReviewDetails().getIntroduction() + review.getReviewDetails().getReviewBody()
+							review.getReviewDetails().getIntroduction()
 									+ review.getReviewDetails().getConclusion(),
 							AIConstants.AISUMMARY, author.getStyle(), review.getReviewDetails().getSummary()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP10:// Mark the Review Active
+		case STEP10:// Write Name
+			review.getReviewDetails()
+					.setName(AIManager.editText(
+							review.getReviewDetails().getTitle(),
+							AIConstants.AINAME, "", review.getReviewDetails().getSummary()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP11://  Write Slug
+			review.setSlug(AIManager.editText(review.getReviewDetails().getName(),
+							AIConstants.AISLUG, author.getStyle(), review.getReviewDetails().getSummary()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+			case STEP12:// Write Description
+			review.getReviewDetails()
+					.setDesc(AIManager.editText(
+							review.getReviewDetails().getSummary(),
+							AIConstants.AIDESC, author.getStyle(), review.getReviewDetails().getDesc()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP13:// Mark the Review Active
 			review.setDeleted(false);
 			break;
 		case FAIL:

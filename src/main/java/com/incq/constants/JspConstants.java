@@ -48,11 +48,13 @@ public class JspConstants {
 
 	
 
+	public static final String NAME = "name";
+	public static final String DESC = "desc";
+	public static final String SLUG = "slug";
 	public static final String META = "meta";
 	public static final String TAGS = "tags";
 	public static final String TAGINPUT = "tag";
 
-	public static final String NAME = "name";
 	public static final String STYLE = "style";
 	public static final String SHORTDESC = "shortDescription";
 	public static final String LONGDESC = "longDescription";

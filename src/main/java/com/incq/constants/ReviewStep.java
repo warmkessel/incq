@@ -16,7 +16,10 @@ public enum ReviewStep {
 	STEP7("step7"), // Write the introductions
 	STEP8("step8"), // Write the Conclusion
 	STEP9("step9"), // Write a summary
-	STEP10("step10"); // Mark the Review Active
+	STEP10("step10"), // Write Name
+	STEP11("step11"), // Write Slug
+	STEP12("step12"), // Write Description
+	STEP13("step13"); // Mark the Review Active
 
 	static Logger logger = Logger.getLogger(ReviewStep.class.getName());
 

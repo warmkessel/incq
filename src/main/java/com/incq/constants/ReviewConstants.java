@@ -1,6 +1,8 @@
 package com.incq.constants;
 
 public class ReviewConstants extends BaseEntityConstants{
+	public static final String DELM = "^$";
+
 	public static final String REVIEW = "Review";
 
 	public static final String DEFAULTID = "fill me in";
@@ -11,7 +13,13 @@ public class ReviewConstants extends BaseEntityConstants{
 	
 	public static final String TIMELINECOLLECTION = "TimelineCollection";
 
+	public static final String NAME = "Name";
+
+	public static final String SLUG = "Slug";
+
 	public static final String MEDIA = "Media";
+
+	public static final String DESC = "Desc";
 
 	public static final String INTRODUCTION = "Introduction";
 
