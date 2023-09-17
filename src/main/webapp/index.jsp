@@ -41,7 +41,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta name="description" content="INCQ Reviews on all kinds of products">
 <meta name="author" content="INCQ">
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
+<link rel="stylesheet" href="/assets/css/sols.css">
 <title>INCQ Reviews</title>
 
 </head>
@@ -51,7 +51,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 		<div class="container">
 			<a class="navbar-brand"
 				href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
-				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -132,12 +132,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 							<div class="d-flex">
 								<div class="flex-grow-1">
 									<a
-										href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"
+										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
 									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>"
 										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
 									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
-										<a href="<%=JspConstants.REVIEW%>?id=<%=theList.get(x).getKey().getId()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br>More...</a>
+										<a href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br>More...</a>
 									</p>
 								</div>
 							</div>
@@ -159,7 +159,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
-						src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+						src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">

@@ -38,7 +38,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
+<link rel="stylesheet" href="/assets/css/sols.css">
 <title>INCQ Reviews - Authors</title>
 
 </head>
@@ -47,7 +47,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
-				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -113,9 +113,9 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 						<div class="col-md-6 my-4">
 								<div class="d-flex">
 									<div class="flex-grow-1">
-									<a href="<%=JspConstants.AUTHOR%> %>?id=<%=theList.get(x).getKey().getId()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getName() %></a>
-										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHOR%>?id=<%=theList.get(x).getKey().getId()%>"><%= theList.get(x).getShortDescription()%></a></p>
-									</div>
+									<a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getName() %></a>
+										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%= theList.get(x).getShortDescription()%></a></p>
+									</div>s
 								</div>	
 						</div>
 					<%
@@ -134,7 +134,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">

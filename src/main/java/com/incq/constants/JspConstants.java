@@ -8,6 +8,10 @@ public class JspConstants {
 	public static final String AUTHOR = "/author.jsp";
 	public static final String AUTHORS = "/authors.jsp";
 
+	public static final String AUTHORSEO = "/author/";
+	public static final String REVIEWSEO = "/review/";
+
+	
 	public static final String EXPANDREVIEW = "/tasks/expandReview";
 	public static final String EXPANDREVIEWDETAILS = "/tasks/expandReviewDetails";
 	public static final String EXPANDAUTHOR = "/tasks/expandAuthor";

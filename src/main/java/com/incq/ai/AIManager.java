@@ -8,6 +8,7 @@ import org.json.*;
 import com.google.appengine.api.urlfetch.*;
 import com.incq.constants.*;
 import com.incq.exception.IncqServletException;
+import com.incq.util.HtmlHelper;
 
 public class AIManager {
 	public static final String SORRY = "sorry";
@@ -20,20 +21,27 @@ public class AIManager {
 		return input.replaceAll("\r", ". ").replaceAll("\n", "").replaceAll("'", "\'").replaceAll("\"", "\\\\\"");
 	}
 
-	
-	public static String editTextChunk(String input, String instruction, String style, String errorMessage) throws IncqServletException {
-//		int numOfTries = 10;
-//		StringBuffer theReturn = new StringBuffer();
-//
-//		while (numOfTries > 0) {
-//			String[] inputArr = input.split(delim);
-//			for (int x = 0; x < inputArr.length; x++) {
-//				theReturn.append(extactText(edit(delim + inputArr[x], instruction, style, true), errorMessage));
-//			}
-//			numOfTries =numOfTries - 1;
-//		}
-//		return theReturn.toString();
-return "";
+	public static String editTextChunk(String input, String instruction, String style, String errorMessage)
+			throws IncqServletException {
+		int numOfTries = 10;
+		StringBuffer theReturn = new StringBuffer();
+
+		while (numOfTries > 0) {
+			try {
+				String[] inputArr = input.split("\r\n");
+				for (int x = 0; x < inputArr.length; x++) {
+					if (inputArr[x].length() > 0) {
+						theReturn.append(extactText(edit(inputArr[x], instruction, style, true), errorMessage))
+								.append(HtmlHelper.CRLF);
+					}
+				}
+				numOfTries = 0;
+			} catch (IncqServletException incq) {
+				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);
+				numOfTries = numOfTries - 1;
+			}
+		}
+		return theReturn.toString();
 	}
 
 	public static String editText(String input, String instruction, String style, String errorMessage)

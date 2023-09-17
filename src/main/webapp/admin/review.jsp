@@ -310,8 +310,8 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button" value="Step 11 - Translate Description"
-			onclick="appendToUrlAndFetch('step11')">
+		%><input type="button" value="Step 7 - Translate Description"
+			onclick="appendToUrlAndFetch('step7')">
 		<%}%><br> Title:<input type="text" name="<%=JspConstants.TITLE%>"
 			value="<%=review.getReviewDetails().getTitle()%>" size="50">
 		<%

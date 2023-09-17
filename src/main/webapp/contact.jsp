@@ -70,7 +70,7 @@ if ((null != currentUser) && subject != null && body != null) {
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css?v=1">
+<link rel="stylesheet" href="/assets/css/sols.css?v=1">
 <title>INCQ Reviews</title>
 
 </head>
@@ -79,7 +79,7 @@ if ((null != currentUser) && subject != null && body != null) {
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
-				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -145,7 +145,7 @@ if ((null != currentUser) && subject != null && body != null) {
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
-					<img src="assets/imgs/logo.jpg"
+					<img src="/assets/imgs/logo.jpg"
 						alt="INCQ Review Contact"
 						class="w-100 rounded shadow">
 				</div>
@@ -191,7 +191,7 @@ if ((null != currentUser) && subject != null && body != null) {
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
-					<img src="assets/imgs/contact.jpg"
+					<img src="/assets/imgs/contact.jpg"
 						alt="INCQ Landing Page"
 						class="w-100 rounded shadow">
 				</div>
@@ -220,7 +220,7 @@ if ((null != currentUser) && subject != null && body != null) {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img src="assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">

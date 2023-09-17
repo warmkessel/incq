@@ -1,6 +1,7 @@
 package com.incq.util;
 
 public class HtmlHelper {
+	public static final String CRLF = "\r\n";
 	public static String convertLongText(String input) {
 		StringBuffer theReturn = new StringBuffer();
         String[] lines = splitOnCRLF(input);
@@ -18,6 +19,6 @@ public class HtmlHelper {
         if (input == null) {
             return new String[0]; // return an empty array if input is null
         }
-        return input.split("\r\n");
+        return input.split(CRLF);
     }
 }

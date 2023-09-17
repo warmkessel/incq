@@ -45,7 +45,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta name="description" content="Welcome to the INCQ Reviews">
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
+<link rel="stylesheet" href="/assets/css/sols.css">
 <title>INCQ Reviews</title>
 
 </head>
@@ -54,7 +54,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
-				src="assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -113,7 +113,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img src="assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>"><img src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">

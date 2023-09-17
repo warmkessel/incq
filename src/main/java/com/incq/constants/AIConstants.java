@@ -22,7 +22,7 @@ public class AIConstants {
 
 	public static final String AIREVIEW = "Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences.   Review this product and write a generally positive review.  Find at least one not positive topic, and do not list any Amazon product or offer";
 
-	public static final String AISLUG = "Review this content and write a slug based upon this product name to be used in the url ";
+	public static final String AISLUG = "write a slug based upon this product name to be used in the url ";
 	
 	public static final String AINAME = "write the name in 30 characters: ";
 	

@@ -120,6 +120,9 @@ public class ReviewDetailsList {
 			boolean continueExpand) throws IncqServletException {
 		ReviewDetails reviewDetails = new ReviewDetails();
 		reviewDetails.loadEvent(key, lang, true);
+		logger.log(Level.INFO, "AuthorStep Fail key " + key + " lang " + lang + " step " + step);
+
+		
 		switch (step) {
 		case STEP1: // translate Introduction"
 			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),
@@ -161,7 +164,24 @@ public class ReviewDetailsList {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP6:
+		case STEP6: // translate Name"
+			reviewDetails.setName(AIManager.editText(reviewDetails.getName(), AIConstants.AILANG + lang.name, "",
+					reviewDetails.getName()));
+
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP7: // translate Desc"
+			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(), AIConstants.AILANG + lang.name, "",
+					reviewDetails.getDesc()));
+
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+			}
+			break;
+			
+		case STEP8:
 			reviewDetails.setDeleted(false);
 			break;
 		case FAIL:

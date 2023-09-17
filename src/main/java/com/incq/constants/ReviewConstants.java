@@ -5,7 +5,7 @@ public class ReviewConstants extends BaseEntityConstants{
 
 	public static final String REVIEW = "Review";
 
-	public static final String DEFAULTID = "fill me in";
+	public static final String DEFAULTID = "5726966351134720";
 	
 	public static final String REVIEWDETAILS = "ReviewDetails";
 	

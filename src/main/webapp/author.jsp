@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.net.URLDecoder" %>
 <%@ page import="org.json.*"%>
 <%@ page import="com.incq.entity.*"%>
 <%@ page import="com.incq.datastore.*"%>
@@ -22,12 +23,28 @@ if (null != langString && langString.length() > 0) {
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
+String name = (String) request.getParameter(JspConstants.NAME);
 
 if (null != id && id.length() > 0) {
 	author.loadAuthor(new Long(id).longValue());
 }
 else{
-	String name = (String) request.getParameter(JspConstants.NAME);
+	if(null == name || name.length() ==0){
+		 // Get the full URL and query string
+	    String requestURL = request.getRequestURL().toString();
+	    String requestURI = request.getRequestURI();
+	    String contextPath = request.getContextPath();
+	    
+	    // Extract the part after "/author/"
+	    String prefix = contextPath + JspConstants.AUTHORSEO;	    
+	    if (requestURI.startsWith(prefix)) {
+	        name = requestURI.substring(prefix.length());
+	        // URL decode to convert any '+' to ' ' and '%' encoding to characters
+	        name = URLDecoder.decode(name, "UTF-8");
+	    }
+	}
+	
+	
 	if (null != name && name.length() > 0) {
 		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
 	}
@@ -35,7 +52,6 @@ else{
 		author.loadAuthor(AuthorConstants.DEFAULTID);
 	}
 }
-
 long idLong = 0L;
 try {
 	idLong = Long.parseLong(id);
@@ -64,7 +80,7 @@ try {
 <meta name="author" content="Incq.com">
 
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
+<link rel="stylesheet" href="/assets/css/sols.css">
 <title>INCQ Reviews - Authors</title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
@@ -72,7 +88,7 @@ try {
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.INDEX%>"> <img
-				src="assets/imgs/logo-sm.jpg" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -103,12 +119,12 @@ try {
 							Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.AUTHOR%>" method="get" id="languageForm">
+					<li class="nav-item"><form action="<%=JspConstants.AUTHORSEO%><%=author.getName() %>" method="get" id="languageForm">
             			<select name="la" onchange="document.getElementById('languageForm').submit();">
       				<% for (Language langEnum : Language.values()) {%>
       				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
 					<%}%>
-    </select><input type=hidden name="<%=JspConstants.NAME %>" value="<%=author.getName()%>"></form></li>
+    </select></form></li>
 				</ul>
 			</div>
 		</div>
@@ -135,7 +151,7 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img src="assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
+					<a href="<%=JspConstants.INDEX%>"><img src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">

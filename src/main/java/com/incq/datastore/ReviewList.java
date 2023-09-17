@@ -49,6 +49,30 @@ public class ReviewList {
 		return theReturn;
 	}
 
+	public static Entity fetchReview(String slug) {
+		return fetchReview(slug, true);
+	}
+
+	public static Entity fetchReview(String slug, boolean guarantee) {
+		Entity theReturn = null;
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		Query<Entity> query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW)
+				.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.SLUG, slug),
+						PropertyFilter.eq(AuthorConstants.DELETED, false)))
+				.build();
+		// Run the query and retrieve a list of matching entities
+		QueryResults<Entity> results = datastore.run(query);
+		List<Entity> entities = Lists.newArrayList(results);
+		if (entities.size() > 0) {
+			theReturn = entities.get(0);
+		} else if (guarantee) {
+			theReturn = datastore
+					.get(Key.newBuilder(Constants.INCQ, ReviewConstants.REVIEW, ReviewConstants.DEFAULTID).build());
+
+		}
+		return theReturn;
+	}
+
 	public static void expandReviewSteps(String key, String lang, String step, String continueExpand)
 			throws IncqServletException {
 		expandReviewSteps(Long.valueOf(key), Language.findByCode(lang), ReviewStep.findByName(step),
@@ -63,7 +87,7 @@ public class ReviewList {
 
 		review.loadEvent(key, Language.ENGLISH);
 		author.loadAuthor(review.getAuthor(), Language.ENGLISH);
-		
+
 		switch (step) {
 		case STEP1: // Fetch the Source
 			try {
@@ -114,8 +138,8 @@ public class ReviewList {
 			}
 			break;
 		case STEP6:// Write the Review Body
-			review.getReviewDetails().setReviewBody(AIManager.editText(review.getReviewDetails().getReviewBody(), AIConstants.AIREVIEW,
-					author.getStyle(),review.getReviewDetails().getReviewBody()));
+			review.getReviewDetails().setReviewBody(AIManager.editText(review.getReviewDetails().getReviewBody(),
+					AIConstants.AIREVIEW, author.getStyle(), review.getReviewDetails().getReviewBody()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
@@ -137,34 +161,29 @@ public class ReviewList {
 		case STEP9:// Write the Conclusion
 			review.getReviewDetails()
 					.setSummary(AIManager.editText(
-							review.getReviewDetails().getIntroduction()
-									+ review.getReviewDetails().getConclusion(),
+							review.getReviewDetails().getIntroduction() + review.getReviewDetails().getConclusion(),
 							AIConstants.AISUMMARY, author.getStyle(), review.getReviewDetails().getSummary()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP10:// Write Name
-			review.getReviewDetails()
-					.setName(AIManager.editText(
-							review.getReviewDetails().getTitle(),
-							AIConstants.AINAME, "", review.getReviewDetails().getSummary()));
+			review.getReviewDetails().setName(AIManager.editText(review.getReviewDetails().getTitle(),
+					AIConstants.AINAME, "", review.getReviewDetails().getSummary()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP11://  Write Slug
-			review.setSlug(AIManager.editText(review.getReviewDetails().getName(),
-							AIConstants.AISLUG, author.getStyle(), review.getReviewDetails().getSummary()));
+		case STEP11:// Write Slug
+			review.setSlug(AIManager.editText(review.getReviewDetails().getName(), AIConstants.AISLUG,
+					"", review.getSlug()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-			case STEP12:// Write Description
-			review.getReviewDetails()
-					.setDesc(AIManager.editText(
-							review.getReviewDetails().getSummary(),
-							AIConstants.AIDESC, author.getStyle(), review.getReviewDetails().getDesc()));
+		case STEP12:// Write Description
+			review.getReviewDetails().setDesc(AIManager.editText(review.getReviewDetails().getSummary(),
+					AIConstants.AIDESC, author.getStyle(), review.getReviewDetails().getDesc()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}

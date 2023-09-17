@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.net.URLDecoder"%>
 <%@ page import="org.json.*"%>
 <%@ page import="com.incq.util.*"%>
 <%@ page import="com.incq.entity.*"%>
@@ -15,7 +16,6 @@ User currentUser = userService.getCurrentUser();
 Review review = new Review();
 Author author = new Author();
 
-
 Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
@@ -26,6 +26,21 @@ if (null != langString && langString.length() > 0) {
 String id = (String) request.getParameter(JspConstants.ID);
 if (null != id && id.length() > 0) {
 	review.loadEvent(new Long(id).longValue(), lang);
+} else {
+	// Get the full URL and query string
+	String requestURL = request.getRequestURL().toString();
+	String requestURI = request.getRequestURI();
+	String contextPath = request.getContextPath();
+
+	String prefix = contextPath + JspConstants.REVIEWSEO;
+	if (requestURI.startsWith(prefix)) {
+		String slug = requestURI.substring(prefix.length());
+		// URL decode to convert any '+' to ' ' and '%' encoding to characters
+		slug = URLDecoder.decode(slug, "UTF-8");
+		review.loadFromEntity(ReviewList.fetchReview(slug), lang);
+	}
+}
+if(null != review.getAuthor() && review.getAuthor().length() > 0){
 	author.loadFromEntity(AuthorList.fetchAuthor(review.getAuthor(), lang));
 }
 long idLong = 0L;
@@ -34,36 +49,39 @@ try {
 } catch (NumberFormatException e) {
 	idLong = 0L; // Set value to 0 in case of NumberFormatException
 }
-
 %><!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
-<script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<script async=true
+	src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
 
-  gtag('config', 'G-PMGYN3L4QF');
+	gtag('config', 'G-PMGYN3L4QF');
 </script>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Reviews:<%= review.getReviewDetails().getDesc()%>">
+<meta name="description"
+	content="Reviews:<%=review.getReviewDetails().getDesc()%>">
 <meta name="author" content="INCQ: <%=review.getAuthor()%>">
-<meta name="keywords" content="<%= review.getMetaString()%>">
+<meta name="keywords" content="<%=review.getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
-<link rel="stylesheet" href="assets/css/sols.css">
-<title><%= review.getReviewDetails().getName()%> review</title>
+<link rel="stylesheet" href="/assets/css/sols.css">
+<title><%=review.getReviewDetails().getName()%> review</title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.INDEX%>"> <img
-				src="assets/imgs/logo-sm.jpg" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -88,18 +106,28 @@ try {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact
-							Us</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>" method="get" id="languageForm">
-            			<select name="la" onchange="document.getElementById('languageForm').submit();">
-      				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
-					<%}%>
-    </select><input type=hidden name="<%=JspConstants.ID %>" value="<%=idLong%>"></form></li>
+					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>"
+							method="get" id="languageForm">
+							<select name="la"
+								onchange="document.getElementById('languageForm').submit();">
+								<%
+								for (Language langEnum : Language.values()) {
+								%>
+								<option value="<%=langEnum.code%>"
+									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+									<%=langEnum.name%></option>
+								<%}%>
+							</select><input type=hidden name="<%=JspConstants.ID%>"
+								value="<%=idLong%>">
+						</form></li>
 				</ul>
 				<%
 				if (currentUser != null) {
@@ -123,21 +151,30 @@ try {
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-						<h4><a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a> by - <a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName() %></a>
-						</h4>
-						<img border="0" src="<%=review.getMediaList().get(0)%>" alt="<%=review.getReviewDetails().getDesc()%>">
-						<p><%= HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
-						<h4>Conclusion</h4>
-						<p><%= review.getReviewDetails().getConclusion()%></p>
-						<h4><a href="<%= JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author - <%=author.getName() %></a></h4>
-						<p><%=author.getShortDescription() %></p>
-						<p>
-						<% 	for(int x=0; x < review.getTagsList().size(); x++){%>
-								| <a href=""><%=review.getTagsList().get(x) %></a> 
+					<h4>
+						<a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a>
+						by - <a
+							href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName()%></a>
+					</h4>
+					<img border="0" src="<%=review.getMediaList().get(0)%>"
+						alt="<%=review.getReviewDetails().getDesc()%>">
+					<p><%=HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
+					<h4>Conclusion</h4>
+					<p><%=review.getReviewDetails().getConclusion()%></p>
+					<h4>
+						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author
+							- <%=author.getName()%></a>
+					</h4>
+					<p><%=author.getShortDescription()%></p>
+					<p>
+						<%
+						for (int x = 0; x < review.getTagsList().size(); x++) {
+						%>
+						| <a href=""><%=review.getTagsList().get(x)%></a>
 						<%}%>
 						|
-						</p>
-					</div>
+					</p>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -149,13 +186,16 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img src="assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
-						class="mb-0"></a>
+					<a href="<%=JspConstants.INDEX%>"><img
+						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Home</small></a> <a
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Authors</small></a> <a
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small
+						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -171,7 +211,9 @@ try {
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
+						, INCQ All rights reserved - As an Amazon Associate we earn from
+						qualifying purchases. -
+						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
