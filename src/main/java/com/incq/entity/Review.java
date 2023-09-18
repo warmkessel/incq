@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.incq.constants.*;
 import com.incq.datastore.*;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 
 public class Review extends BaseEntity implements Comparable<Review> {
@@ -265,7 +266,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		}
 		Entity.Builder entity = Entity.newBuilder(key);
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked())
-				.set(ReviewConstants.CREATEDDATE, getCreatedDate()).set(ReviewConstants.UPDATEDDATE, getUpdatedDate())
+				.set(ReviewConstants.CREATEDDATE, getCreatedDate()).set(ReviewConstants.UPDATEDDATE, Timestamp.now())
 				.set(ReviewConstants.USERID, getUserId()).set(ReviewConstants.TAGS, getTags())
 				.set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor())
 				.set(ReviewConstants.SOURCE, StringValue.newBuilder(getSource()).setExcludeFromIndexes(true).build())
@@ -300,6 +301,12 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void loadFromEntity(Entity entity, Language lang) {
 		loadFromEntity(entity, lang, false);
+	}
+
+	public void loadFromEntitySiteMap(Entity entity) {
+		super.loadFromEntity(entity);
+		setSlug(entity.getString(ReviewConstants.SLUG));
+
 	}
 
 	public void loadFromEntity(Entity entity, Language lang, boolean admin) {

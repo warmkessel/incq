@@ -35,11 +35,19 @@ String id = (String) request.getParameter(JspConstants.ID);
 if (null != id && id.length() > 0 && !id.equals("0")) {
 	review.loadEvent(new Long(id).longValue(), lang, true);
 }
-long idLong = 0L;
-try {
-	idLong = Long.parseLong(id);
-} catch (NumberFormatException e) {
-	idLong = 0L; // Set value to 0 in case of NumberFormatException
+else {
+	// Get the full URL and query string
+	String requestURL = request.getRequestURL().toString();
+	String requestURI = request.getRequestURI();
+	String contextPath = request.getContextPath();
+
+	String prefix = contextPath + JspConstants.ADMINREVIEWSEO;
+	if (requestURI.startsWith(prefix)) {
+		String slug = requestURI.substring(prefix.length());
+		// URL decode to convert any '+' to ' ' and '%' encoding to characters
+		slug = URLDecoder.decode(slug, "UTF-8");
+		review.loadFromEntity(ReviewList.fetchReview(slug), lang);
+	}
 }
 long reviewDate = 0;
 
@@ -207,11 +215,15 @@ if (null != langList && langList.length > 0) {
 				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 				<%=langEnum.name%></option>
 			<%}%>
-		</select><input type=hidden name="<%=JspConstants.ID%>" value="<%=idLong%>">
+		</select><input type=hidden name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>">
 	</form>
 	<h1>
-		ID: <a
+		Review ID: <a
 			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
+	</h1>
+	<h1>
+		Review Details ID: <a
+			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getReviewDetails().getKeyLong()%></a>
 	</h1>
 	<br>
 
@@ -219,7 +231,7 @@ if (null != langList && langList.length > 0) {
 		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
 		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
 			value="Language.ENGLISH"> <input type="hidden"
-			name="<%=JspConstants.ID%>" value="<%=idLong%>"> Deleted:<input
+			name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>"> Deleted:<input
 			type="radio" name="<%=JspConstants.DELETED%>" value="true"
 			<%=review.isDeleted() ? "checked" : ""%>> True <input
 			type="radio" name="<%=JspConstants.DELETED%>" value="false"
@@ -282,7 +294,7 @@ if (null != langList && langList.length > 0) {
 				<%=langEnum.name%></option>
 			<%}%>
 		</select><input type=hidden name=id value="<%=review.getKeyLong()%>"> <br>
-		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=idLong%>">
+		<input type="hidden" name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>">
 		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
 			value="true"
 			<%=review.getReviewDetails().isDeleted() ? "checked" : ""%>>
@@ -377,8 +389,8 @@ if (null != langList && langList.length > 0) {
 		<br>
 		<table>
 			<%
-			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(idLong);
-			Map<Language, Boolean> ready = ReviewDetailsList.checkReviewDetailsReady(idLong);
+			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(review.getKeyLong());
+			Map<Language, Boolean> ready = ReviewDetailsList.checkReviewDetailsReady(review.getKeyLong());
 			for (Language langEnum : Language.values()) {
 			%>
 			<tr>

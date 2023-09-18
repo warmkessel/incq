@@ -18,10 +18,15 @@ public enum Language {
     NORWEGIAN("no", "Norwegian", "&#127475;&#127476;"),
     PORTUGUESE("pt", "Portuguese", "&#127477;&#127479;"),
     RUSSIAN("ru", "Russian", "&#127479;&#127482;"),
-    SPANISH("es", "Spanish", "&#127466;&#127480;"),
+    SPANISH_SPAIN("es-ES", "Spanish (Spain)", "&#127466;&#127480;"),
+    SPANISH_MEXICO("es-MX", "Spanish (Mexico)", "&#127474;&#127485;"),   
+    SPANISH_COLOMBIA("es-CO", "Spanish (Colombia)", "&#127464;&#127476;"),      
+    SPANISH_ARGENTINA("es-AR", "Spanish (Argentina)", "&#127462;&#127479;"),
+    SPANISH_VENEZUELA("es-VE", "Spanish (Venezuela)", "&#127483;&#127466;"),
+    SPANISH_PERU("es-PE", "Spanish (Peru)", "&#127477;&#127486;"),
     SWEDISH("sv", "Swedish", "&#127480;&#127465;"),
     SWISS_GERMAN_FRENCH("ch", "Swiss German/Swiss French", "&#127464;&#127469;"),
-    //TURKISH("tr", "Turkish", "&#127481;&#127480;"),
+    TURKISH("tr", "Turkish", "&#127481;&#127479;"),
     HEBREW("he", "Hebrew", "&#127473;&#127482;"),
     SINGLISH_MALAY("sg", "Singaporean English (Singlish)/Malay", "&#127464;&#127472;");
 
@@ -45,11 +50,19 @@ public enum Language {
     }
 
     public static Language findByCode(String code) {
-        return BY_CODE.getOrDefault(code, ENGLISH);
+    	Language lang = BY_CODE.getOrDefault(code, ENGLISH);
+    	if(ENGLISH.equals(lang) && code.startsWith("es-")) {
+    		lang = Language.SPANISH_MEXICO;
+    	}
+    	return lang;
     }
 
     public static Language findByName(String name) {
-        return BY_NAME.getOrDefault(name, ENGLISH);
+    	Language lang = BY_NAME.getOrDefault(name, ENGLISH);
+    	if(ENGLISH.equals(lang) && name.startsWith("SPANISH")) {
+    		lang = Language.SPANISH_MEXICO;
+    	}
+    	return lang;
     }
 
     public String getFlagUnicode() {

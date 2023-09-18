@@ -38,7 +38,7 @@ public class AIConstants {
 
 	public static final String AIAUTHORTAGS = "Suggest a list of 10 activityies and intresets seperated by a , which this author may be intrested it. ";
 
-	public static final String AIAUTHORLONG = "Respond only with five paragraphs in html that is an imagined backgroud of an author whos has some relevance to the following elements.  Each paragraph should have a h4 title and a p element with four sentances.   Do not referance any real people";
+	public static final String AIAUTHORLONG = "Imagined backgroud of an author whos has some relevance to the following elements.  Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences. Do not referance any real people";
 
 	public static final String AIAUTHORSHORT = "Review this content and summarize one paragraphs.   Do not referance any real people";
 
@@ -48,7 +48,7 @@ public class AIConstants {
 
 	public static final String AITAGS = "Review this content and suggest a list of 10 tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
 
-	public static final String AILANG = "Respond only with the provided text in the same format as provided in ";
+	public static final String AILANG = "Translate the text into ";
 
 	public static final String AIERROR = "The spirits are resless, ask your qustions again.";
 

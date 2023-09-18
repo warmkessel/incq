@@ -126,7 +126,7 @@ public class ReviewDetailsList {
 		switch (step) {
 		case STEP1: // translate Introduction"
 			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),
-					AIConstants.AILANG + lang.name, "", reviewDetails.getIntroduction()));
+					 AIConstants.AILANG + " BPC-47(" + lang.code +"):", "", reviewDetails.getIntroduction()));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
@@ -134,7 +134,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP2: // translate Review"
 			reviewDetails.setReviewBody(AIManager.editTextChunk(reviewDetails.getReviewBody(),
-					AIConstants.AILANG + lang.name, "", reviewDetails.getReviewBody()));
+					 AIConstants.AILANG + " BPC-47(" + lang.code +"):", "", reviewDetails.getReviewBody()));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
@@ -142,14 +142,14 @@ public class ReviewDetailsList {
 			break;
 		case STEP3: // translate Conclusion"
 			reviewDetails.setConclusion(AIManager.editText(reviewDetails.getConclusion(),
-					AIConstants.AILANG + lang.name, "", reviewDetails.getConclusion()));
+					 AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", "", reviewDetails.getConclusion()));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP4: // translate Summary"
-			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(), AIConstants.AILANG + lang.name, "",
+			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
 					reviewDetails.getSummary()));
 
 			if (continueExpand) {
@@ -157,7 +157,7 @@ public class ReviewDetailsList {
 			}
 			break;
 		case STEP5: // translate Title"
-			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(), AIConstants.AILANG + lang.name, "",
+			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
 					reviewDetails.getTitle()));
 
 			if (continueExpand) {
@@ -165,7 +165,7 @@ public class ReviewDetailsList {
 			}
 			break;
 		case STEP6: // translate Name"
-			reviewDetails.setName(AIManager.editText(reviewDetails.getName(), AIConstants.AILANG + lang.name, "",
+			reviewDetails.setName(AIManager.editText(reviewDetails.getName(),   AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
 					reviewDetails.getName()));
 
 			if (continueExpand) {
@@ -173,7 +173,7 @@ public class ReviewDetailsList {
 			}
 			break;
 		case STEP7: // translate Desc"
-			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(), AIConstants.AILANG + lang.name, "",
+			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
 					reviewDetails.getDesc()));
 
 			if (continueExpand) {

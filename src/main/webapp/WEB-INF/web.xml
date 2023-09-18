@@ -40,9 +40,22 @@
 	<servlet>
 		<servlet-name>AuthorRedirectServlet</servlet-name>
 		<jsp-file>/author.jsp</jsp-file>
-	</servlet>	<servlet>
+	</servlet>
+	<servlet>
 		<servlet-name>ReviewRedirectServlet</servlet-name>
 		<jsp-file>/review.jsp</jsp-file>
+	</servlet>
+		<servlet>
+		<servlet-name>AdminAuthorRedirectServlet</servlet-name>
+		<jsp-file>/admin/author.jsp</jsp-file>
+	</servlet>
+	<servlet>
+		<servlet-name>AdminReviewRedirectServlet</servlet-name>
+		<jsp-file>/admin/review.jsp</jsp-file>
+	</servlet>
+		<servlet>
+		<servlet-name>SitemapServlet</servlet-name>
+		<jsp-file>/sitemap.jsp</jsp-file>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>AiPlugin</servlet-name>
@@ -71,6 +84,18 @@
 	<servlet-mapping>
 		<servlet-name>ReviewRedirectServlet</servlet-name>
 		<url-pattern>/review/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AdminAuthorRedirectServlet</servlet-name>
+		<url-pattern>/admin/author/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AdminReviewRedirectServlet</servlet-name>
+		<url-pattern>/admin/review/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SitemapServlet</servlet-name>
+		<url-pattern>/sitemap.xml</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

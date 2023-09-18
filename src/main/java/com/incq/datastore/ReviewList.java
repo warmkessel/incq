@@ -23,7 +23,7 @@ import com.incq.exception.IncqServletException;
 public class ReviewList {
 	static Logger logger = Logger.getLogger(ReviewList.class.getName());
 
-	public static List<Entity> fetchBookmaredEntities() {
+	private static List<Entity> fetchBookmaredEntities(boolean bookmarked) {
 
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -31,16 +31,23 @@ public class ReviewList {
 				.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.BOOKMARKED, true),
 						PropertyFilter.eq(ReviewConstants.DELETED, false)))
 				.build();
-
+		
+		if(!bookmarked) {
+			query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW)
+					.setFilter(PropertyFilter.eq(ReviewConstants.DELETED, false))
+					.build();
+		}
 		// Run the query and retrieve a list of matching entities
 		QueryResults<Entity> results = datastore.run(query);
 		List<Entity> entities = Lists.newArrayList(results);
 		return entities;
 	}
 
+	
+	
 	public static ArrayList<Review> fetchBookmaredReviews(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
-		List<Entity> entitys = fetchBookmaredEntities();
+		List<Entity> entitys = fetchBookmaredEntities(true);
 		for (int x = 0; x < entitys.size(); x++) {
 			Review review = new Review();
 			review.loadFromEntity(entitys.get(x), lang);
@@ -48,7 +55,16 @@ public class ReviewList {
 		}
 		return theReturn;
 	}
-
+	public static ArrayList<Review> fetchReviewSiteMap(Language lang) {
+		ArrayList<Review> theReturn = new ArrayList<Review>();
+		List<Entity> entitys = fetchBookmaredEntities(false);
+		for (int x = 0; x < entitys.size(); x++) {
+			Review review = new Review();
+			review.loadFromEntity(entitys.get(x), lang);
+			theReturn.add(review);
+		}
+		return theReturn;
+	}
 	public static Entity fetchReview(String slug) {
 		return fetchReview(slug, true);
 	}

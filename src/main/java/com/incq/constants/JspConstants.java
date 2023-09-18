@@ -1,6 +1,7 @@
 package com.incq.constants;
 
 public class JspConstants {
+	public static final String INCQ = "https://incq.com/";
 	public static final String INDEX = "/index.jsp";
 	public static final String CONTACT = "/contact.jsp";
 	public static final String PRIVACY = "/privacy.jsp";
@@ -11,6 +12,12 @@ public class JspConstants {
 	public static final String AUTHORSEO = "/author/";
 	public static final String REVIEWSEO = "/review/";
 
+	public static final String ADMIN = "/admin";
+
+	public static final String ADMININDEX = ADMIN + "/index.jsp";
+	public static final String ADMINAUTHORSEO = ADMIN + "/author/";
+	public static final String ADMINREVIEWSEO = ADMIN + "/review/";
+	
 	
 	public static final String EXPANDREVIEW = "/tasks/expandReview";
 	public static final String EXPANDREVIEWDETAILS = "/tasks/expandReviewDetails";

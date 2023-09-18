@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.*;
 
 public class Author extends BaseEntity implements Comparable<Author> {
@@ -167,7 +168,8 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		Key key = getKey();
 		Entity.Builder entity = Entity.newBuilder(key);
 		entity.set(AuthorConstants.DELETED, isDeleted()).set(AuthorConstants.BOOKMARKED, isBookmarked())
-				.set(AuthorConstants.CREATEDDATE, getCreatedDate()).set(AuthorConstants.UPDATEDDATE, getUpdatedDate())
+		.set(ReviewConstants.CREATEDDATE, getCreatedDate())
+		.set(AuthorConstants.UPDATEDDATE, Timestamp.now())
 				.set(AuthorConstants.NAME, getName())
 				.set(AuthorConstants.LONGDESC,
 						StringValue.newBuilder(getLongDescription()).setExcludeFromIndexes(true).build())
@@ -194,6 +196,11 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		loadFromEntity(event);
 	}
 
+	public void loadFromEntitySiteMap(Entity entity) {
+		super.loadFromEntity(entity);
+		setName(entity.getString(AuthorConstants.NAME));
+
+	}
 	public void loadFromEntity(Entity entity) {
 		super.loadFromEntity(entity);
 		if (null != entity) {

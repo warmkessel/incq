@@ -35,8 +35,8 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the INCQ Reviews">
-<meta name="author" content="Incq.com">
+<meta name="description" content="Here are our most recognized authors">
+<meta name="author" content="INCQ Authors">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
 <title>INCQ Reviews - Authors</title>
@@ -88,13 +88,13 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>

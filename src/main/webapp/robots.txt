@@ -1,6 +1,7 @@
-# brandonsbaseballcards.com/robots.txt
-# Tell Google not to crawl any URLs in the shopping cart or images in the icons folder,
+# incq.com/robots.txt
+# Tell Google not to crawl any URLs in the admin or a folder,
 # because they won't be useful in Google Search results.
+sitemap: https://incq.com/sitemap.xml
 User-agent: googlebot
 Disallow: /admin/
 Disallow: /a/

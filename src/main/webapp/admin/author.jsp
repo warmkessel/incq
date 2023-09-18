@@ -23,7 +23,6 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 <head>
 <%
 Author author = new Author();
-
 Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
@@ -32,18 +31,39 @@ if (null != langString && langString.length() > 0) {
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
-String name = (String) request.getParameter(JspConstants.NAME);
 
-if (null != id && id.length() > 0 && !id.equals("0")) {
+if (null != id && id.length() > 0) {
 	author.loadAuthor(new Long(id).longValue());
-} else if (null != name && name.length() > 0) {
-	author.loadAuthorAdmin(name, lang);
 }
-long authorDate = 0;
-
+else{
+	String name = (String) request.getParameter(JspConstants.NAME);
+	if(null == name || name.length() ==0){
+		 // Get the full URL and query string
+	    String requestURL = request.getRequestURL().toString();
+	    String requestURI = request.getRequestURI();
+	    String contextPath = request.getContextPath();
+	    
+	    // Extract the part after "/author/"
+	    String prefix = contextPath + JspConstants.ADMINAUTHORSEO;	    
+	    if (requestURI.startsWith(prefix)) {
+	        name = requestURI.substring(prefix.length());
+	        // URL decode to convert any '+' to ' ' and '%' encoding to characters
+	        name = URLDecoder.decode(name, "UTF-8");
+	    }
+	}
+	
+	
+	if (null != name && name.length() > 0) {
+		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
+	}
+	else{
+		author.loadAuthor(AuthorConstants.DEFAULTID);
+	}
+}
 Boolean deleted = Boolean.FALSE;
 Boolean bookmarked = Boolean.FALSE;
 String style = (String) request.getParameter(JspConstants.STYLE);
+String nameParam = (String) request.getParameter(JspConstants.NAME);
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 String shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 Set<String> tag = new HashSet<String>();
@@ -83,8 +103,8 @@ if (null != request.getParameter(JspConstants.BOOKMARKED)
 }
 
 if (null != request.getParameter(JspConstants.NAME) && request.getParameter(JspConstants.NAME).length() > 0) {
-	name = (String) request.getParameter(JspConstants.NAME);
-	author.setName(name);
+	nameParam = (String) request.getParameter(JspConstants.NAME);
+	author.setName(nameParam);
 	dirty = true;
 }
 if (null != request.getParameter(JspConstants.STYLE) && request.getParameter(JspConstants.STYLE).length() > 0) {
@@ -114,7 +134,7 @@ if (dirty && save) {
 langList = request.getParameterValues(JspConstants.LANGUAGELIST);
 
 if (null != langList && langList.length > 0) {
-	AuthorList.expandLanguage(name, langList);
+	AuthorList.expandLanguage(author.getName(), langList);
 }
 %>
 </head>

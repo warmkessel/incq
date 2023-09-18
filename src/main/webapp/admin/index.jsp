@@ -17,6 +17,12 @@ if(!userService.isUserLoggedIn() || !userService.isUserAdmin()){
 <body>
 	<ul>
 		<li><a href="https://analytics.google.com/analytics/web/">https://analytics.google.com/analytics/web/</a></li>
+		<li><a href="https://cloud.google.com/">https://cloud.google.com/</a>
+		<ul><li><a href="https://console.cloud.google.com/cloudtasks/queue/us-west1/Incq/tasks?hl=en&project=incq-397620">CloudTasks</a></li>
+		<li><a href="https://console.cloud.google.com/appengine?hl=en&project=incq-397620">App Engine</a></li>
+		<li><a href="https://console.cloud.google.com/datastore/databases/-default-/entities;kind=ReviewDetails;ns=__$DEFAULT$__/query/kind?hl=en&project=incq-397620">DataStore</a></li>
+		</ul></li>
+		<li><a href="site:incq.com">site:incq.com</a></li>
 		<li><ul>
 				<li><a href="https://twitter.com/shrinesecrets">https://twitter.com/shrinesecrets</a></li>
 				<li><a href="https://www.facebook.com/ShrineofLostSecrets">https://www.facebook.com/ShrineofLostSecrets</a></li>

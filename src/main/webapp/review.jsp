@@ -112,9 +112,19 @@ try {
 						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+					<%
+					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
+					%>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMINAUTHORSEO%><%=author.getName()%>" target="_blank">Ad Author</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMINREVIEWSEO%><%=review.getSlug()%>" target="_blank">Ad Review</a></li>
+					<%}%>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.REVIEW%>"
+					<li class="nav-item"><form action="<%=JspConstants.REVIEWSEO%><%=review.getSlug()%>"
 							method="get" id="languageForm">
 							<select name="la"
 								onchange="document.getElementById('languageForm').submit();">
@@ -125,21 +135,20 @@ try {
 									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 									<%=langEnum.name%></option>
 								<%}%>
-							</select><input type=hidden name="<%=JspConstants.ID%>"
-								value="<%=idLong%>">
+							</select>
 						</form></li>
 				</ul>
 				<%
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>
@@ -154,7 +163,7 @@ try {
 					<h4>
 						<a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a>
 						by - <a
-							href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getName()%></a>
+							href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"><%=author.getName()%></a>
 					</h4>
 					<img border="0" src="<%=review.getMediaList().get(0)%>"
 						alt="<%=review.getReviewDetails().getDesc()%>">

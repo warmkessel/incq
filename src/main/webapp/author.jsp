@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.net.URLDecoder"%>
 <%@ page import="org.json.*"%>
 <%@ page import="com.incq.entity.*"%>
 <%@ page import="com.incq.datastore.*"%>
@@ -14,7 +14,8 @@ boolean isMobile = userAgent.matches(".*Mobile.*");
 
 Author author = new Author();
 
-
+UserService userService = UserServiceFactory.getUserService();
+User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
 
 String langString = (String) request.getParameter(JspConstants.LANGUAGE);
@@ -23,32 +24,29 @@ if (null != langString && langString.length() > 0) {
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
-String name = (String) request.getParameter(JspConstants.NAME);
 
 if (null != id && id.length() > 0) {
 	author.loadAuthor(new Long(id).longValue());
-}
-else{
-	if(null == name || name.length() ==0){
-		 // Get the full URL and query string
-	    String requestURL = request.getRequestURL().toString();
-	    String requestURI = request.getRequestURI();
-	    String contextPath = request.getContextPath();
-	    
-	    // Extract the part after "/author/"
-	    String prefix = contextPath + JspConstants.AUTHORSEO;	    
-	    if (requestURI.startsWith(prefix)) {
-	        name = requestURI.substring(prefix.length());
-	        // URL decode to convert any '+' to ' ' and '%' encoding to characters
-	        name = URLDecoder.decode(name, "UTF-8");
-	    }
+} else {
+	String name = (String) request.getParameter(JspConstants.NAME);
+	if (null == name || name.length() == 0) {
+		// Get the full URL and query string
+		String requestURL = request.getRequestURL().toString();
+		String requestURI = request.getRequestURI();
+		String contextPath = request.getContextPath();
+
+		// Extract the part after "/author/"
+		String prefix = contextPath + JspConstants.AUTHORSEO;
+		if (requestURI.startsWith(prefix)) {
+	name = requestURI.substring(prefix.length());
+	// URL decode to convert any '+' to ' ' and '%' encoding to characters
+	name = URLDecoder.decode(name, "UTF-8");
+		}
 	}
-	
-	
+
 	if (null != name && name.length() > 0) {
 		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
-	}
-	else{
+	} else {
 		author.loadAuthor(AuthorConstants.DEFAULTID);
 	}
 }
@@ -58,26 +56,27 @@ try {
 } catch (NumberFormatException e) {
 	idLong = 0L; // Set value to 0 in case of NumberFormatException
 }
-
-
-
 %><!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
-<script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<script async=true
+	src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
 
-  gtag('config', 'G-PMGYN3L4QF');
+	gtag('config', 'G-PMGYN3L4QF');
 </script>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the INCQ Reviews">
-<meta name="author" content="Incq.com">
+<meta name="description"
+	content="Reviews by: <%=author.getName()%> <%=author.getShortDescription()%>">
+<meta name="author" content="INCQ: <%=author.getName()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
@@ -113,19 +112,50 @@ try {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact
-							Us</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+					<%
+					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
+					%>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMINAUTHORSEO%><%=author.getName()%>" target="_blank">Admin Author</a></li>
+					<%}%>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.AUTHORSEO%><%=author.getName() %>" method="get" id="languageForm">
-            			<select name="la" onchange="document.getElementById('languageForm').submit();">
-      				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
-					<%}%>
-    </select></form></li>
+					<li class="nav-item"><form
+							action="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
+							method="get" id="languageForm">
+							<select name="la"
+								onchange="document.getElementById('languageForm').submit();">
+								<%
+								for (Language langEnum : Language.values()) {
+								%>
+								<option value="<%=langEnum.code%>"
+									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+									<%=langEnum.name%></option>
+								<%}%>
+							</select>
+						</form></li>
 				</ul>
+				<%
+				if (currentUser != null) {
+				%>
+				<a
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<%
+				} else {
+				%>
+				<a
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					class="btn btn-primary btn-sm">Login/Register</a>
+				<%}%>
 			</div>
 		</div>
 	</nav>
@@ -135,10 +165,10 @@ try {
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-						<h4><%= author.getName()%></h4>
-						<p>
-						<%= author.getLongDescription() %>
-						</p>
+					<h4><%=author.getName()%></h4>
+					<p>
+						<%=author.getLongDescription()%>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -151,13 +181,16 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ"
-						class="mb-0"></a>
+					<a href="<%=JspConstants.INDEX%>"><img
+						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Home</small></a> <a
+						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small
+						class="font-weight-bold">Authors</small></a> <a
+						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small
+						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -173,7 +206,9 @@ try {
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
+						, INCQ All rights reserved - As an Amazon Associate we earn from
+						qualifying purchases. -
+						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">

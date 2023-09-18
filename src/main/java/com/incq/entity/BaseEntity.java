@@ -1,6 +1,10 @@
 package com.incq.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 
 import com.google.cloud.datastore.Datastore;
@@ -93,9 +97,17 @@ public  abstract class BaseEntity implements  Serializable {
 		this.createdDate = createdDate;
 	}
 
+	public String getUpdatedDateShort() {
+		return getFormatted(getUpdatedDate());
+		
+	}
 	public Timestamp getUpdatedDate() {
 		return updatedDate;
 	}
+	
+	
+	 
+	 
 	public void setUpdatedDate() {
 		setUpdatedDate(Timestamp.now());
 	}
@@ -108,4 +120,17 @@ public  abstract class BaseEntity implements  Serializable {
 		return DatastoreOptions.getDefaultInstance().getService();
 
 	}
+	public static String getFormatted(Timestamp timestamp) {
+        // Convert the Timestamp to a java.util.Date object
+        Date date = timestamp.toDate();
+
+        // Convert the java.util.Date to a LocalDate object
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Define the target date format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // Format the LocalDate object into the target date format
+        return localDate.format(formatter);
+    }
 }

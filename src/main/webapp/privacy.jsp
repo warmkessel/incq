@@ -138,12 +138,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 						<%
 						if (currentUser != null) {
 						%> <a
-						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 						class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 						<%
 						} else {
 						%> <a
-						href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+						href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 						class="btn btn-primary btn-sm">Login/Register</a> <%}%>
 					</p>
 				</div>

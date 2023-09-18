@@ -8,6 +8,7 @@ import com.incq.constants.Constants;
 import com.incq.constants.Language;
 import com.incq.constants.ReviewConstants;
 import com.incq.datastore.ReviewDetailsList;
+import com.google.cloud.Timestamp;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.ListValue;
@@ -71,6 +72,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void setIntroduction(String introduction) {
 		this.introduction = introduction;
 	}
+
 	public String getReviewBody() {
 		return reviewBody;
 	}
@@ -78,8 +80,6 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void setReviewBody(String reviewBody) {
 		this.reviewBody = reviewBody;
 	}
-	
-	
 
 	public String getConclusion() {
 		return conclusion;
@@ -138,7 +138,9 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void save() {
 		Entity.Builder entity = Entity.newBuilder(getKey());
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.CREATEDDATE, getCreatedDate())
-				.set(ReviewConstants.UPDATEDDATE, getUpdatedDate()).set(ReviewConstants.SUMMARY, getSummary())
+				.set(ReviewConstants.UPDATEDDATE, Timestamp.now())
+				.set(ReviewConstants.SUMMARY,
+						StringValue.newBuilder(getSummary()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage().code)
 				.set(ReviewConstants.REVIEW, getReviewId()).set(ReviewConstants.NAME, getName())
 				.set(ReviewConstants.DESC, getDesc())
@@ -201,8 +203,8 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + '\'' + ", \" + NAME + \"='" + name + '\''
 				+ ", \" + DESC + \"='" + desc + '\'' + ", \" + TITLE + \"='" + title + '\''
 				+ ReviewConstants.COMPACTDESC + '\'' + '\'' + ", \" + INTRODUCTION + \"='" + introduction + '\''
-				+ ", \" + REVIEWBODY + \"='" + getReviewBody() + '\'' + ", \" + CONCLUSION + \"='" + conclusion
-				+ '\'' + ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
+				+ ", \" + REVIEWBODY + \"='" + getReviewBody() + '\'' + ", \" + CONCLUSION + \"='" + conclusion + '\''
+				+ ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
 	}
 
 	public int compareTo(ReviewDetails other) {

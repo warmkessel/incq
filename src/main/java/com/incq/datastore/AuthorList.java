@@ -21,14 +21,21 @@ public class AuthorList {
 
 	static Logger logger = Logger.getLogger(AuthorList.class.getName());
 
-	private static List<Entity> fetchAuthorsList(Language lang) {
+	private static List<Entity> fetchAuthorsList(Language lang, boolean bookmarked) {
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		Query<Entity> query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
-				.setFilter(CompositeFilter.and(PropertyFilter.eq(AuthorConstants.BOOKMARKED, true),
-						PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
-						PropertyFilter.eq(AuthorConstants.DELETED, false)))
-				.build();
-
+		Query<Entity> query = null;
+		if (bookmarked) {
+			query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(AuthorConstants.BOOKMARKED, bookmarked),
+							PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
+							PropertyFilter.eq(AuthorConstants.DELETED, false)))
+					.build();
+		} else {
+			query = Query.newEntityQueryBuilder().setKind(AuthorConstants.AUTHOR)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
+							PropertyFilter.eq(AuthorConstants.DELETED, false)))
+					.build();
+		}
 		// Run the query and retrieve a list of matching entities
 		QueryResults<Entity> results = datastore.run(query);
 		List<Entity> entities = Lists.newArrayList(results);
@@ -37,7 +44,7 @@ public class AuthorList {
 
 	public static ArrayList<Author> fetchAuthors(Language lang) {
 		ArrayList<Author> theReturn = new ArrayList<Author>();
-		List<Entity> entitys = fetchAuthorsList(lang);
+		List<Entity> entitys = fetchAuthorsList(lang, true);
 		for (int x = 0; x < entitys.size(); x++) {
 			Author author = new Author();
 			author.loadFromEntity(entitys.get(x));
@@ -46,9 +53,21 @@ public class AuthorList {
 		return theReturn;
 	}
 
+	public static ArrayList<Author> fetchAuthorsSiteMap(Language lang) {
+		ArrayList<Author> theReturn = new ArrayList<Author>();
+		List<Entity> entitys = fetchAuthorsList(lang, false);
+		for (int x = 0; x < entitys.size(); x++) {
+			Author author = new Author();
+			author.loadFromEntitySiteMap(entitys.get(x));
+			theReturn.add(author);
+		}
+		return theReturn;
+	}
+
 	public static Entity fetchAuthor(String name, Language lang) {
 		return fetchAuthor(name, lang, true, false);
 	}
+
 	public static Entity fetchAuthor(String name, Language lang, boolean guarantee) {
 		return fetchAuthor(name, lang, guarantee, false);
 	}
@@ -99,7 +118,7 @@ public class AuthorList {
 		}
 		return theReturn;
 	}
-	
+
 	public static Map<Language, Boolean> checkAuthorLanguages(String name) {
 		HashMap<Language, Boolean> theReturn = new HashMap<Language, Boolean>();
 		for (Language langEnum : Language.values()) {
@@ -148,56 +167,65 @@ public class AuthorList {
 		}
 	}
 
-	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand)throws IncqServletException{
-		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step), Boolean.valueOf(continueExpand));
+	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand)
+			throws IncqServletException {
+		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step),
+				Boolean.valueOf(continueExpand));
 	}
 
-	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand)throws IncqServletException {
+	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand)
+			throws IncqServletException {
 		Author auth = new Author();
 		auth.loadAuthor(key);
 		switch (step) {
 		case STEP1:// Suggest an Authors Name
 			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
-			if(continueExpand) {
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP2:// Suggest a Style
 			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE, auth.getStyle()));
-			if(continueExpand) {
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP3:// Suggest some Tags
 			auth.setTags(AIManager.editText(auth.getStyle() + auth.getTagsString(), AIConstants.AITAGS,
 					auth.getTagsString()));
-			if(continueExpand) {
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP4:// Suggest Long Description"
 			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG,
 					auth.getStyle(), auth.getLongDescription()));
-			if(continueExpand) {
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP5:// Suggest Short Description"
 			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
 					auth.getStyle(), auth.getShortDescription()));
-			if(continueExpand) {
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP6:// Translate Short Description
 
-			auth.setShortDescription(AIManager.editText(auth.getShortDescription(), AIConstants.AILANG + lang.name,
-					auth.getShortDescription()));
-			if(continueExpand) {
+			auth.setShortDescription(AIManager.editText(auth.getShortDescription(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", auth.getShortDescription()));
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP7:// Translate Long Description"
-//			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(), AIConstants.AILANG + lang.name,"",
-//					auth.getLongDescription()));
-			if(continueExpand) {
+			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", "", auth.getLongDescription()));
+			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}			break;
+			}
+			break;
 		case STEP8:// Enable
 			auth.setDeleted(false);
 			break;

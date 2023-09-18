@@ -82,6 +82,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+						<%if(userService.isUserLoggedIn() && userService.isUserAdmin()){ %>
+						<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
+						<%}%>
+						
+						
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form
@@ -103,13 +109,13 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>
@@ -202,5 +208,11 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 
 	</footer>
 	<!-- End of Page Footer -->
+	<!-- core  -->
+	<script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+	<script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+	<!-- bootstrap affix -->
+	<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
 </body>
 </html>

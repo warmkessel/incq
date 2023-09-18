@@ -66,7 +66,7 @@ public class AIManager {
 			throws IncqServletException {
 		String theReturn = "";
 		// input = removeUnusual(input);
-
+		input = input.trim();
 		if (style.length() > 0) {
 			style = AIConstants.AIMANAGERSTYLE + style;
 		}
