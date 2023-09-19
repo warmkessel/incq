@@ -322,8 +322,8 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button" value="Step 7 - Translate Description"
-			onclick="appendToUrlAndFetch('step7')">
+		%><input type="button" value="Step 2 - Translate Description"
+			onclick="appendToUrlAndFetch('step2')">
 		<%}%><br> Title:<input type="text" name="<%=JspConstants.TITLE%>"
 			value="<%=review.getReviewDetails().getTitle()%>" size="50">
 		<%
@@ -354,8 +354,8 @@ if (null != langList && langList.length > 0) {
 			cols="80"><%=review.getReviewDetails().getIntroduction()%></textarea>
 		<%
 		if (Language.ENGLISH.equals(lang)) {
-		%><input type="button" value="Step 7 - Write the introductions"
-			onclick="appendToUrlAndFetch('step7')">
+		%><input type="button" value="Step 2 - Write the introductions"
+			onclick="appendToUrlAndFetch('step2')">
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
@@ -371,8 +371,8 @@ if (null != langList && langList.length > 0) {
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {
-		%><input type="button" value="Step 2 - Translate Review"
-			onclick="appendToUrlAndFetch('step2')">
+		%><input type="button" value="Step 7 - Translate Review"
+			onclick="appendToUrlAndFetch('step7')">
 		<%}%>
 		<br> Conclusion:
 		<textarea name="<%=JspConstants.CONCLUSIONDESC%>" rows="20" cols="80"><%=review.getReviewDetails().getConclusion()%></textarea>

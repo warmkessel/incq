@@ -29,9 +29,12 @@ public class ExpandReviewDetailsTask extends HttpServlet {
 		String langString = req.getParameter(JspConstants.LANGUAGE);
 		String stepString = req.getParameter(JspConstants.STEP);
 		String contString = req.getParameter(JspConstants.CONTINUE);
-
+		String positionString = req.getParameter(JspConstants.POSITION);
+		if(null == positionString || positionString.length() == 0) {
+			positionString = "0";
+		}
 		// Call your method here
-		ReviewDetailsList.expandReviewDetailSteps(keyString, langString, stepString, contString);
+		ReviewDetailsList.expandReviewDetailSteps(keyString, langString, stepString, positionString, contString);
 		
 	}
 }

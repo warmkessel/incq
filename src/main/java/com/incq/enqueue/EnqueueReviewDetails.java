@@ -15,12 +15,15 @@ public class EnqueueReviewDetails {
 	static Logger logger = Logger.getLogger(EnqueueReviewDetails.class.getName());
 
 	static public void enqueueReviewDetailsTask(Long key, Language lang, ReviewDetailsStep step, boolean continueExpand) {
+		enqueueReviewDetailsTask(key, lang, step, 0, continueExpand);
+	}
+	static public void enqueueReviewDetailsTask(Long key, Language lang, ReviewDetailsStep step, int position, boolean continueExpand) {
 		try (CloudTasksClient client = CloudTasksClient.create()) {
 
 			String parent = "projects/incq-397620/locations/us-west1/queues/Incq";
 
 			// Prepare POST parameters
-			String postData = JspConstants.ID + "=" + key + "&" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.STEP + "=" + step.name + "&" + JspConstants.CONTINUE + "=" + continueExpand;
+			String postData = JspConstants.ID + "=" + key + "&" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.STEP + "=" + step.name  + "&" + JspConstants.POSITION + "=" + position+ "&" + JspConstants.CONTINUE + "=" + continueExpand;
 			HttpRequest httpRequest = HttpRequest.newBuilder().setBody(ByteString.copyFromUtf8(postData))
 					.setHttpMethod(HttpMethod.POST).setUrl("https://incq-397620.appspot.com" + JspConstants.EXPANDREVIEWDETAILS)
 					.putHeaders("Content-Type", "application/x-www-form-urlencoded") // Important for POST parameters

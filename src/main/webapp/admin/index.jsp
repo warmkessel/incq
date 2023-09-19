@@ -21,6 +21,7 @@ if(!userService.isUserLoggedIn() || !userService.isUserAdmin()){
 		<ul><li><a href="https://console.cloud.google.com/cloudtasks/queue/us-west1/Incq/tasks?hl=en&project=incq-397620">CloudTasks</a></li>
 		<li><a href="https://console.cloud.google.com/appengine?hl=en&project=incq-397620">App Engine</a></li>
 		<li><a href="https://console.cloud.google.com/datastore/databases/-default-/entities;kind=ReviewDetails;ns=__$DEFAULT$__/query/kind?hl=en&project=incq-397620">DataStore</a></li>
+		<li><a href="https://search.google.com/search-console?resource_id=sc-domain:incq.com">Search.google.com</a></li>
 		</ul></li>
 		<li><a href="site:incq.com">site:incq.com</a></li>
 		<li><ul>

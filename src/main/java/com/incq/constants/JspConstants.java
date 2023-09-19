@@ -50,6 +50,7 @@ public class JspConstants {
 
 	public static final String STEP = "step";
 	public static final String CONTINUE = "cont";
+	public static final String POSITION = "pos";
 	
 
 	public static final String RESET = "reset";

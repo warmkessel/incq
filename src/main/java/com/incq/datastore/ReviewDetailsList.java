@@ -26,25 +26,26 @@ public class ReviewDetailsList {
 	public static Entity fetchEventDetails(long key, Language lang, boolean guarantee) {
 		return fetchEventDetails(key, lang, guarantee, false);
 	}
+
 	public static Entity fetchEventDetailsAdmin(long key, Language lang, boolean guarantee) {
 		return fetchEventDetails(key, lang, guarantee, true);
 	}
+
 	public static Entity fetchEventDetails(long key, Language lang, boolean guarantee, boolean admin) {
 		Entity theReturn = null;
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		Query<Entity> query = null;
 		if (admin) {
-			 query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEWDETAILS)
-						.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.REVIEW, key),
-								PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code)))
-						.build();
-		}
-		else {
-			 query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEWDETAILS)
-						.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.REVIEW, key),
-								PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
-								PropertyFilter.eq(ReviewConstants.DELETED, false)))
-						.build();
+			query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEWDETAILS)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.REVIEW, key),
+							PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code)))
+					.build();
+		} else {
+			query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEWDETAILS)
+					.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.REVIEW, key),
+							PropertyFilter.eq(ReviewConstants.LANGUAGE, lang.code),
+							PropertyFilter.eq(ReviewConstants.DELETED, false)))
+					.build();
 			// Run the query and retrieve a list of matching entities
 		}
 		QueryResults<Entity> results = datastore.run(query);
@@ -78,8 +79,8 @@ public class ReviewDetailsList {
 				rdetailSub.setReviewBody(rdetail.getReviewBody());
 				rdetailSub.setConclusion(rdetail.getConclusion());
 				rdetailSub.save();
-				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getReviewId(), lang,
-				 ReviewDetailsStep.STEP1, true);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getReviewId(), lang, ReviewDetailsStep.STEP1,
+						true);
 
 			}
 		}
@@ -97,6 +98,7 @@ public class ReviewDetailsList {
 		}
 		return theReturn;
 	}
+
 	public static Map<Language, Boolean> checkReviewDetailsLanguages(long key) {
 		HashMap<Language, Boolean> theReturn = new HashMap<Language, Boolean>();
 		for (Language langEnum : Language.values()) {
@@ -110,88 +112,139 @@ public class ReviewDetailsList {
 		return theReturn;
 	}
 
-	public static void expandReviewDetailSteps(String key, String lang, String step, String continueExpand) throws IncqServletException {
+	public static void expandReviewDetailSteps(String key, String lang, String step, String position,
+			String continueExpand) throws IncqServletException {
 		expandReviewDetailSteps(Long.valueOf(key), Language.findByCode(lang), ReviewDetailsStep.findByName(step),
-				Boolean.valueOf(continueExpand));
+				Integer.valueOf(position), Boolean.valueOf(continueExpand));
 
 	}
 
-	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step,
+	public static void expandReviewDetailSteps(Long key, Language lang, ReviewDetailsStep step, int position,
 			boolean continueExpand) throws IncqServletException {
 		ReviewDetails reviewDetails = new ReviewDetails();
 		reviewDetails.loadEvent(key, lang, true);
-		logger.log(Level.INFO, "AuthorStep Fail key " + key + " lang " + lang + " step " + step);
+		expandReviewDetailSteps(reviewDetails, lang, step, position, continueExpand);
 
-		
+	}
+
+	public static void expandReviewDetailSteps(ReviewDetails reviewDetails, Language lang, ReviewDetailsStep step,
+			int position, boolean continueExpand) throws IncqServletException {
 		switch (step) {
 		case STEP1: // translate Introduction"
 			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),
-					 AIConstants.AILANG + " BPC-47(" + lang.code +"):", "", reviewDetails.getIntroduction()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "",
+					reviewDetails.getIntroduction()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
-		case STEP2: // translate Review"
-			reviewDetails.setReviewBody(AIManager.editTextChunk(reviewDetails.getReviewBody(),
-					 AIConstants.AILANG + " BPC-47(" + lang.code +"):", "", reviewDetails.getReviewBody()));
+		case STEP2: // translate Desc"
+			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getDesc()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
 		case STEP3: // translate Conclusion"
 			reviewDetails.setConclusion(AIManager.editText(reviewDetails.getConclusion(),
-					 AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", "", reviewDetails.getConclusion()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", reviewDetails.getConclusion()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
 		case STEP4: // translate Summary"
-			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
-					reviewDetails.getSummary()));
+			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getSummary()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
 		case STEP5: // translate Title"
-			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
-					reviewDetails.getTitle()));
+			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getTitle()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
 		case STEP6: // translate Name"
-			reviewDetails.setName(AIManager.editText(reviewDetails.getName(),   AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
-					reviewDetails.getName()));
+			reviewDetails.setName(AIManager.editText(reviewDetails.getName(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getName()));
 
 			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
 			}
 			break;
-		case STEP7: // translate Desc"
-			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(),  AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):",
-					reviewDetails.getDesc()));
-
-			if (continueExpand) {
-				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(), continueExpand);
-			}
+		case STEP7: // translate Review"
+			reviewDetails.setReviewBody(translateString(reviewDetails.getReviewBody(), reviewDetails, lang, step,
+					position, continueExpand));
 			break;
-			
 		case STEP8:
 			reviewDetails.setDeleted(false);
 			break;
 		case FAIL:
-			logger.log(Level.SEVERE, "AuthorStep Fail key " + key + " lang " + lang + " step " + step);
+			logger.log(Level.SEVERE,
+					"AuthorStep Fail key " + reviewDetails.getKeyLong() + " lang " + lang + " step " + step);
 			break;
 		default:
-			logger.log(Level.SEVERE, "Default Fail key " + key + " lang " + lang + " step " + step);
+			logger.log(Level.SEVERE,
+					"Default Fail key " + reviewDetails.getKeyLong() + " lang " + lang + " step " + step);
 
 		}
 		reviewDetails.save();
 
+	}
+
+	private static String translateString(String input, ReviewDetails reviewDetails, Language lang,
+			ReviewDetailsStep step, int position, boolean continueExpand) throws IncqServletException {
+		StringBuffer theReturn = new StringBuffer();
+		String subString = "";
+		String[] theSplit = input.split("\r\n");
+		if(0 == position) {
+			for (int x = 0; x < theSplit.length; x++) {
+				if(0<theSplit[x].trim().length()) {
+					theReturn.append(theSplit[x]).append("\r\n");
+				}
+			}
+			theSplit = theReturn.toString().split("\r\n");
+			theReturn = new StringBuffer();
+		}
+		if(position >= 0 && position < theSplit.length) {
+			subString = theSplit[position];
+		}
+		int numOfTries = 10;
+		while (numOfTries > 0 && subString.length() > 0) {
+			try {
+				theSplit[position] = AIManager.editText(subString,
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", subString);
+				numOfTries = 0;
+			} catch (IncqServletException incq) {
+				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);
+				numOfTries = numOfTries - 1;
+			}
+
+			position = position + 1;
+			if (position < theSplit.length) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step, position,
+						continueExpand);
+			} else if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
+		}
+		for (int x = 0; x < theSplit.length; x++) {
+			theReturn.append(theSplit[x]).append("\r\n");
+		}
+		return theReturn.toString();
 	}
 }
