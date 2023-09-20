@@ -25,9 +25,17 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 Author author = new Author();
 Language lang = Language.ENGLISH;
 
-String langString = (String) request.getParameter(JspConstants.LANGUAGE);
-if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+String requestUrl = request.getRequestURL().toString();
+URL url = new URL(requestUrl);
+String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
+if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
+	if (null != langString && langString.length() > 0) {
+		lang = Language.findByCode(langString);
+	}
+}
+else{
+	lang = Language.findByCode(subDomain);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
@@ -54,7 +62,7 @@ else{
 	
 	
 	if (null != name && name.length() > 0) {
-		author.loadFromEntity(AuthorList.fetchAuthor(name, lang));
+		author.loadFromEntity(AuthorList.fetchAuthorAdmin(name, lang, true));
 	}
 	else{
 		author.loadAuthor(AuthorConstants.DEFAULTID);
@@ -64,6 +72,7 @@ Boolean deleted = Boolean.FALSE;
 Boolean bookmarked = Boolean.FALSE;
 String style = (String) request.getParameter(JspConstants.STYLE);
 String nameParam = (String) request.getParameter(JspConstants.NAME);
+String translatedNameParam = (String) request.getParameter(JspConstants.TRANSLATEDNAME);
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 String shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 Set<String> tag = new HashSet<String>();
@@ -105,6 +114,11 @@ if (null != request.getParameter(JspConstants.BOOKMARKED)
 if (null != request.getParameter(JspConstants.NAME) && request.getParameter(JspConstants.NAME).length() > 0) {
 	nameParam = (String) request.getParameter(JspConstants.NAME);
 	author.setName(nameParam);
+	dirty = true;
+}
+if (null != request.getParameter(JspConstants.TRANSLATEDNAME) && request.getParameter(JspConstants.TRANSLATEDNAME).length() > 0) {
+	translatedNameParam = (String) request.getParameter(JspConstants.TRANSLATEDNAME);
+	author.setTranslatedName(translatedNameParam);
 	dirty = true;
 }
 if (null != request.getParameter(JspConstants.STYLE) && request.getParameter(JspConstants.STYLE).length() > 0) {
@@ -182,23 +196,32 @@ if (null != langList && langList.length > 0) {
 		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=author.getTagsString()%></textarea>
 		<% if (Language.ENGLISH.equals(author.getLanguage())){%><input type="button" value="Step
 			3 - Suggest some Tags"
-			onclick="appendToUrlAndFetch('step3')"><%}%><br> Short
-		Description:
+			onclick="appendToUrlAndFetch('step3')"><%}%><br>Translated Name:<input type="text"
+			name="<%=JspConstants.TRANSLATEDNAME%>"
+			value="<%=author.getTranslatedName()%>" size="50">
+		<%
+		if (!Language.ENGLISH.equals(author.getLanguage())) {
+		%><input
+			type="button" value="Step
+			6 - Translate the User Name"
+			onclick="appendToUrlAndFetch('step6')">
+		<%}%><br>
+		Short Description:
 		<textarea name="<%=JspConstants.SHORTDESC%>" rows="20" cols="80"><%=author.getShortDescription()%></textarea>
 		<% if (Language.ENGLISH.equals(author.getLanguage())){%><input type="button" value="Step
 			5 - Suggest Short Description"
-			onclick="appendToUrlAndFetch('step5')"><%}%><% if (!Language.ENGLISH.equals(author.getLanguage())){%><input type="button"
+			onclick="appendToUrlAndFetch('step7')"><%}%><% if (!Language.ENGLISH.equals(author.getLanguage())){%><input type="button"
 			value="Step
-			6 - translate Short Description"
-			onclick="appendToUrlAndFetch('step6')"><%}%><br> Long
+			7 - translate Short Description"
+			onclick="appendToUrlAndFetch('step7')"><%}%><br> Long
 		Description:
 		<textarea name="<%=JspConstants.LONGDESC%>" rows="20" cols="80"><%=author.getLongDescription()%></textarea>
 		<% if (Language.ENGLISH.equals(author.getLanguage())){%><input type="button" value="Step
 			4 - Suggest Long Description"
 			onclick="appendToUrlAndFetch('step4')"><%}%><% if (!Language.ENGLISH.equals(author.getLanguage())){%><input type="button"
 			value="Step
-			7 - translate Long Description"
-			onclick="appendToUrlAndFetch('step7')"><%}%><br>
+			8 - translate Long Description"
+			onclick="appendToUrlAndFetch('step8')"><%}%><br>
 
 		<table>
 			<%
@@ -256,7 +279,7 @@ if (null != langList && langList.length > 0) {
 	
 	async function appendToUrlAndFetch(str) {
 		  // Append the string to the current URL
-		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
+		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>&<%=JspConstants.POSITION%>=0&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
 		  try {
 		    // Perform an asynchronous HTTP request
 		    const response = await fetch(newUrl+str);

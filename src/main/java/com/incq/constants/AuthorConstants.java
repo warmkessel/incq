@@ -10,6 +10,8 @@ public class AuthorConstants extends BaseEntityConstants{
 	
 	public static final String NAME = "Name";
 
+	public static final String TRANSLATEDNAME = "TranslatedName";
+
 	public static final String LANGUAGE = "Language";
 	
 	public static final String STYLE = "Style";

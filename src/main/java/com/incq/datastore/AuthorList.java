@@ -143,15 +143,11 @@ public class AuthorList {
 				if (Language.ENGLISH != lang && null == fetchAuthorAdmin(name, lang, false)) {
 					authSub = new Author();
 					authSub.setName(auth.getName());
+					authSub.setTranslatedName(auth.getTranslatedName());
 					authSub.setTags(auth.getTags());
 					authSub.setLanguage(lang);
 					authSub.setStyle(auth.getStyle());
 					authSub.setBookmarked(auth.isBookmarked());
-//				tempLongDesc = AIManager.editText(auth.getLongDescription(), AIConstants.AILANG + lang.name,
-//						auth.getLongDescription());
-//				tempShortDesc = AIManager.editText(auth.getShortDescription(), AIConstants.AILANG + lang.name,
-//						auth.getShortDescription());
-
 					authSub.setShortDescription(auth.getShortDescription());
 					authSub.setLongDescription(auth.getLongDescription());
 
@@ -167,76 +163,126 @@ public class AuthorList {
 		}
 	}
 
-	public static void expandAuthorSteps(String key, String lang, String step, String continueExpand)
+	public static void expandAuthorSteps(String key, String lang, String step, String position, String continueExpand)
 			throws IncqServletException {
-		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step),
+		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step),Integer.valueOf(position),
 				Boolean.valueOf(continueExpand));
 	}
-
-	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, boolean continueExpand)
+	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, int position, boolean continueExpand)
 			throws IncqServletException {
 		Author auth = new Author();
 		auth.loadAuthor(key);
+		expandAuthorSteps(auth, lang, step, position, continueExpand);
+	}
+	public static void expandAuthorSteps(Author auth, Language lang, AuthorStep step, int position, boolean continueExpand)
+			throws IncqServletException {
 		switch (step) {
 		case STEP1:// Suggest an Authors Name
 			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP2:// Suggest a Style
 			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE, auth.getStyle()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP3:// Suggest some Tags
 			auth.setTags(AIManager.editText(auth.getStyle() + auth.getTagsString(), AIConstants.AITAGS,
 					auth.getTagsString()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP4:// Suggest Long Description"
 			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG,
 					auth.getStyle(), auth.getLongDescription()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP5:// Suggest Short Description"
 			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
 					auth.getStyle(), auth.getShortDescription()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP6:// Translate Short Description
+		case STEP6:// Translate Name
+
+			auth.setTranslatedName(AIManager.editText(auth.getTranslatedName(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", auth.getTranslatedName()));
+			if (continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP7:// Translate Short Description
 
 			auth.setShortDescription(AIManager.editText(auth.getShortDescription(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", auth.getShortDescription()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP7:// Translate Long Description"
-			auth.setLongDescription(AIManager.editTextChunk(auth.getLongDescription(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", "", auth.getLongDescription()));
-			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(key, lang, step.next(), continueExpand);
-			}
+		case STEP8:// Translate Long Description"
+			auth.setLongDescription(translateString(auth.getLongDescription(), auth, lang, step,
+					position, continueExpand));
 			break;
-		case STEP8:// Enable
+		case STEP9:// Enable
 			auth.setDeleted(false);
 			break;
 		case FAIL:
-			logger.log(Level.SEVERE, "AuthorStep Fail key " + key + " lang " + lang + " step " + step);
+			logger.log(Level.SEVERE, "AuthorStep Fail key " + auth.getKeyLong() + " lang " + lang + " step " + step);
 			break;
 		default:
-			logger.log(Level.SEVERE, "Default Fail key " + key + " lang " + lang + " step " + step);
+			logger.log(Level.SEVERE, "Default Fail key " + auth.getKeyLong() + " lang " + lang + " step " + step);
 
 		}
 		auth.save();
 
+	}
+	private static String translateString(String input, Author auth, Language lang,
+			AuthorStep step, int position, boolean continueExpand) throws IncqServletException {
+		StringBuffer theReturn = new StringBuffer();
+		String subString = "";
+		String[] theSplit = input.split("\r\n");
+		if(0 == position) {
+			for (int x = 0; x < theSplit.length; x++) {
+				if(0<theSplit[x].trim().length()) {
+					theReturn.append(theSplit[x]).append("\r\n");
+				}
+			}
+			theSplit = theReturn.toString().split("\r\n");
+			theReturn = new StringBuffer();
+		}
+		if(position >= 0 && position < theSplit.length) {
+			subString = theSplit[position];
+		}
+		int numOfTries = 10;
+		while (numOfTries > 0 && subString.length() > 0) {
+			try {
+				theSplit[position] = AIManager.editText(subString,
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", subString);
+				numOfTries = 0;
+			} catch (IncqServletException incq) {
+				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);
+				numOfTries = numOfTries - 1;
+			}
+
+			position = position + 1;
+			if (position < theSplit.length) {
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step, position,
+						continueExpand);
+			} else if (continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(),
+						continueExpand);
+			}
+		}
+		for (int x = 0; x < theSplit.length; x++) {
+			theReturn.append(theSplit[x]).append("\r\n");
+		}
+		return theReturn.toString();
 	}
 }

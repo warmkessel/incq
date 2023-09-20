@@ -15,15 +15,13 @@ String formattedDate = currentDate.format(formatter);
 
 %><?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url> <loc><%=JspConstants.INCQ%></loc> <lastmod><%=formattedDate%></lastmod>
-</url>
 <%
  for (Language langEnum : Language.values()) {
  %>
-<url>
-	<loc><%=JspConstants.INCQ%><%=JspConstants.AUTHORS%>?la=<%=langEnum.code%></loc>
-	<lastmod><%=formattedDate%></lastmod>
-</url>
+<url><loc><%=JspConstants.HTTPS + (Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code) + JspConstants.INCQP + JspConstants.INDEX%></loc><lastmod><%=formattedDate%></lastmod></url>
+<url><loc><%=JspConstants.HTTPS + (Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code) + JspConstants.INCQP + JspConstants.AUTHORS%></loc><lastmod><%=formattedDate%></lastmod></url>
+<url><loc><%=JspConstants.HTTPS + (Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code) + JspConstants.INCQP + JspConstants.PRIVACY%></loc><lastmod><%=PrivacyPolicyConstants.PRIVACYDATE%></lastmod></url>
+<url><loc><%=JspConstants.HTTPS + (Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code) + JspConstants.INCQP + JspConstants.CONTACT%></loc><lastmod><%=formattedDate%></lastmod></url>
 <%}%>
 <%
 for (Language langEnum : Language.values()) {
@@ -31,7 +29,7 @@ for (Language langEnum : Language.values()) {
 	for (Author author : authors) {
  %>
 <url>
-	<loc><%=URLEncoder.encode(JspConstants.INCQ + JspConstants.AUTHORSEO + author.getName(), StandardCharsets.UTF_8.toString())%>?la=<%=langEnum.code%></loc>
+	<loc><%=JspConstants.HTTPS + (Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code) +JspConstants.INCQP + JspConstants.AUTHORSEO + URLEncoder.encode(author.getName(), StandardCharsets.UTF_8.toString())%></loc>
 	<lastmod><%=author.getUpdatedDateShort()%></lastmod>
 </url>
 <%}}%>
@@ -41,7 +39,7 @@ for (Language langEnum : Language.values()) {
 	for (Review review : reviews) {
  %>
 <url>
-	<loc><%=URLEncoder.encode(JspConstants.INCQ + JspConstants.REVIEWSEO + review.getSlug(), StandardCharsets.UTF_8.toString())%>?la=<%=langEnum.code%></loc>
+	<loc><%=JspConstants.HTTPS+(Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code)+JspConstants.INCQP + JspConstants.REVIEWSEO + URLEncoder.encode(review.getSlug(), StandardCharsets.UTF_8.toString())%></loc>
 	<lastmod><%=review.getUpdatedDateShort()%></lastmod>
 </url>
 <%}}%>

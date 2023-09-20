@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.net.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.constants.*"%>
 <%@ page import="com.incq.datastore.*"%>
@@ -10,16 +11,25 @@
 <%
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
+String requestUrl = request.getRequestURL().toString();
 Language lang = Language.ENGLISH;
 
-String langString = (String) request.getParameter(JspConstants.LANGUAGE);
-if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+URL url = new URL(requestUrl);
+String firstPart = url.getHost().split("\\.")[0];
+String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
+if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
+	if (null != langString && langString.length() > 0) {
+		lang = Language.findByCode(langString);
+	}
+}
+else{
+	lang = Language.findByCode(subDomain);
 }
 
 ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 %><!DOCTYPE html>
-<html lang="en">
+<html lang="<%=lang.code%>">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
@@ -46,7 +56,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img
+			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
 				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -72,9 +82,9 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form action="<%=JspConstants.AUTHORS%>?la=<%=lang%>" method="get" id="languageForm">
@@ -88,13 +98,13 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLogoutURL(JspConstants.AUTHORS)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLoginURL(JspConstants.AUTHORS)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>
@@ -114,7 +124,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 								<div class="d-flex">
 									<div class="flex-grow-1">
 									<a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%= theList.get(x).getName() %></a>
-										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%= theList.get(x).getShortDescription()%></a></p>
+										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getTranslatedName()%>"><%= theList.get(x).getShortDescription()%></a></p>
 									</div>s
 								</div>	
 						</div>
@@ -134,13 +144,13 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -182,5 +192,10 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 
 	</footer>
 	<!-- End of Page Footer -->
+	<script src="assets/vendors/jquery/jquery-3.4.1.js"></script>
+	<script src="assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+	<!-- bootstrap affix -->
+	<script src="assets/vendors/bootstrap/bootstrap.affix.js"></script>
 </body>
 </html>

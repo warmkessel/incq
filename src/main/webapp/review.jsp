@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
-<%@ page import="java.net.URLDecoder"%>
+<%@ page import="java.net.*"%>
 <%@ page import="org.json.*"%>
 <%@ page import="com.incq.util.*"%>
 <%@ page import="com.incq.entity.*"%>
@@ -15,12 +15,19 @@ User currentUser = userService.getCurrentUser();
 
 Review review = new Review();
 Author author = new Author();
-
 Language lang = Language.ENGLISH;
 
-String langString = (String) request.getParameter(JspConstants.LANGUAGE);
-if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+String requestUrl = request.getRequestURL().toString();
+URL url = new URL(requestUrl);
+String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
+if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
+	if (null != langString && langString.length() > 0) {
+		lang = Language.findByCode(langString);
+	}
+}
+else{
+	lang = Language.findByCode(subDomain);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);
@@ -50,7 +57,7 @@ try {
 	idLong = 0L; // Set value to 0 in case of NumberFormatException
 }
 %><!DOCTYPE html>
-<html lang="en">
+<html lang="<%=lang.code%>">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async=true
@@ -75,12 +82,46 @@ try {
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
 <title><%=review.getReviewDetails().getName()%> review</title>
+<script type="application/ld+json">
+   {
+	  "@context": "https://schema.org",
+	  "@type": "Product",
+	  "aggregateRating": {
+	    "@type": "AggregateRating",
+	    "ratingValue": "3.5",
+	    "reviewCount": "11"
+	  },
+	  "description": "<%=review.getReviewDetails().getSummary()%>",
+	  "name": "<%=review.getReviewDetails().getName()%>",
+	  "image": "<%=review.getMediaList().get(0)%>",
+	  "url": "<%=review.getMetaString()%>",
+	  "keywords": "<%=review.getLink()%>",
+	  "positiveNotes": <%=HtmlHelper.convertLongJSON(review.getReviewDetails().getReviewBody())%>
+	  },
+	  "review": [
+	    {
+	      "@type": "Review",
+	      "author": "<%=review.getAuthor()%>",
+	      "datePublished": "<%=Review.getFormatted(review.getUpdatedDate(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")%>",
+	      "reviewBody": "<%=review.getReviewDetails().getDesc()%>",
+	      "name": "<%=review.getReviewDetails().getDesc()%>",
+	      "isFamilyFriendly": "true",
+	      "reviewRating": {
+	        "@type": "Rating",
+	        "bestRating": "5",
+	        "ratingValue": "4.5",
+	        "worstRating": "1"
+	      }
+	    }
+	  ]
+	}
+    </script>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>"> <img
+			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"> <img
 				src="/assets/imgs/logo-sm.jpg" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -107,11 +148,11 @@ try {
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
+						href="<%=JspConstants.INDEX%>">Home</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
@@ -142,13 +183,13 @@ try {
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>
@@ -167,6 +208,8 @@ try {
 					</h4>
 					<img border="0" src="<%=review.getMediaList().get(0)%>"
 						alt="<%=review.getReviewDetails().getDesc()%>">
+					<h4>Introduction</h4>
+					<p><%=review.getReviewDetails().getIntroduction()%></p>
 					<p><%=HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
 					<h4>Conclusion</h4>
 					<p><%=review.getReviewDetails().getConclusion()%></p>
@@ -195,15 +238,15 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>"><img
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
 						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small
+					<a href="<%=JspConstants.INDEX%>" class="px-3"><small
 						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small
+						href="<%=JspConstants.AUTHORS%>" class="px-3"><small
 						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small
+						href="<%=JspConstants.CONTACT%>" class="pl-3"><small
 						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
@@ -238,5 +281,11 @@ try {
 
 	</footer>
 	<!-- End of Page Footer -->
+		<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
+	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+	<!-- bootstrap affix -->
+	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
+	
 </body>
 </html>

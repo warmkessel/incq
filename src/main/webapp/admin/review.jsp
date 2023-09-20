@@ -26,9 +26,17 @@ Review review = new Review();
 
 Language lang = Language.ENGLISH;
 
-String langString = (String) request.getParameter(JspConstants.LANGUAGE);
-if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+String requestUrl = request.getRequestURL().toString();
+URL url = new URL(requestUrl);
+String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
+if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
+	if (null != langString && langString.length() > 0) {
+		lang = Language.findByCode(langString);
+	}
+}
+else{
+	lang = Language.findByCode(subDomain);
 }
 
 String id = (String) request.getParameter(JspConstants.ID);

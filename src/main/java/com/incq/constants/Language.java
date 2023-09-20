@@ -34,7 +34,7 @@ public enum Language {
     private static final Map<String, Language> BY_NAME = new HashMap<>();
     static {
         for (Language lang : values()) {
-            BY_CODE.put(lang.code, lang);
+            BY_CODE.put(lang.code.toLowerCase(), lang);
             BY_NAME.put(lang.name, lang);
         }
     }
@@ -50,7 +50,7 @@ public enum Language {
     }
 
     public static Language findByCode(String code) {
-    	Language lang = BY_CODE.getOrDefault(code, ENGLISH);
+    	Language lang = BY_CODE.getOrDefault(code.toLowerCase(), ENGLISH);
     	if(ENGLISH.equals(lang) && code.startsWith("es-")) {
     		lang = Language.SPANISH_MEXICO;
     	}

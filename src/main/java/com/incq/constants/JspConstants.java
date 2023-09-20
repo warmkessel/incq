@@ -1,7 +1,15 @@
 package com.incq.constants;
 
 public class JspConstants {
-	public static final String INCQ = "https://incq.com/";
+	public static final String INCQ = "incq.com";
+	public static final String WWW = "www";
+	public static final String LOCALHOST = "localhost";
+	public static final String SPLIT = "\\.";
+	public static final String HTTPS = "https://";
+	public static final String INCQP = "." + INCQ;
+
+	
+	
 	public static final String INDEX = "/index.jsp";
 	public static final String CONTACT = "/contact.jsp";
 	public static final String PRIVACY = "/privacy.jsp";
@@ -60,6 +68,7 @@ public class JspConstants {
 
 	
 
+	public static final String TRANSLATEDNAME = "trName";
 	public static final String NAME = "name";
 	public static final String DESC = "desc";
 	public static final String SLUG = "slug";

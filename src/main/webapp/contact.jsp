@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.net.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.constants.*"%>
 <%@ page import="javax.mail.*"%>
@@ -10,12 +11,19 @@
 <%
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
-
 Language lang = Language.ENGLISH;
 
-String langString = (String) request.getParameter(JspConstants.LANGUAGE);
-if (null != langString && langString.length() > 0) {
-	lang = Language.findByCode(langString);
+String requestUrl = request.getRequestURL().toString();
+URL url = new URL(requestUrl);
+String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
+if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
+	if (null != langString && langString.length() > 0) {
+		lang = Language.findByCode(langString);
+	}
+}
+else{
+	lang = Language.findByCode(subDomain);
 }
 
 //Get the subject and body parameters from the request
@@ -51,7 +59,7 @@ if ((null != currentUser) && subject != null && body != null) {
     }
 }
 %><!DOCTYPE html>
-<html lang="en">
+<html lang="<%=lang.code%>">
 <head>
 <!-- Google tag (gtag.js) -->
 <script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
@@ -78,7 +86,7 @@ if ((null != currentUser) && subject != null && body != null) {
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img
+			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
 				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
@@ -104,9 +112,9 @@ if ((null != currentUser) && subject != null && body != null) {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>?la=<%=lang.code%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get" id="languageForm">
@@ -120,13 +128,13 @@ if ((null != currentUser) && subject != null && body != null) {
 				if (currentUser != null) {
 				%>
 				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLogoutURL(JspConstants.CONTACT)%>"
 					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
-				%>
+				%>cre
 				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX + "?" + JspConstants.LANGUAGE + "=" + lang.code)%>"
+					href="<%=userService.createLoginURL(JspConstants.CONTACT)%>"
 					class="btn btn-primary btn-sm">Login/Register</a>
 				<%}%>
 			</div>
@@ -191,7 +199,7 @@ if ((null != currentUser) && subject != null && body != null) {
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
-					<img src="/assets/imgs/contact.jpg"
+					<img src="/assets/imgs/logo.jpg"
 						alt="INCQ Landing Page"
 						class="w-100 rounded shadow">
 				</div>
@@ -220,13 +228,13 @@ if ((null != currentUser) && subject != null && body != null) {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>?la=<%=lang.code%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>?la=<%=lang.code%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" class="px-3"><small class="font-weight-bold">Home</small></a>
+					<a href="<%=JspConstants.AUTHORS%>" class="px-3"><small class="font-weight-bold">Authors</small></a>
+					<a href="<%=JspConstants.CONTACT%>" class="pl-3"><small class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -258,5 +266,10 @@ if ((null != currentUser) && subject != null && body != null) {
 
 	</footer>
 	<!-- End of Page Footer -->
+	<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
+	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+	<!-- bootstrap affix -->
+	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
 </body>
 </html>

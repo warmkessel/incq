@@ -12,9 +12,10 @@ public enum AuthorStep {
 	STEP3("step3"), // "Suggest some Tags"
 	STEP4("step4"), // "Suggest Long Description"
 	STEP5("step5"), // "Suggest Short Description"
-	STEP6("step6"), // "translate Short Description"
-	STEP7("step7"), // "translate Long Description"
-	STEP8("step8"); // "Enable"
+	STEP6("step6"), // "translate Name"
+	STEP7("step7"), // "translate Short Description"
+	STEP8("step8"), // "translate Long Description"
+	STEP9("step9"); // "Enable"
 	
 
 	static Logger logger = Logger.getLogger(AuthorStep.class.getName());

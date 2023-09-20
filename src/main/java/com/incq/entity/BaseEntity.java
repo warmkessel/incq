@@ -121,6 +121,9 @@ public  abstract class BaseEntity implements  Serializable {
 
 	}
 	public static String getFormatted(Timestamp timestamp) {
+		return getFormatted(timestamp, "yyyy-MM-dd");
+	}
+	public static String getFormatted(Timestamp timestamp, String format) {
         // Convert the Timestamp to a java.util.Date object
         Date date = timestamp.toDate();
 
@@ -132,5 +135,5 @@ public  abstract class BaseEntity implements  Serializable {
 
         // Format the LocalDate object into the target date format
         return localDate.format(formatter);
-    }
+	}	
 }

@@ -15,6 +15,28 @@ public class HtmlHelper {
 		}
 		return theReturn.toString();
 	}
+	public static String convertLongJSON(String input) {
+		StringBuffer theReturn = new StringBuffer("[");
+        String[] lines = splitOnCRLF(input);
+		boolean first = true;
+        for(int x=0; x< lines.length; x++) {
+			if(lines[x].length() < 200 && lines[x].trim().length() > 0) {
+				if(first) {
+					first = false;
+
+				}
+				else {
+					theReturn.append(",");
+
+				}
+				theReturn.append("\"").append(lines[x]).append("\"");
+
+			}
+		}
+		theReturn.append("]");
+
+		return theReturn.toString();
+	}
 	public static String[] splitOnCRLF(String input) {
         if (input == null) {
             return new String[0]; // return an empty array if input is null
