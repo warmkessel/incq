@@ -20,13 +20,12 @@ Language lang = Language.ENGLISH;
 String requestUrl = request.getRequestURL().toString();
 URL url = new URL(requestUrl);
 String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
-if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstants.LOCALHOST.equals(subDomain)) {
 	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 	if (null != langString && langString.length() > 0) {
 		lang = Language.findByCode(langString);
 	}
-}
-else{
+} else {
 	lang = Language.findByCode(subDomain);
 }
 
@@ -47,7 +46,7 @@ if (null != id && id.length() > 0) {
 		review.loadFromEntity(ReviewList.fetchReview(slug), lang);
 	}
 }
-if(null != review.getAuthor() && review.getAuthor().length() > 0){
+if (null != review.getAuthor() && review.getAuthor().length() > 0) {
 	author.loadFromEntity(AuthorList.fetchAuthor(review.getAuthor(), lang));
 }
 long idLong = 0L;
@@ -121,15 +120,18 @@ try {
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"> <img
-				src="/assets/imgs/logo-sm.jpg" alt="INCQ">
+			<a class="navbar-brand"
+				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+				aria-label="Link to our Home Page"> <img
+				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/groups/915527066379136/"
-						class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
-						target="_blank"><i class="ti-twitter"></i></a>
+						class="px-2" target="_blank" aria-label="Facebook"><i
+						class="ti-facebook"></i></a> <a
+						href="https://twitter.com/shrinesecrets" aria-label="Twitter"
+						class="px-2" target="_blank"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
 		</div>
@@ -148,26 +150,30 @@ try {
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact
+							Us</a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
 					<li class="nav-item"><a class="nav-link"
 						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.ADMINAUTHORSEO%><%=author.getName()%>" target="_blank">Ad Author</a></li>
+						href="<%=JspConstants.ADMINAUTHORSEO%><%=author.getName()%>"
+						target="_blank">Ad Author</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.ADMINREVIEWSEO%><%=review.getSlug()%>" target="_blank">Ad Review</a></li>
+						href="<%=JspConstants.ADMINREVIEWSEO%><%=review.getSlug()%>"
+						target="_blank">Ad Review</a></li>
 					<%}%>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.REVIEWSEO%><%=review.getSlug()%>"
+					<li class="nav-item"><form
+							action="<%=JspConstants.REVIEWSEO%><%=review.getSlug()%>"
 							method="get" id="languageForm">
-							<select name="la"
+							<select name="la" aria-label="Language"
 								onchange="document.getElementById('languageForm').submit();">
 								<%
 								for (Language langEnum : Language.values()) {
@@ -182,15 +188,14 @@ try {
 				<%
 				if (currentUser != null) {
 				%>
-				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
+					aria-label="Welcome <%=currentUser.getNickname()%>"
+					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm">Login/Register</a>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					aria-label="Login/Register" class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
 				<%}%>
 			</div>
 		</div>
@@ -202,27 +207,31 @@ try {
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<h4>
-						<a href="<%=review.getLink()%>" target="_blank"><%=review.getReviewDetails().getTitle()%></a>
-						by - <a
-							href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"><%=author.getName()%></a>
+						<a href="<%=review.getLink()%>" target="_blank"
+							aria-label="<%=review.getReviewDetails().getTitle()%>"><%=review.getReviewDetails().getTitle()%></a>
+						by - <a href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
+							aria-label="<%=author.getName()%>"><%=author.getName()%></a>
 					</h4>
 					<img border="0" src="<%=review.getMediaList().get(0)%>"
-						alt="<%=review.getReviewDetails().getDesc()%>">
+						alt="<%=review.getReviewDetails().getDesc()%>" height="250px"
+						width="250px">
 					<h4>Introduction</h4>
 					<p><%=review.getReviewDetails().getIntroduction()%></p>
 					<p><%=HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
 					<h4>Conclusion</h4>
 					<p><%=review.getReviewDetails().getConclusion()%></p>
 					<h4>
-						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>">Author
-							- <%=author.getName()%></a>
+						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"
+							aria-label="Author
+							- <%=author.getName()%>">Author - <%=author.getName()%></a>
 					</h4>
 					<p><%=author.getShortDescription()%></p>
 					<p>
 						<%
 						for (int x = 0; x < review.getTagsList().size(); x++) {
 						%>
-						| <a href=""><%=review.getTagsList().get(x)%></a>
+						| <a
+							href="<%=JspConstants.CATEGORY%><%=review.getTagsList().get(x)%>"><%=review.getTagsList().get(x)%></a>
 						<%}%>
 						|
 					</p>
@@ -238,15 +247,17 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
-						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+						aria-label="Link to our Home Page"><img
+						src="/assets/imgs/logo-sm.jpg" alt="INCQ" class="mb-0"
+						height="100px" width="100px"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small
+					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
 						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3"><small
+						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
 						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3"><small
+						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
 						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
@@ -271,9 +282,10 @@ try {
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/groups/915527066379136/"
-							class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
+							class="px-2" target="_blank" aria-label="Facebook"><i
+							class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"
-							target="_blank"><i class="ti-twitter"></i></a>
+							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
 			</div>
@@ -281,11 +293,11 @@ try {
 
 	</footer>
 	<!-- End of Page Footer -->
-		<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
-	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
-	<!-- bootstrap affix -->
-	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
-	
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
 </body>
 </html>

@@ -19,6 +19,7 @@ public class JspConstants {
 
 	public static final String AUTHORSEO = "/author/";
 	public static final String REVIEWSEO = "/review/";
+	public static final String CATEGORY = "/category/";
 
 	public static final String ADMIN = "/admin";
 

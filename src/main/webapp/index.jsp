@@ -45,10 +45,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <meta name="description" content="INCQ Reviews on all kinds of products">
 <meta name="author" content="INCQ">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
+
 <title>INCQ Reviews</title>
 
 </head>
@@ -63,9 +65,10 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/groups/915527066379136/"
-						class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
-						target="_blank"><i class="ti-twitter"></i></a>
+						class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
+						href="https://twitter.com/shrinesecrets" aria-label="Twitter" class="px-2"
+						aria-label="Link to our Home Page" target="_blank"><i
+						class="ti-twitter"></i></a>
 				</h6>
 			</div>
 		</div>
@@ -84,11 +87,14 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>">Home</a></li>
+						href="<%=JspConstants.INDEX%>"
+						aria-label="Home">Home</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>"
+						aria-label="Authors">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>"
+						aria-label="Contact Us">Contact Us</a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
@@ -102,7 +108,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 					<li class="nav-item"><form
 							action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get"
 							id="languageForm">
-							<select name="la"
+							<select name="la" aria-label="Language"
 								onchange="document.getElementById('languageForm').submit();">
 								<%
 								for (Language langEnum : Language.values()) {
@@ -117,15 +123,13 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<%
 				if (currentUser != null) {
 				%>
-				<a
-					href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a
-					href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm">Login/Register</a>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
 				<%}%>
 			</div>
 		</div>
@@ -147,8 +151,9 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 								<div class="flex-grow-1">
 									<a
 										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
+										aria-label="Link to our review of <%=theList.get(x).getReviewDetails().getTitle()%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
-									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>"
+									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>" height="250px" width="250px"
 										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
 									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
 										<a
@@ -175,14 +180,17 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
 						src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
-						class="mb-0"></a>
+						aria-label="Link to our Home Page" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small
+					<a href="<%=JspConstants.INDEX%>"
+						aria-label="Home" class="px-3"><small
 						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3"><small
+						href="<%=JspConstants.AUTHORS%>"
+						aria-label="Authors" class="px-3"><small
 						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3"><small
+						href="<%=JspConstants.CONTACT%>"
+						aria-label="Contact" class="pl-3"><small
 						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
@@ -207,9 +215,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/groups/915527066379136/"
-							class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
+							class="px-2" target="_blank"
+							aria-label="Facebook"><i
+							class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"
-							target="_blank"><i class="ti-twitter"></i></a>
+							aria-label="Twitter" target="_blank"><i
+							class="ti-twitter"></i></a>
 					</h6>
 				</div>
 			</div>
@@ -218,10 +229,8 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	</footer>
 	<!-- End of Page Footer -->
 	<!-- core  -->
-	<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
-	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
 	<!-- bootstrap affix -->
-	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
 </body>
 </html>

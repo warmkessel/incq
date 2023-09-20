@@ -94,14 +94,14 @@ try {
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"> <img
+			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"> <img
 				src="/assets/imgs/logo-sm.jpg" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/groups/915527066379136/"
-						class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
+						class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
+						href="https://twitter.com/shrinesecrets" class="px-2" aria-label="Twitter"
 						target="_blank"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -139,7 +139,7 @@ try {
 					<li class="nav-item"><form
 							action="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
 							method="get" id="languageForm">
-							<select name="la"
+							<select name="la" aria-label="Language" 
 								onchange="document.getElementById('languageForm').submit();">
 								<%
 								for (Language langEnum : Language.values()) {
@@ -156,13 +156,13 @@ try {
 				%>
 				<a
 					href="<%=userService.createLogoutURL(JspConstants.AUTHORSEO + URLEncoder.encode(author.getName(), StandardCharsets.UTF_8.toString()))%>"
-					class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a
 					href="<%=userService.createLoginURL(JspConstants.AUTHORSEO + URLEncoder.encode(author.getName(), StandardCharsets.UTF_8.toString()))%>"
-					class="btn btn-primary btn-sm">Login/Register</a>
+					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
 				<%}%>
 			</div>
 		</div>
@@ -187,15 +187,15 @@ try {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img
 						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3"><small
+					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
 						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3"><small
+						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
 						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3"><small
+						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
 						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
@@ -220,9 +220,9 @@ try {
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/groups/915527066379136/"
-							class="px-2" target="_blank"><i class="ti-facebook"></i></a> <a
+							class="px-2" target="_blank" aria-label="Facebook" ><i class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"
-							target="_blank"><i class="ti-twitter"></i></a>
+							target="_blank" aria-label="Twitter" ><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
 			</div>
@@ -230,10 +230,7 @@ try {
 
 	</footer>
 	<!-- End of Page Footer -->
-	<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
-	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
-	<!-- bootstrap affix -->
-	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
 </body>
 </html>

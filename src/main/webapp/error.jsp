@@ -149,11 +149,8 @@
 
 	</footer>
 	<!-- End of Page Footer -->
-	<script src="/assets/vendors/jquery/jquery-3.4.1.js"></script>
-	<script src="/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
-
-	<!-- bootstrap affix -->
-	<script src="/assets/vendors/bootstrap/bootstrap.affix.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
 </body>
 </html>
 
