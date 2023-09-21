@@ -185,11 +185,20 @@ public class ReviewDetailsList {
 						continueExpand);
 			}
 			break;
-		case STEP7: // translate Review"
+		case STEP7: // translate Call"
+			reviewDetails.setCall(AIManager.editText(reviewDetails.getCall(),
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getCall()));
+
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
+			break;
+		case STEP8: // translate Review"
 			reviewDetails.setReviewBody(translateString(reviewDetails.getReviewBody(), reviewDetails, lang, step,
 					position, continueExpand));
 			break;
-		case STEP8:
+		case STEP9:
 			reviewDetails.setDeleted(false);
 			break;
 		case FAIL:
@@ -210,16 +219,16 @@ public class ReviewDetailsList {
 		StringBuffer theReturn = new StringBuffer();
 		String subString = "";
 		String[] theSplit = input.split("\r\n");
-		if(0 == position) {
+		if (0 == position) {
 			for (int x = 0; x < theSplit.length; x++) {
-				if(0<theSplit[x].trim().length()) {
+				if (0 < theSplit[x].trim().length()) {
 					theReturn.append(theSplit[x]).append("\r\n");
 				}
 			}
 			theSplit = theReturn.toString().split("\r\n");
 			theReturn = new StringBuffer();
 		}
-		if(position >= 0 && position < theSplit.length) {
+		if (position >= 0 && position < theSplit.length) {
 			subString = theSplit[position];
 		}
 		int numOfTries = 10;

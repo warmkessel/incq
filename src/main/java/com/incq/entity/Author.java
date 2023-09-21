@@ -56,6 +56,9 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		this.name = name;
 	}
 	public String getTranslatedName() {
+		if(null == translatedName || translatedName.length() == 0) {
+			translatedName = getName();
+		}
 		return translatedName;
 	}
 

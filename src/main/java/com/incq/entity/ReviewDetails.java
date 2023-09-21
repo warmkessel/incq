@@ -29,6 +29,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	private String conclusion = "";
 	private long reviewId = 0l;
 	private String name = "";
+	private String call = "Get Mine Today!";
 
 	public ReviewDetails() {
 	}
@@ -39,6 +40,13 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public String getCall() {
+		return call;
+	}
+
+	public void setCall(String call) {
+		this.call = call;
 	}
 
 	public String getName() {
@@ -132,6 +140,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		result = 31 * result + introduction.hashCode();
 		result = 31 * result + reviewBody.hashCode();
 		result = 31 * result + conclusion.hashCode();
+		result = 31 * result + call.hashCode();
 		return result;
 	}
 
@@ -144,6 +153,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage().code)
 				.set(ReviewConstants.REVIEW, getReviewId()).set(ReviewConstants.NAME, getName())
 				.set(ReviewConstants.DESC, getDesc())
+				.set(ReviewConstants.CALL, getCall())
 				.set(ReviewConstants.INTRODUCTION,
 						StringValue.newBuilder(getIntroduction()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.REVIEWBODY,
@@ -176,12 +186,11 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	public void loadFromEntity(Entity entity) {
 		super.loadFromEntity(entity);
 		if (null != entity) {
-			if (entity.contains(ReviewConstants.NAME)) {
-				setName(entity.getString(ReviewConstants.NAME));
+			if (entity.contains(ReviewConstants.CALL)) {
+				setCall(entity.getString(ReviewConstants.CALL));
 			}
-			if (entity.contains(ReviewConstants.DESC)) {
-				setDesc(entity.getString(ReviewConstants.DESC));
-			}
+			setName(entity.getString(ReviewConstants.NAME));
+			setDesc(entity.getString(ReviewConstants.DESC));
 			setTitle(entity.getString(ReviewConstants.TITLE));
 			setIntroduction(entity.getString(ReviewConstants.INTRODUCTION));
 			setReviewBody(entity.getString(ReviewConstants.REVIEWBODY));
@@ -196,17 +205,6 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 			}
 		}
 	}
-
-	public String toString() {
-		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "="
-				+ isDeleted() + ", \" + CREATEDDATE + \"=" + getCreatedDate() + ", \" + SUMMARY + \"=" + getSummary()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + '\'' + ", \" + NAME + \"='" + name + '\''
-				+ ", \" + DESC + \"='" + desc + '\'' + ", \" + TITLE + \"='" + title + '\''
-				+ ReviewConstants.COMPACTDESC + '\'' + '\'' + ", \" + INTRODUCTION + \"='" + introduction + '\''
-				+ ", \" + REVIEWBODY + \"='" + getReviewBody() + '\'' + ", \" + CONCLUSION + \"='" + conclusion + '\''
-				+ ", \" + REVIEWID + \"='" + reviewId + '\'' + '}';
-	}
-
 	public int compareTo(ReviewDetails other) {
 		if (this.title == null && other.title == null) {
 			return 0;

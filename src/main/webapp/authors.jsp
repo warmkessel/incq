@@ -17,13 +17,12 @@ Language lang = Language.ENGLISH;
 URL url = new URL(requestUrl);
 String firstPart = url.getHost().split("\\.")[0];
 String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
-if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstants.LOCALHOST.equals(subDomain)) {
 	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 	if (null != langString && langString.length() > 0) {
 		lang = Language.findByCode(langString);
 	}
-}
-else{
+} else {
 	lang = Language.findByCode(subDomain);
 }
 
@@ -31,15 +30,23 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<!-- Google Tag Manager -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-PMGYN3L4QF');
+	(function(w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({
+			'gtm.start' : new Date().getTime(),
+			event : 'gtm.js'
+		});
+		var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l='
+				+ l
+				: '';
+		j.async = true;
+		j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-5CJH64QP');
 </script>
+<!-- End Google Tag Manager -->
 
 
 <meta charset="utf-8">
@@ -53,16 +60,25 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
+			height="0" width="0" style="display: none; visibility: hidden"></iframe>
+	</noscript>
+	<!-- First Navigation -->
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img
+			<a class="navbar-brand"
+				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+				aria-label="Link to our Home Page"><img
 				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/groups/915527066379136/"
-						class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
+						class="px-2" target="_blank" aria-label="Facebook"><i
+						class="ti-facebook"></i></a> <a
 						href="https://twitter.com/shrinesecrets" class="px-2"
 						target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 				</h6>
@@ -82,29 +98,39 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.INDEX%>">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.AUTHORS%>?la=<%=lang%>" method="get" id="languageForm">
-            			<select name="la" aria-label="Language" onchange="document.getElementById('languageForm').submit();">
-      				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
-					<%}%>
-    </select></form></li>
+					<li class="nav-item"><form
+							action="<%=JspConstants.AUTHORS%>?la=<%=lang%>" method="get"
+							id="languageForm">
+							<select name="la" aria-label="Language"
+								onchange="document.getElementById('languageForm').submit();">
+								<%
+								for (Language langEnum : Language.values()) {
+								%>
+								<option value="<%=langEnum.code%>"
+									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+									<%=langEnum.name%></option>
+								<%}%>
+							</select>
+						</form></li>
 				</ul>
 				<%
 				if (currentUser != null) {
 				%>
-				<a
-					href="<%=userService.createLogoutURL(JspConstants.AUTHORS)%>"
-					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+				<a href="<%=userService.createLogoutURL(JspConstants.AUTHORS)%>"
+					class="btn btn-primary btn-sm"
+					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a
-					href="<%=userService.createLoginURL(JspConstants.AUTHORS)%>" 
+				<a href="<%=userService.createLoginURL(JspConstants.AUTHORS)%>"
 					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
 				<%}%>
 			</div>
@@ -114,23 +140,32 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 	<!-- Menu Section -->
 	<section class="has-img-bg" id="insite">
 		<div class="container">
-			<h6 class="section-subtitle text-center">Here are some of our INCQ reviews</h6>
+			<h6 class="section-subtitle text-center">Here are some of our
+				INCQ reviews</h6>
 			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">
-					<%  for(int x=0; x < theList.size(); x++){%>					
+						<%
+						for (int x = 0; x < theList.size(); x++) {
+						%>
 						<div class="col-md-6 my-4">
-								<div class="d-flex">
-									<div class="flex-grow-1">
-									<a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>" class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0" aria-label="<%= theList.get(x).getTranslatedName() %>"><%= theList.get(x).getTranslatedName() %></a>
-										<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>"><a href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%= theList.get(x).getShortDescription()%></a></p>
-									</div>
-								</div>	
+							<div class="d-flex">
+								<div class="flex-grow-1">
+									<a
+										href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"
+										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"
+										aria-label="<%=theList.get(x).getTranslatedName()%>"><%=theList.get(x).getTranslatedName()%></a>
+									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
+										<a
+											href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%=theList.get(x).getShortDescription()%></a>
+									</p>
+								</div>
+							</div>
 						</div>
-					<%
-					}
-					%>
+						<%
+						}
+						%>
 					</div>
 				</div>
 			</div>
@@ -144,13 +179,18 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+						aria-label="Link to our Home Page"><img
+						src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>" class="pl-3"aria-label="Contact"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
+						class="font-weight-bold">Home</small></a> <a
+						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
+						class="font-weight-bold">Authors</small></a> <a
+						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
+						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
 		</div>
@@ -166,25 +206,31 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
+						, INCQ All rights reserved - As an Amazon Associate we earn from
+						qualifying purchases. -
+						<%=Constants.VERSION%>
 						<%
 						if (currentUser != null) {
-						%> <a
-						href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
+						%>
+						<a
+							href="<%=userService.createLogoutURL(JspConstants.INDEX + "?la=" + lang)%>"
+							class="btn btn-primary btn-sm">Welcome <%=currentUser.getNickname()%></a>
 						<%
 						} else {
-						%> <a
-						href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
-						class="btn btn-primary btn-sm">Login/Register</a> <%}%>
+						%>
+						<a
+							href="<%=userService.createLoginURL(JspConstants.INDEX + "?la=" + lang)%>"
+							class="btn btn-primary btn-sm">Login/Register</a>
+						<%}%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/groups/915527066379136/"
-							class="px-2" aria-label="Facebook"  target="_blank"><i class="ti-facebook"></i></a> <a
-							href="https://twitter.com/shrinesecrets" class="px-2" aria-label="Twitter" 
-							target="_blank"><i class="ti-twitter"></i></a>
+							class="px-2" aria-label="Facebook" target="_blank"><i
+							class="ti-facebook"></i></a> <a
+							href="https://twitter.com/shrinesecrets" class="px-2"
+							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
 			</div>
@@ -192,7 +238,11 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 
 	</footer>
 	<!-- End of Page Footer -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
 </body>
 </html>

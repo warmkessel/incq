@@ -31,6 +31,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	private String link = "";
 	private String author = "";
 	private String source = "";
+	private double score = 5d;
 
 	public Review() {
 		setReviewDetails(new ReviewDetails());
@@ -54,6 +55,22 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		try {
+			setScore(Double.valueOf(score));
+		}
+		catch(Exception e) {
+			setScore(Double.valueOf(4.9d));
+		}
+	}
+	public void setScore(double score) {
+		this.score = score;
 	}
 
 	public String getTagsEncodedString() {
@@ -254,6 +271,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		result = 31 * result + media.hashCode();
 		result = 31 * result + link.hashCode();
 		result = 31 * result + slug.hashCode();
+		result = 31 * result + new Double(score).intValue();
 
 		return result;
 	}
@@ -268,7 +286,8 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		entity.set(ReviewConstants.DELETED, isDeleted()).set(ReviewConstants.BOOKMARKED, isBookmarked())
 				.set(ReviewConstants.CREATEDDATE, getCreatedDate()).set(ReviewConstants.UPDATEDDATE, Timestamp.now())
 				.set(ReviewConstants.USERID, getUserId()).set(ReviewConstants.TAGS, getTags())
-				.set(ReviewConstants.META, getMeta()).set(ReviewConstants.AUTHOR, getAuthor())
+				.set(ReviewConstants.SCORE, getScore()).set(ReviewConstants.META, getMeta())
+				.set(ReviewConstants.AUTHOR, getAuthor())
 				.set(ReviewConstants.SOURCE, StringValue.newBuilder(getSource()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.LINK, getLink()).set(ReviewConstants.MEDIA, getMedia())
 				.set(ReviewConstants.SLUG, getSlug()).build();
@@ -321,6 +340,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 			setLink(entity.getString(ReviewConstants.LINK));
 			setSlug(entity.getString(ReviewConstants.SLUG));
 			setSource(entity.getString(ReviewConstants.SOURCE));
+			setScore(entity.getDouble(ReviewConstants.SCORE));
 
 			Entity event = ReviewDetailsList.fetchEventDetails(entity.getKey().getId(), lang, true, admin);
 			if (null != event) {
@@ -331,15 +351,6 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		}
 	}
 
-	public String toString() {
-		return "Event{" + "" + Constants.KEY + "='" + getKeyString() + '\'' + ", " + ReviewConstants.DELETED + "="
-				+ isDeleted() + ", \" + BOOKMARKED + \"=" + bookmarked + ", \" + CREATEDDATE + \"=" + getCreatedDate()
-				+ ", \" + UPDATEDDATE + \"=" + getUpdatedDate() + ", " + ReviewConstants.USERID + "=" + userId + ", "
-				+ '\'' + ", \" + TAGS + \"='" + getTags() + ", \" + META + \"='" + getMeta() + '\''
-				+ ", \" + AUTHOR + \"='" + author + '\'' + '\'' + ", \" + SLUG + \"='" + slug + '\''
-				+ ReviewConstants.COMPACTDESC + '\'' + ", \" + LINK + \"='" + link + '\'' + ", \" + MEDIA + \"'" + media
-				+ '\'' + '}';
-	}
 
 	public int compareTo(Review other) {
 		if (this.getKeyLong() == null && other.getKeyLong() == null) {

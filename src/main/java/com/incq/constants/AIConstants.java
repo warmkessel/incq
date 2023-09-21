@@ -28,6 +28,8 @@ public class AIConstants {
 	
 	public static final String AIDESC = "Write a three sentance description based upon the following summary";
 	
+	public static final String AICALL = "Write a short one sentance call to action to purchase this product";
+
 	public static final String AISUMMARY = "Review this content and write a summary product review of the production listed here ";
 
 	public static final String AICONCLUSION = "Review this content and write an introduction to a product review of the production listed here ";

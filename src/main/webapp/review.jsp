@@ -58,18 +58,23 @@ try {
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async=true
-	src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<!-- Google Tag Manager -->
 <script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag() {
-		dataLayer.push(arguments);
-	}
-	gtag('js', new Date());
-
-	gtag('config', 'G-PMGYN3L4QF');
+	(function(w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({
+			'gtm.start' : new Date().getTime(),
+			event : 'gtm.js'
+		});
+		var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l='
+				+ l
+				: '';
+		j.async = true;
+		j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-5CJH64QP');
 </script>
+<!-- End Google Tag Manager -->
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -87,8 +92,8 @@ try {
 	  "@type": "Product",
 	  "aggregateRating": {
 	    "@type": "AggregateRating",
-	    "ratingValue": "3.5",
-	    "reviewCount": "11"
+	    "ratingValue": "4.5",
+	    "reviewCount": "21"
 	  },
 	  "description": "<%=review.getReviewDetails().getSummary()%>",
 	  "name": "<%=review.getReviewDetails().getName()%>",
@@ -108,7 +113,7 @@ try {
 	      "reviewRating": {
 	        "@type": "Rating",
 	        "bestRating": "5",
-	        "ratingValue": "4.5",
+	        "ratingValue": "<%=review.getScore()%>",
 	        "worstRating": "1"
 	      }
 	    }
@@ -117,6 +122,11 @@ try {
     </script>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
+			height="0" width="0" style="display: none; visibility: hidden"></iframe>
+	</noscript>
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
@@ -190,12 +200,14 @@ try {
 				%>
 				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					aria-label="Welcome <%=currentUser.getNickname()%>"
-					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					class="btn btn-primary btn-sm"
+					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
-					aria-label="Login/Register" class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
+					aria-label="Login/Register" class="btn btn-primary btn-sm"
+					aria-label="Login/Register">Login/Register</a>
 				<%}%>
 			</div>
 		</div>
@@ -212,14 +224,21 @@ try {
 						by - <a href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
 							aria-label="<%=author.getName()%>"><%=author.getName()%></a>
 					</h4>
-					<img border="0" src="<%=review.getMediaList().get(0)%>"
+					<a href="<%=review.getLink()%>" target="_blank"
+						aria-label="<%=review.getReviewDetails().getTitle()%>"><img
+						border="0" src="<%=review.getMediaList().get(0)%>"
 						alt="<%=review.getReviewDetails().getDesc()%>" height="250px"
-						width="250px">
+						width="250px"></a>
 					<h4>Introduction</h4>
 					<p><%=review.getReviewDetails().getIntroduction()%></p>
 					<p><%=HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
 					<h4>Conclusion</h4>
 					<p><%=review.getReviewDetails().getConclusion()%></p>
+					<h2>
+						<a href="<%=review.getLink()%>"
+							aria-label="<%=review.getReviewDetails().getCall()%>"><%=review.getReviewDetails().getCall()%></h2><br><h1>Check Amazon!</a>
+					</h1>
+					<br>
 					<h4>
 						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"
 							aria-label="Author

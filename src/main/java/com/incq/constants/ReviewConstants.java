@@ -17,6 +17,8 @@ public class ReviewConstants extends BaseEntityConstants{
 
 	public static final String SLUG = "Slug";
 
+	public static final String CALL = "Call";
+	
 	public static final String MEDIA = "Media";
 
 	public static final String DESC = "Desc";
@@ -40,6 +42,8 @@ public class ReviewConstants extends BaseEntityConstants{
 	public static final String AUTHOR = "Author";
 
 	public static final String TAGS = "Tags";
+
+	public static final String SCORE = "Score";
 
 	public static final String META = "Meta";
 

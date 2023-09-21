@@ -61,15 +61,23 @@ if ((null != currentUser) && subject != null && body != null) {
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async=true src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<!-- Google Tag Manager -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-PMGYN3L4QF');
+	(function(w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({
+			'gtm.start' : new Date().getTime(),
+			event : 'gtm.js'
+		});
+		var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l='
+				+ l
+				: '';
+		j.async = true;
+		j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-5CJH64QP');
 </script>
+<!-- End Google Tag Manager -->
 
 
 <meta charset="utf-8">
@@ -83,7 +91,12 @@ if ((null != currentUser) && subject != null && body != null) {
 
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
-	<!-- First Navigation -->
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
+			height="0" width="0" style="display: none; visibility: hidden"></iframe>
+	</noscript>
+	<!-- First Navigation -->	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img

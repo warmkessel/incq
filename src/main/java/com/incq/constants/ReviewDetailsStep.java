@@ -13,8 +13,9 @@ public enum ReviewDetailsStep {
 	STEP4("step4"), // Translate Summary"
 	STEP5("step5"), // Translate Title"
 	STEP6("step6"), // Translate Name"
-	STEP7("step7"), // Translate Review
-	STEP8("step8"); // Enable
+	STEP7("step7"), // Translate Call
+	STEP8("step8"), // Translate Review
+	STEP9("step9"); // Enable
 
 	static Logger logger = Logger.getLogger(ReviewDetailsStep.class.getName());
 

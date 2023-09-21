@@ -28,18 +28,23 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async=true
-	src="https://www.googletagmanager.com/gtag/js?id=G-PMGYN3L4QF"></script>
+<!-- Google Tag Manager -->
 <script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag() {
-		dataLayer.push(arguments);
-	}
-	gtag('js', new Date());
-
-	gtag('config', 'G-PMGYN3L4QF');
+	(function(w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({
+			'gtm.start' : new Date().getTime(),
+			event : 'gtm.js'
+		});
+		var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l='
+				+ l
+				: '';
+		j.async = true;
+		j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+		f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-5CJH64QP');
 </script>
+<!-- End Google Tag Manager -->
 
 
 <meta charset="utf-8">
@@ -55,6 +60,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript>
+		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
+			height="0" width="0" style="display: none; visibility: hidden"></iframe>
+	</noscript>
+	<!-- End Google Tag Manager (noscript) -->
 	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
@@ -65,9 +76,10 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/groups/915527066379136/"
-						class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" aria-label="Twitter" class="px-2"
-						aria-label="Link to our Home Page" target="_blank"><i
+						class="px-2" target="_blank" aria-label="Facebook"><i
+						class="ti-facebook"></i></a> <a
+						href="https://twitter.com/shrinesecrets" aria-label="Twitter"
+						class="px-2" aria-label="Link to our Home Page" target="_blank"><i
 						class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -87,14 +99,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>"
-						aria-label="Home">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>"
-						aria-label="Authors">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>"
-						aria-label="Contact Us">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact
+							Us</a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
@@ -124,7 +134,8 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				if (currentUser != null) {
 				%>
 				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					class="btn btn-primary btn-sm"
+					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
@@ -153,7 +164,8 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
 										aria-label="Link to our review of <%=theList.get(x).getReviewDetails().getTitle()%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
-									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>" height="250px" width="250px"
+									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>"
+										height="250px" width="250px"
 										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
 									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
 										<a
@@ -183,14 +195,11 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 						aria-label="Link to our Home Page" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>"
-						aria-label="Home" class="px-3"><small
+					<a href="<%=JspConstants.INDEX%>" aria-label="Home" class="px-3"><small
 						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>"
-						aria-label="Authors" class="px-3"><small
+						href="<%=JspConstants.AUTHORS%>" aria-label="Authors" class="px-3"><small
 						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>"
-						aria-label="Contact" class="pl-3"><small
+						href="<%=JspConstants.CONTACT%>" aria-label="Contact" class="pl-3"><small
 						class="font-weight-bold">Contact</small></a>
 				</div>
 			</div>
@@ -215,12 +224,10 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/groups/915527066379136/"
-							class="px-2" target="_blank"
-							aria-label="Facebook"><i
+							class="px-2" target="_blank" aria-label="Facebook"><i
 							class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"
-							aria-label="Twitter" target="_blank"><i
-							class="ti-twitter"></i></a>
+							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
 			</div>
@@ -229,8 +236,12 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	</footer>
 	<!-- End of Page Footer -->
 	<!-- core  -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
 	<!-- bootstrap affix -->
 </body>
 </html>

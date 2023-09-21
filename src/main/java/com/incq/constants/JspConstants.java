@@ -85,6 +85,8 @@ public class JspConstants {
 	public static final String PROMOTE= "promote";
 	public static final String TITLE = "title";
 	public static final String LINK = "link";
+	public static final String SCORE = "score";
+	public static final String CALL = "call";
 	public static final String INTRODUCTIONDESC = "introductionDesc";
 	public static final String REVIEWBODYDESC = "reviewBodyDesc";
 	public static final String CONCLUSIONDESC = "conclusionDesc";

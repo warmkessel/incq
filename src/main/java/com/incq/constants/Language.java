@@ -25,7 +25,6 @@ public enum Language {
     SPANISH_VENEZUELA("es-VE", "Spanish (Venezuela)", "&#127483;&#127466;"),
     SPANISH_PERU("es-PE", "Spanish (Peru)", "&#127477;&#127486;"),
     SWEDISH("sv", "Swedish", "&#127480;&#127465;"),
-    SWISS_GERMAN_FRENCH("ch", "Swiss German/Swiss French", "&#127464;&#127469;"),
     TURKISH("tr", "Turkish", "&#127481;&#127479;"),
     HEBREW("he", "Hebrew", "&#127473;&#127482;"),
     SINGLISH_MALAY("sg", "Singaporean English (Singlish)/Malay", "&#127464;&#127472;");

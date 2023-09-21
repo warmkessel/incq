@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 //import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,11 +32,10 @@ public class ReviewList {
 				.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.BOOKMARKED, true),
 						PropertyFilter.eq(ReviewConstants.DELETED, false)))
 				.build();
-		
-		if(!bookmarked) {
+
+		if (!bookmarked) {
 			query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW)
-					.setFilter(PropertyFilter.eq(ReviewConstants.DELETED, false))
-					.build();
+					.setFilter(PropertyFilter.eq(ReviewConstants.DELETED, false)).build();
 		}
 		// Run the query and retrieve a list of matching entities
 		QueryResults<Entity> results = datastore.run(query);
@@ -43,8 +43,6 @@ public class ReviewList {
 		return entities;
 	}
 
-	
-	
 	public static ArrayList<Review> fetchBookmaredReviews(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities(true);
@@ -55,6 +53,7 @@ public class ReviewList {
 		}
 		return theReturn;
 	}
+
 	public static ArrayList<Review> fetchReviewSiteMap(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities(false);
@@ -65,6 +64,7 @@ public class ReviewList {
 		}
 		return theReturn;
 	}
+
 	public static Entity fetchReview(String slug) {
 		return fetchReview(slug, true);
 	}
@@ -72,9 +72,8 @@ public class ReviewList {
 	public static Entity fetchReview(String slug, boolean guarantee) {
 		Entity theReturn = null;
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-		Query<Entity> query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW)
-				.setFilter(CompositeFilter.and(PropertyFilter.eq(ReviewConstants.SLUG, slug),
-						PropertyFilter.eq(AuthorConstants.DELETED, false)))
+		Query<Entity> query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW).setFilter(CompositeFilter
+				.and(PropertyFilter.eq(ReviewConstants.SLUG, slug), PropertyFilter.eq(AuthorConstants.DELETED, false)))
 				.build();
 		// Run the query and retrieve a list of matching entities
 		QueryResults<Entity> results = datastore.run(query);
@@ -191,8 +190,8 @@ public class ReviewList {
 			}
 			break;
 		case STEP11:// Write Slug
-			review.setSlug(AIManager.editText(review.getReviewDetails().getName(), AIConstants.AISLUG,
-					"", review.getSlug()));
+			review.setSlug(
+					AIManager.editText(review.getReviewDetails().getName(), AIConstants.AISLUG, "", review.getSlug()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
@@ -204,7 +203,21 @@ public class ReviewList {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP13:// Mark the Review Active
+
+		case STEP13:// Set Score
+			review.setScore(4.5 + Math.round((0.5 * new Random().nextDouble()) * 100.0) / 100.0);
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP14:// Write Call
+			review.getReviewDetails().setCall(AIManager.editText(review.getReviewDetails().getSummary(),
+					AIConstants.AICALL, "", review.getReviewDetails().getCall()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP15:// Mark the Review Active
 			review.setDeleted(false);
 			break;
 		case FAIL:
