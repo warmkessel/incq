@@ -149,8 +149,7 @@ if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.S
 	review.setSlug(slug);
 	dirty = true;
 }
-if (null != request.getParameter(JspConstants.CALL)
-		&& request.getParameter(JspConstants.CALL).length() > 0) {
+if (null != request.getParameter(JspConstants.CALL) && request.getParameter(JspConstants.CALL).length() > 0) {
 	call = (String) request.getParameter(JspConstants.CALL);
 	review.getReviewDetails().setCall(call);
 	dirty = true;
@@ -212,6 +211,7 @@ if (null != request.getParameter(JspConstants.CONCLUSIONDESC)
 }
 if (dirty && save) {
 	review.save();
+	save = false;
 }
 langList = request.getParameterValues(JspConstants.LANGUAGELIST);
 
@@ -221,38 +221,44 @@ if (null != langList && langList.length > 0) {
 %>
 </head>
 <body>
-	Language Selection:
-	<form action="<%=JspConstants.ADMINREVIEW%>" method="get"
-		id="languageForm">
-		<select name="la"
-			onchange="document.getElementById('languageForm').submit();">
-			<%
-			for (Language langEnum : Language.values()) {
-			%>
-			<option value="<%=langEnum.code%>"
-				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
-				<%=langEnum.name%></option>
-			<%}%>
-		</select><input type=hidden name="<%=JspConstants.ID%>"
-			value="<%=review.getKeyLong()%>">
-	</form>
 	<h1>
 		Review ID: <a
 			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
-	</h1>
-	<h1>
-		Review Details ID: <a
-			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getReviewDetails().getKeyLong()%></a>
 	</h1>
 	<br>
 
 	<form method=post
 		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
 		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
-			value="Language.ENGLISH"> <input type="hidden"
+			value="<%= Language.ENGLISH.code%>"> <input type="hidden"
 			name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>">
-		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
-			value="true" <%=review.isDeleted() ? "checked" : ""%>> True <input
+		<table>
+			<%
+			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(review.getKeyLong());
+			Map<Language, Boolean> ready = ReviewDetailsList.checkReviewDetailsReady(review.getKeyLong());
+			for (Language langEnum : Language.values()) {
+			%>
+			<tr>
+				<td>
+					<%if (state.get(langEnum)) {%><a
+					href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>">
+						<%}%><%=langEnum.name%> <%
+ if (state.get(langEnum)) {
+ %>
+				</a> <%}%>
+				</td>
+				<td><%=state.get(langEnum) ? "Instantiated" : ""%></td>
+				<td><%=ready.get(langEnum) ? "Ready" : ""%></td>
+				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
+					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
+			</tr>
+			<%}%>
+		</table>
+		<br> Toggle Checkboxes<input type=button value=toggle
+			id="toggleButton"> <br><input type=hidden
+			name=save value="save"> Deleted:<input type="radio"
+			name="<%=JspConstants.DELETED%>" value="true"
+			<%=review.isDeleted() ? "checked" : ""%>> True <input
 			type="radio" name="<%=JspConstants.DELETED%>" value="false"
 			<%=!review.isDeleted() ? "checked" : ""%>> False<br>
 		Bookmark:<input type="radio" name="<%=JspConstants.BOOKMARKED%>"
@@ -297,7 +303,7 @@ if (null != langList && langList.length > 0) {
 		%><input type="button" value="Step 4 - Determine the Meta"
 			onclick="appendToUrlAndFetch('step4')">
 		<%}%>
-		<br> <input type=hidden name=save value="save">
+		<br>
 		<%
 		if (Language.ENGLISH.equals(lang)) {
 		%>
@@ -309,16 +315,14 @@ if (null != langList && langList.length > 0) {
 	<hr>
 	<form method=post
 		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
-		<select name="la"
-			onchange="document.getElementById('languageForm').submit();">
-			<%
-			for (Language langEnum : Language.values()) {
-			%>
-			<option value="<%=langEnum.code%>"
-				<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
-				<%=langEnum.name%></option>
-			<%}%>
-		</select><input type=hidden name=id value="<%=review.getKeyLong()%>"> <br>
+		<h1>
+			Review Details ID: <a
+				href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getReviewDetails().getKeyLong()%></a>
+		</h1>
+		<h1>
+			Language:<%=lang.flagUnicode%><%=lang.name%></h1>
+		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
+			value="<%=lang.code%>"><input type=hidden name=id value="<%=review.getKeyLong()%>">
 		<input type="hidden" name="<%=JspConstants.ID%>"
 			value="<%=review.getKeyLong()%>"> Deleted:<input type="radio"
 			name="<%=JspConstants.DELETED%>" value="true"
@@ -349,7 +353,7 @@ if (null != langList && langList.length > 0) {
 		%><input type="button" value="Step 7 - Translate Call"
 			onclick="appendToUrlAndFetch('step7')">
 		<%}%><br> Description:
-		<textarea name="<%=JspConstants.DESC%>" rows="20" cols="80"><%=review.getReviewDetails().getDesc()%></textarea>
+		<textarea name="<%=JspConstants.DESC%>" rows="12" cols="80"><%=review.getReviewDetails().getDesc()%></textarea>
 		<%
 		if (Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 12 - Write Description"
@@ -420,27 +424,11 @@ if (null != langList && langList.length > 0) {
 		if (!Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 3 - Translate Conclusion"
 			onclick="appendToUrlAndFetch('step3')">
-		<%}%>
-		<br>
-		<table>
-			<%
-			Map<Language, Boolean> state = ReviewDetailsList.checkReviewDetailsLanguages(review.getKeyLong());
-			Map<Language, Boolean> ready = ReviewDetailsList.checkReviewDetailsReady(review.getKeyLong());
-			for (Language langEnum : Language.values()) {
-			%>
-			<tr>
-				<td><a
-					href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>"><%=langEnum.name%></a></td>
-				<td><%=state.get(langEnum) ? "Instantiated" : ""%></td>
-				<td><%=ready.get(langEnum) ? "Ready" : ""%></td>
-				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
-					value="<%=langEnum.code%>" <%=!state.get(langEnum) ? "" : ""%>></td>
-			</tr>
-			<%}%>
-		</table>
-		<br> Toggle Checkboxes<input type=button value=toggle
-			id="toggleButton"> <br> <br> <input type=hidden
-			name=save value="save"> <input type=submit value="save">
+		<%}%><br>
+		<input type=hidden
+			name=save value="save">
+		<input type=submit value="save">
+		<br><br>
 	</form>
 	<script type="text/javascript">
 	// Function to toggle checkboxes

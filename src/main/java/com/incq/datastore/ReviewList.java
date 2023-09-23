@@ -176,7 +176,7 @@ public class ReviewList {
 		case STEP9:// Write the Conclusion
 			review.getReviewDetails()
 					.setSummary(AIManager.editText(
-							review.getReviewDetails().getIntroduction() + review.getReviewDetails().getConclusion(),
+							review.getSource(),
 							AIConstants.AISUMMARY, author.getStyle(), review.getReviewDetails().getSummary()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);

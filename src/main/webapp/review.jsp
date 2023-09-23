@@ -137,7 +137,7 @@ try {
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/groups/915527066379136/"
+					<a href="https://www.facebook.com/INCQreviews/"
 						class="px-2" target="_blank" aria-label="Facebook"><i
 						class="ti-facebook"></i></a> <a
 						href="https://twitter.com/shrinesecrets" aria-label="Twitter"
@@ -236,7 +236,13 @@ try {
 					<p><%=review.getReviewDetails().getConclusion()%></p>
 					<h2>
 						<a href="<%=review.getLink()%>"
-							aria-label="<%=review.getReviewDetails().getCall()%>"><%=review.getReviewDetails().getCall()%></h2><br><h1>Check Amazon!</a>
+							aria-label="<%=review.getReviewDetails().getCall()%>"><%=review.getReviewDetails().getCall()%></a>
+					</h2>
+					<br>
+					<h1>
+						<a href="<%=review.getLink()%>"
+							aria-label="<%=review.getReviewDetails().getCall()%>">Check
+							Amazon!</a>
 					</h1>
 					<br>
 					<h4>
@@ -300,7 +306,7 @@ try {
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/groups/915527066379136/"
+						<a href="https://www.facebook.com/INCQreviews/"
 							class="px-2" target="_blank" aria-label="Facebook"><i
 							class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"

@@ -27,7 +27,10 @@ public class IncqServletException extends ServletException {
 		return exception;
 	}
 	public String getMessage() {
-		StringBuffer theReturn = new StringBuffer(super.getMessage());
+		StringBuffer theReturn = new StringBuffer();
+		if(null != super.getMessage()) {
+			theReturn.append(super.getMessage());
+		}
 		theReturn.insert(0, message);
 		return theReturn.toString();
 	}

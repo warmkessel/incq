@@ -110,7 +110,7 @@ try {
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/groups/915527066379136/"
+					<a href="https://www.facebook.com/INCQreviews/"
 						class="px-2" target="_blank" aria-label="Facebook"><i
 						class="ti-facebook"></i></a> <a
 						href="https://twitter.com/shrinesecrets" class="px-2"
@@ -236,7 +236,7 @@ try {
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/groups/915527066379136/"
+						<a href="https://www.facebook.com/INCQreviews/"
 							class="px-2" target="_blank" aria-label="Facebook"><i
 							class="ti-facebook"></i></a> <a
 							href="https://twitter.com/shrinesecrets" class="px-2"

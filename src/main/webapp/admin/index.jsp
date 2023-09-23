@@ -25,12 +25,17 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 						https://pagespeed.web.dev/ </a></li>
 
 				<li><a href="site:incq.com">site:incq.com</a></li>
+
+
 				<li><a
 					href="https://search.google.com/search-console?resource_id=sc-domain:incq.com">Search.google.com</a></li>
 				<li><a href="https://search.google.com/test/rich-results">https://search.google.com/test/rich-results</a></li>
 				<li><a
 					href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide#addstructureddata">SEO
 						guide</a></li>
+				<li><a
+					href="https://www.bing.com/webmasters/indexnow?siteUrl=https://incq.com/">https://www.bing.com/webmasters/indexnow?siteUrl=https://incq.com/</a></li>
+
 			</ul>
 		</li>
 		<li>Analytics

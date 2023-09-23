@@ -197,8 +197,10 @@ public class AuthorList {
 			}
 			break;
 		case STEP4:// Suggest Long Description"
-			auth.setLongDescription(AIManager.editText3(auth.getLongDescription(), AIConstants.AIAUTHORLONG,
-					auth.getStyle(), auth.getLongDescription()));
+			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step,
+					position, continueExpand, AIConstants.AIAUTHORLONG));
+			
+			
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
@@ -206,14 +208,11 @@ public class AuthorList {
 		case STEP5:// Suggest Short Description"
 			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
 					auth.getStyle(), auth.getShortDescription()));
-			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
-			}
 			break;
 		case STEP6:// Translate Name
 
 			auth.setTranslatedName(AIManager.editText(auth.getTranslatedName(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", auth.getTranslatedName()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):"));
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
@@ -221,13 +220,13 @@ public class AuthorList {
 		case STEP7:// Translate Short Description
 
 			auth.setShortDescription(AIManager.editText(auth.getShortDescription(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):", auth.getShortDescription()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):"));
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP8:// Translate Long Description"
-			auth.setLongDescription(translateString(auth.getLongDescription(), auth, lang, step,
+			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step,
 					position, continueExpand));
 			break;
 		case STEP9:// Enable
@@ -243,8 +242,14 @@ public class AuthorList {
 		auth.save();
 
 	}
-	private static String translateString(String input, Author auth, Language lang,
+	private static String chunkString(String input, Author auth, Language lang,
 			AuthorStep step, int position, boolean continueExpand) throws IncqServletException {
+		return chunkString(input, auth, lang,
+				step, position, continueExpand, 
+				AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):");
+	}
+	private static String chunkString(String input, Author auth, Language lang,
+			AuthorStep step, int position, boolean continueExpand, String instruction) throws IncqServletException {
 		StringBuffer theReturn = new StringBuffer();
 		String subString = "";
 		String[] theSplit = input.split("\r\n");
@@ -263,8 +268,7 @@ public class AuthorList {
 		int numOfTries = 10;
 		while (numOfTries > 0 && subString.length() > 0) {
 			try {
-				theSplit[position] = AIManager.editText(subString,
-						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", subString);
+				theSplit[position] = AIManager.editText(subString,instruction, "", subString);
 				numOfTries = 0;
 			} catch (IncqServletException incq) {
 				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);

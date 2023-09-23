@@ -152,7 +152,7 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 						StringValue.newBuilder(getSummary()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.TITLE, getTitle()).set(ReviewConstants.LANGUAGE, getLanguage().code)
 				.set(ReviewConstants.REVIEW, getReviewId()).set(ReviewConstants.NAME, getName())
-				.set(ReviewConstants.DESC, getDesc())
+				.set(ReviewConstants.DESC, StringValue.newBuilder(getDesc()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.CALL, getCall())
 				.set(ReviewConstants.INTRODUCTION,
 						StringValue.newBuilder(getIntroduction()).setExcludeFromIndexes(true).build())

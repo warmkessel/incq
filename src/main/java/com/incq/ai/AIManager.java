@@ -1,5 +1,6 @@
 package com.incq.ai;
 
+import java.net.SocketTimeoutException;
 //import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,7 +9,6 @@ import org.json.*;
 import com.google.appengine.api.urlfetch.*;
 import com.incq.constants.*;
 import com.incq.exception.IncqServletException;
-import com.incq.util.HtmlHelper;
 
 public class AIManager {
 	public static final String SORRY = "sorry";
@@ -28,11 +28,11 @@ public class AIManager {
 
 		while (numOfTries > 0) {
 			try {
-				String[] inputArr = input.split("\r\n");
+				String[] inputArr = input.split("\\.");
 				for (int x = 0; x < inputArr.length; x++) {
-					if (inputArr[x].length() > 0) {
-						theReturn.append(extactText(edit(inputArr[x], instruction, style, true), errorMessage))
-								.append(HtmlHelper.CRLF);
+					if (inputArr[x].trim().length() > 0) {
+						theReturn.append(edit(inputArr[x], instruction, style, true, inputArr[x]))
+								.append(".");
 					}
 				}
 				numOfTries = 0;
@@ -44,25 +44,32 @@ public class AIManager {
 		return theReturn.toString();
 	}
 
+	public static String editText(String input, String instruction)throws IncqServletException {
+		return editText(input, instruction, "");
+
+	}
+	public static String editText(String input, String instruction, String style)throws IncqServletException {
+		return editText(input, instruction, style, input);
+	}
 	public static String editText(String input, String instruction, String style, String errorMessage)
 			throws IncqServletException {
-		return extactText(edit(input, instruction, style, true), errorMessage);
+		return edit(input, instruction, style, true, errorMessage);
 	}
 
-	public static String editText3(String input, String instruction, String style, String errorMessage)
-			throws IncqServletException {
-		return extactText(edit(input, instruction, style, false), errorMessage);
-	}
+//	public static String editText3(String input, String instruction, String style, String errorMessage)
+//			throws IncqServletException {
+//		return extactText(edit(input, instruction, style, false), errorMessage);
+//	}
 
-	public static String editText(String input, String instruction, String errorMessage) throws IncqServletException {
-		return extactText(edit(input, instruction, "", true), errorMessage);
-	}
+//	public static String editText(String input, String instruction, String errorMessage) throws IncqServletException {
+//		return extactText(edit(input, instruction, "", true), errorMessage);
+//	}
 
-	public static String editText3(String input, String instruction, String errorMessage) throws IncqServletException {
-		return extactText(edit(input, instruction, "", false), errorMessage);
-	}
+//	public static String editText3(String input, String instruction, String errorMessage) throws IncqServletException {
+//		return extactText(edit(input, instruction, "", false), errorMessage);
+//	}
 
-	public static String edit(String input, String instruction, String style, boolean current)
+	public static String edit(String input, String instruction, String style, boolean current, String errorMessage)
 			throws IncqServletException {
 		String theReturn = "";
 		// input = removeUnusual(input);
@@ -97,9 +104,13 @@ public class AIManager {
 			logger.log(Level.INFO, "requestBody " + mainObject.toString());
 
 			HTTPResponse httpResponse = urlFetchService.fetch(httpRequest);
-			theReturn = new String(httpResponse.getContent()).trim();
+			theReturn = extactText(new String(httpResponse.getContent()).trim(), errorMessage);
 
 			logger.log(Level.INFO, "httpResponse " + theReturn);
+
+		} catch (SocketTimeoutException ste) {
+			logger.log(Level.SEVERE, "TimeoutException to execute OpenAI API request: " + ste.getMessage());
+			theReturn = editTextChunk(input, instruction, style, "");
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to execute OpenAI API request: " + e.getMessage());
 			throw new IncqServletException(e);
@@ -121,7 +132,7 @@ public class AIManager {
 
 //				String text = choices.getJSONObject(0).getString("content");
 				// String text = choices.getJSONObject(0).getString("text");
-				theReturn = text;
+				theReturn = removeOuterQuotes(text);
 			}
 		} catch (JSONException e) {
 			logger.log(Level.SEVERE, "JSONException: " + e.getMessage());
@@ -139,6 +150,18 @@ public class AIManager {
 		return theReturn;
 	}
 
+	public static String removeOuterQuotes(String input) {
+        if (input == null || input.length() == 0) {
+            // Return the input unchanged if it is null or empty
+            return input;
+        }
+        input = input.trim();
+        int startIndex = input.charAt(0) == '"' ? 1 : 0;
+        int endIndex = input.charAt(input.length() - 1) == '"' ? input.length() - 1 : input.length();
+
+        // Return the substring from startIndex to endIndex
+        return input.substring(startIndex, endIndex);
+    }
 	private static boolean checkInvalidResponse(String response) {
 		String responseLower = response.toLowerCase();
 		return (responseLower.contains(SORRY) || responseLower.contains(AIMODEL));

@@ -78,6 +78,7 @@ public class ReviewDetailsList {
 				rdetailSub.setIntroduction(rdetail.getIntroduction());
 				rdetailSub.setReviewBody(rdetail.getReviewBody());
 				rdetailSub.setConclusion(rdetail.getConclusion());
+				rdetailSub.setCall(rdetail.getCall());
 				rdetailSub.save();
 				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getReviewId(), lang, ReviewDetailsStep.STEP1,
 						true);
@@ -132,8 +133,7 @@ public class ReviewDetailsList {
 		switch (step) {
 		case STEP1: // translate Introduction"
 			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "",
-					reviewDetails.getIntroduction()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -142,7 +142,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP2: // translate Desc"
 			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getDesc()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -151,7 +151,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP3: // translate Conclusion"
 			reviewDetails.setConclusion(AIManager.editText(reviewDetails.getConclusion(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", reviewDetails.getConclusion()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -160,7 +160,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP4: // translate Summary"
 			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getSummary()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -169,7 +169,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP5: // translate Title"
 			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getTitle()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -178,7 +178,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP6: // translate Name"
 			reviewDetails.setName(AIManager.editText(reviewDetails.getName(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getName()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -187,7 +187,7 @@ public class ReviewDetailsList {
 			break;
 		case STEP7: // translate Call"
 			reviewDetails.setCall(AIManager.editText(reviewDetails.getCall(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", reviewDetails.getCall()));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
 				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
@@ -235,7 +235,7 @@ public class ReviewDetailsList {
 		while (numOfTries > 0 && subString.length() > 0) {
 			try {
 				theSplit[position] = AIManager.editText(subString,
-						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):", "", subString);
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):");
 				numOfTries = 0;
 			} catch (IncqServletException incq) {
 				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);
