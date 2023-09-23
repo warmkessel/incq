@@ -95,6 +95,13 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		}
 	}
 
+	public String getCategory() {
+	    return getTags().stream()
+	                    .map(Value::get)
+	                    .map(Object::toString)
+	                    .findFirst()
+	                    .orElse(ReviewConstants.GENERAL);
+	}
 	public List<? extends Value<?>> getTags() {
 
 		if (null == tags) {

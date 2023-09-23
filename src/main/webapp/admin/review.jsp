@@ -90,14 +90,7 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 
 if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.TAGS)
 		&& request.getParameter(JspConstants.TAGS).length() > 0) {
-	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGS));
-	for (String str : list) {
-		String[] split = str.split(",");
-		for (int x = 0; x < split.length; x++) {
-	tag.add(split[x]);
-		}
-	}
-	review.setTags(tag);
+	review.setTags(request.getParameter(JspConstants.TAGS));
 }
 if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.META)
 		&& request.getParameter(JspConstants.META).length() > 0) {

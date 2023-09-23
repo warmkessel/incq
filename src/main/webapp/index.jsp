@@ -3,6 +3,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.net.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
+<%@ page import="com.incq.util.*"%>
 <%@ page import="com.incq.constants.*"%>
 <%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.incq.entity.*"%>
@@ -24,7 +25,16 @@ if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstant
 } else {
 	lang = Language.findByCode(subDomain);
 }
-ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
+int categoryLoc = url.getPath().indexOf(JspConstants.CATEGORY);
+ArrayList<Review> theList = new ArrayList<Review>();
+String category = "";
+if (categoryLoc >= 0) {
+	category = URLDecoder.decode(url.getPath().substring(categoryLoc + JspConstants.CATEGORY.length()), "UTF-8");
+	theList = ReviewList.fetchCategoryEntities(category, lang);
+}
+else{
+	theList = ReviewList.fetchBookmaredReviews(lang);
+}
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
@@ -149,7 +159,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 	<!-- Menu Section -->
 	<section class="has-img-bg" id="insite">
 		<div class="container">
-			<h6 class="section-subtitle text-center">Our most popular:</h6>
+			<h6 class="section-subtitle text-center"><%=category.length() > 0 ? "Category: " + CaseControl.capFirstLetter(category) : "Our most popular:"%></h6>
 			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">

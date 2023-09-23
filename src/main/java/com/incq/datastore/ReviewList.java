@@ -43,6 +43,23 @@ public class ReviewList {
 		return entities;
 	}
 
+	private static List<Entity> fetchCategoryEntities(String category) {
+		ListValue.Builder listBuilder = ListValue.newBuilder().addValue(StringValue.newBuilder(category).build());
+
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		Query<Entity> query = Query.newEntityQueryBuilder().setKind(ReviewConstants.REVIEW)
+				
+				.setFilter(CompositeFilter.and(PropertyFilter.in(ReviewConstants.TAGS, listBuilder.build()),
+						PropertyFilter.eq(ReviewConstants.DELETED, false)))
+				.build();
+		// Run the query and retrieve a list of matching entities
+		QueryResults<Entity> results = datastore.run(query);
+		List<Entity> entities = Lists.newArrayList(results);
+		return entities;
+	}
+
+	
 	public static ArrayList<Review> fetchBookmaredReviews(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities(true);
@@ -54,6 +71,17 @@ public class ReviewList {
 		return theReturn;
 	}
 
+	public static ArrayList<Review> fetchCategoryEntities(String category, Language lang) {
+		ArrayList<Review> theReturn = new ArrayList<Review>();
+		List<Entity> entitys = fetchCategoryEntities(category);
+		for (int x = 0; x < entitys.size(); x++) {
+			Review review = new Review();
+			review.loadFromEntity(entitys.get(x), lang);
+			theReturn.add(review);
+		}
+		return theReturn;
+	}
+	
 	public static ArrayList<Review> fetchReviewSiteMap(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities(false);

@@ -218,6 +218,9 @@ try {
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
+					<h6><a 
+						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a> | <a 
+						href="<%=JspConstants.CATEGORY +review.getCategory()%>" aria-label="Home"><%=CaseControl.capFirstLetter(review.getCategory())%></a></h6>
 					<h4>
 						<a href="<%=review.getLink()%>" target="_blank"
 							aria-label="<%=review.getReviewDetails().getTitle()%>"><%=review.getReviewDetails().getTitle()%></a>

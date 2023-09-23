@@ -57,5 +57,8 @@ public class ReviewConstants extends BaseEntityConstants{
 
 	public static final String CREATEDDATE = "CreatedDate";
 
+
 	public static final String LANGUAGE = "Language";
+
+	public static final String GENERAL = "General";
 }
