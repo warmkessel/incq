@@ -87,8 +87,8 @@ try {
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
-	content="Reviews by: <%=author.getName()%> <%=author.getShortDescription()%>">
-<meta name="author" content="INCQ: <%=author.getName()%>">
+	content="Reviews by: <%=author.getTranslatedName()%> <%=author.getShortDescription()%>">
+<meta name="author" content="INCQ: <%=author.getTranslatedName()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">

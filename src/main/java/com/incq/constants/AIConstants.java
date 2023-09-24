@@ -40,9 +40,9 @@ public class AIConstants {
 
 	public static final String AIAUTHORTAGS = "Suggest a list of 10 activityies and intresets seperated by a , which this author may be intrested it. ";
 
-	public static final String AIAUTHORLONG = "Imagined backgroud of an author whos has some relevance to the following elements.  Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences. Do not referance any real people";
+	public static final String AIAUTHORLONG = "Imagined a backgroud of the author written as if the author was writing the background in four or five paragraphs.  Each paragraph should have a title and three to five sentences. Do not referance any real people";
 
-	public static final String AIAUTHORSHORT = "Review this content and summarize one paragraphs.   Do not referance any real people";
+	public static final String AIAUTHORSHORT = "summarize the background profided and write 3 to 5 sentences summarizing it in the voice of the author.   Do not referance any real people";
 
 	public static final String AIAUTHOR = "Suggest a first and last name of the author";
 

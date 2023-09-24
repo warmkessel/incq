@@ -184,7 +184,7 @@ public class AuthorList {
 			}
 			break;
 		case STEP2:// Suggest a Style
-			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE, auth.getStyle()));
+			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE));
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}
@@ -197,7 +197,7 @@ public class AuthorList {
 			}
 			break;
 		case STEP4:// Suggest Long Description"
-			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step,
+			auth.setLongDescription(chunkString("My name is " + auth.getName() + auth.getLongDescription(), auth, lang, step,
 					position, continueExpand, AIConstants.AIAUTHORLONG));
 			
 			
@@ -206,7 +206,7 @@ public class AuthorList {
 			}
 			break;
 		case STEP5:// Suggest Short Description"
-			auth.setShortDescription(AIManager.editText(auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
+			auth.setShortDescription(AIManager.editText("My name is " + auth.getName() + auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
 					auth.getStyle(), auth.getShortDescription()));
 			break;
 		case STEP6:// Translate Name
