@@ -54,14 +54,14 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Welcome to the INCQ Reviews">
+<meta name="description" content="<%=lang.incqDesc%>">
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title>INCQ Reviews</title>
+<title>INCQ <%=lang.reviews%></title>
 
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+<body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
@@ -73,13 +73,13 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<a class="navbar-brand"
 				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
 				aria-label="Link to our Home Page"><img
-				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/INCQreviews/"
-						class="px-2" target="_blank" aria-label="Facebook"
-						aria-label="Facebook"><i class="ti-facebook"></i></a> <a
+					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+						target="_blank" aria-label="Facebook" aria-label="Facebook"><i
+						class="ti-facebook"></i></a> <a
 						href="https://twitter.com/shrinesecrets" class="px-2"
 						target="_blank" aria-label="Twitter" aria-label="Twitter"><i
 						class="ti-twitter"></i></a>
@@ -101,12 +101,11 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact
-							Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form
@@ -127,14 +126,15 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<%
 				if (currentUser != null) {
 				%>
-				<a href="<%=userService.createLogoutURL(JspConstants.PRIVACY)%>"
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm"
-					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%>
+					<%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a href="<%=userService.createLoginURL(JspConstants.PRIVACY)%>"
-					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login%>"><%=lang.login%></a>
 				<%}%>
 			</div>
 		</div>
@@ -160,17 +160,16 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
 						aria-label="Link to our Home Page"><img
-						src="/assets/imgs/logo-sm.jpg" width="100px" height="100px"
+						src="/assets/imgs/logo-sm.jpg" width="100" height="100"
 						alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"
-						aria-label="Home"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3"
-						aria-label="Authors" aria-label="Authors"><small
-						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"
-						aria-label="Contact"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.home %></small></a> <a
+						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.authors %></small></a> <a
+						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs %></small></a>
 				</div>
 			</div>
 		</div>
@@ -185,17 +184,16 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from
+						, <%=lang.arr %> - <%=lang.amazon %> -
 						qualifying purchases. -
 						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/INCQreviews/"
-							class="px-2" target="_blank" aria-label="Facebook"><i
-							class="ti-facebook"></i></a> <a
-							href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+							target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+						<a href="https://twitter.com/shrinesecrets" class="px-2"
 							target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>

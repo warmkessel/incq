@@ -92,9 +92,9 @@ try {
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title>INCQ Reviews - Authors</title>
+<title>INCQ <%=lang.reviews%> - <%=lang.authors %></title>
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+<body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
@@ -133,11 +133,11 @@ try {
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
@@ -167,26 +167,22 @@ try {
 				<%
 				if (currentUser != null) {
 				%>
-				<a
-					href="<%=userService.createLogoutURL(
-		JspConstants.AUTHORSEO + URLEncoder.encode(author.getName(), StandardCharsets.UTF_8.toString()))%>"
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm"
-					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome %> <%=currentUser.getNickname()%>"><%=lang.welcome %> <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a
-					href="<%=userService.createLoginURL(
-		JspConstants.AUTHORSEO + URLEncoder.encode(author.getName(), StandardCharsets.UTF_8.toString()))%>"
-					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login %>"><%=lang.login %></a>
 				<%}%>
 			</div>
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
-	<section id="">
+	<!-- Menu Section -->
+	<section>
 		<div class="container">
-
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<h3><%=author.getTranslatedName()%></h3>
@@ -195,7 +191,7 @@ try {
 			</div>
 		</div>
 	</section>
-	<!-- End OF Pray Section -->
+	<!-- End OF Menu Section -->
 	<!-- Prefooter Section  -->
 	<div
 		class="py-4 border border-lighter border-bottom-0 border-left-0 border-right-0 bg-dark">
@@ -208,12 +204,12 @@ try {
 						src="/assets/imgs/logo-sm.jpg" width="100" alt="INCQ" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
-						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
-						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
-						class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.home %></small></a> <a
+						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.authors %></small></a> <a
+						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs %></small></a>
 				</div>
 			</div>
 		</div>
@@ -229,8 +225,7 @@ try {
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from
-						qualifying purchases. -
+						, <%=lang.arr %> - <%=lang.amazon %> -
 						<%=Constants.VERSION%>
 					</p>
 				</div>

@@ -79,13 +79,13 @@ try {
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
-	content="Reviews:<%=review.getReviewDetails().getDesc()%>">
+	content="<%=lang.reviews%> %>:<%=review.getReviewDetails().getDesc()%>">
 <meta name="author" content="INCQ: <%=review.getAuthor()%>">
 <meta name="keywords" content="<%=review.getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title><%=review.getReviewDetails().getName()%> review</title>
+<title><%=lang.review%> <%=review.getReviewDetails().getName()%></title>
 <script type="application/ld+json">
    {
 	  "@context": "https://schema.org",
@@ -104,7 +104,7 @@ try {
 	  },
 	  "review": [
 	    {
-	      "@type": "Review",
+	      "@type": "<%=lang.reviews%>",
 	      "author": "<%=review.getAuthor()%>",
 	      "datePublished": "<%=Review.getFormatted(review.getUpdatedDate(), "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")%>",
 	      "reviewBody": "<%=review.getReviewDetails().getDesc()%>",
@@ -121,7 +121,7 @@ try {
 	}
     </script>
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+<body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
@@ -133,7 +133,7 @@ try {
 			<a class="navbar-brand"
 				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
 				aria-label="Link to our Home Page"> <img
-				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -160,12 +160,11 @@ try {
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact
-							Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
@@ -199,28 +198,26 @@ try {
 				if (currentUser != null) {
 				%>
 				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
-					aria-label="Welcome <%=currentUser.getNickname()%>"
 					class="btn btn-primary btn-sm"
-					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome %> <%=currentUser.getNickname()%>"><%=lang.welcome %> <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
-					aria-label="Login/Register" class="btn btn-primary btn-sm"
-					aria-label="Login/Register">Login/Register</a>
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login %>"><%=lang.login %></a>
 				<%}%>
 			</div>
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
-	<section id="">
+	<section>
 		<div class="container">
 
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-					<h6><a 
-						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a> | <a 
-						href="<%=JspConstants.CATEGORY +review.getCategory()%>" aria-label="Home"><%=CaseControl.capFirstLetter(review.getCategory())%></a></h6>
+					<h6>| <a 
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home %>"><%=lang.home %></a> | <a 
+						href="<%=JspConstants.CATEGORY +review.getCategory()%>" aria-label="<%=CaseControl.capFirstLetter(review.getCategory())%>"><%=CaseControl.capFirstLetter(review.getCategory())%></a> |</h6>
 					<h4>
 						<a href="<%=review.getLink()%>" target="_blank"
 							aria-label="<%=review.getReviewDetails().getTitle()%>"><%=review.getReviewDetails().getTitle()%></a>
@@ -230,12 +227,12 @@ try {
 					<a href="<%=review.getLink()%>" target="_blank"
 						aria-label="<%=review.getReviewDetails().getTitle()%>"><img
 						border="0" src="<%=review.getMediaList().get(0)%>"
-						alt="<%=review.getReviewDetails().getDesc()%>" height="250px"
-						width="250px"></a>
-					<h4>Introduction</h4>
+						alt="<%=review.getReviewDetails().getDesc()%>" height="250"
+						width="250"></a>
+					<h4><%=lang.introduction%></h4>
 					<p><%=review.getReviewDetails().getIntroduction()%></p>
 					<p><%=HtmlHelper.convertLongText(review.getReviewDetails().getReviewBody())%>
-					<h4>Conclusion</h4>
+					<h4><%=lang.conclusion%></h4>
 					<p><%=review.getReviewDetails().getConclusion()%></p>
 					<h2>
 						<a href="<%=review.getLink()%>"
@@ -244,14 +241,12 @@ try {
 					<br>
 					<h1>
 						<a href="<%=review.getLink()%>"
-							aria-label="<%=review.getReviewDetails().getCall()%>">Check
-							Amazon!</a>
+							aria-label="<%=review.getReviewDetails().getCall()%>"><%=lang.checkAmazon %></a>
 					</h1>
 					<br>
 					<h4>
 						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"
-							aria-label="Author
-							- <%=author.getName()%>">Author - <%=author.getName()%></a>
+							aria-label="<%=lang.author %> - <%=author.getName()%>"><%=lang.author %> - <%=author.getName()%></a>
 					</h4>
 					<p><%=author.getShortDescription()%></p>
 					<p>
@@ -278,15 +273,15 @@ try {
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
 						aria-label="Link to our Home Page"><img
 						src="/assets/imgs/logo-sm.jpg" alt="INCQ" class="mb-0"
-						height="100px" width="100px"></a>
+						height="100" width="100"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
-						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
-						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
-						class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.home %></small></a> <a
+						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.authors %></small></a> <a
+						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs %></small></a>
 				</div>
 			</div>
 		</div>
@@ -302,8 +297,7 @@ try {
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from
-						qualifying purchases. -
+						, <%=lang.arr %> - <%=lang.amazon %> -
 						<%=Constants.VERSION%>
 					</p>
 				</div>

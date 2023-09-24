@@ -16,13 +16,12 @@ Language lang = Language.ENGLISH;
 String requestUrl = request.getRequestURL().toString();
 URL url = new URL(requestUrl);
 String subDomain = url.getHost().split(JspConstants.SPLIT)[0];
-if(0 == subDomain.length() || JspConstants.WWW.equals(subDomain)|| JspConstants.LOCALHOST.equals(subDomain)){
+if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstants.LOCALHOST.equals(subDomain)) {
 	String langString = (String) request.getParameter(JspConstants.LANGUAGE);
 	if (null != langString && langString.length() > 0) {
 		lang = Language.findByCode(langString);
 	}
-}
-else{
+} else {
 	lang = Language.findByCode(subDomain);
 }
 
@@ -32,31 +31,30 @@ String from = request.getParameter(JspConstants.FROM);
 String body = request.getParameter(JspConstants.BODY);
 String pageurl = request.getParameter(JspConstants.PAGEURL);
 
-
 String emailResp = null;
 if ((null != currentUser) && subject != null && body != null) {
-    Properties props = new Properties();
-    Session mailSession = Session.getDefaultInstance(props, null);
+	Properties props = new Properties();
+	Session mailSession = Session.getDefaultInstance(props, null);
 
-    try {
-        // Create a new email message
-        Message msg = new MimeMessage(mailSession);
-        msg.setFrom(new InternetAddress(currentUser.getEmail(), currentUser.getNickname()));
-        msg.addRecipient(Message.RecipientType.TO, new InternetAddress("comment@incq.com", "INCQ"));
-        msg.setSubject("SOLS:" + subject);
-        msg.setText(body + "\r" + pageurl);
+	try {
+		// Create a new email message
+		Message msg = new MimeMessage(mailSession);
+		msg.setFrom(new InternetAddress(currentUser.getEmail(), currentUser.getNickname()));
+		msg.addRecipient(Message.RecipientType.TO, new InternetAddress("comment@incq.com", "INCQ"));
+		msg.setSubject("SOLS:" + subject);
+		msg.setText(body + "\r" + pageurl);
 
-        // Send the email
-        Transport.send(msg);
+		// Send the email
+		Transport.send(msg);
 
-        emailResp = "We got it!";
-    } catch (AddressException e) {
-        //out.println("Error: " + e.getMessage());
-        emailResp = "Error: " + e.getMessage();
+		emailResp = "We got it!";
+	} catch (AddressException e) {
+		//out.println("Error: " + e.getMessage());
+		emailResp = "Error: " + e.getMessage();
 
-    } catch (MessagingException e) {
-        emailResp = "Error: " + e.getMessage();
-    }
+	} catch (MessagingException e) {
+		emailResp = "Error: " + e.getMessage();
+	}
 }
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
@@ -87,26 +85,29 @@ if ((null != currentUser) && subject != null && body != null) {
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css?v=1">
-<title>INCQ Reviews</title>
+<title>INCQ <%=lang.reviews%></title>
 
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+<body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
 			height="0" width="0" style="display: none; visibility: hidden"></iframe>
 	</noscript>
-	<!-- First Navigation -->	<!-- First Navigation -->
+	<!-- First Navigation -->
+	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img
-				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+			<a class="navbar-brand"
+				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+				aria-label="Link to our Home Page"><img
+				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/INCQreviews/"
-						class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
+					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+						target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+					<a href="https://twitter.com/shrinesecrets" class="px-2"
 						target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -125,79 +126,88 @@ if ((null != currentUser) && subject != null && body != null) {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
-					<li class="nav-item"><a class="nav-link" href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact Us</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get" id="languageForm">
-            			<select name="la" aria-label="Language"  onchange="document.getElementById('languageForm').submit();">
-      				<% for (Language langEnum : Language.values()) {%>
-      				        <option value="<%=langEnum.code%>" <%= langEnum.equals(lang) ? "selected" : "" %>><%=langEnum.flagUnicode%> <%=langEnum.name%></option>
-					<%}%>
-    </select></form></li>
+					<li class="nav-item"><form
+							action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get"
+							id="languageForm">
+							<select name="la" aria-label="Language"
+								onchange="document.getElementById('languageForm').submit();">
+								<%
+								for (Language langEnum : Language.values()) {
+								%>
+								<option value="<%=langEnum.code%>"
+									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
+									<%=langEnum.name%></option>
+								<%}%>
+							</select>
+						</form></li>
 				</ul>
 				<%
 				if (currentUser != null) {
 				%>
-				<a
-					href="<%=userService.createLogoutURL(JspConstants.CONTACT)%>"
-					class="btn btn-primary btn-sm" aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm"
+					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%>
+					<%=currentUser.getNickname()%></a>
 				<%
 				} else {
-				%>cre
-				<a
-					href="<%=userService.createLoginURL(JspConstants.CONTACT)%>"
-					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
+				%>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login%>"><%=lang.login%></a>
 				<%}%>
 			</div>
 		</div>
 	</nav>
 	<!-- End Of Second Navigation -->
-	<!-- Menu Section --> 
+	<!-- Menu Section -->
 	<!-- Contact Section -->
 
 
-<%
-						if (currentUser != null) {
-						%> 
+	<%
+	if (currentUser != null) {
+	%>
 	<!-- Contact Section -->
-	<section class="bg-white">
+	<section>
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
-					<img src="/assets/imgs/logo.jpg"
-						alt="INCQ Review Contact"
+					<img src="/assets/imgs/logo.jpg" alt="INCQ Review Contact"
 						class="w-100 rounded shadow">
 				</div>
 				<div class="col-md-6">
 					<h3 class="section-title mb-5 text-center" id="reponse"></h3>
-					<form action="<%= JspConstants.CONTACT %>" method="get"
+					<form action="<%=JspConstants.CONTACT%>" method="get"
 						enctype="text/plain">
 						<input type="hidden" name="pageurl"
 							value="<%=request.getRequestURI() + (request.getQueryString() == null ? "" : "?" + request.getQueryString())%>">
 						<div class="form-group">
 							<input type="text" class="form-control" id="name"
-								aria-describedby="emailHelp" placeholder="Subject"
+								aria-describedby="emailHelp" placeholder="<%=lang.subject%>"
 								name="subject">
 							<textarea class="form-control" id="message"
 								aria-describedby="emailHelp"
-								placeholder="Your comment or question" name="body" rows="4"
+								placeholder="<%=lang.message%>" name="body" rows="4"
 								cols="50"></textarea>
 						</div>
-						<button type="submit" class="btn btn-primary btn-block">Share
-							your thoughts</button>
-					 <small class="form-text text-muted mt-3">We appreciate
-							your interest. Check our <a
-							href="<%=JspConstants.PRIVACY%>" aria-label="Privacy
-								Policy">Privacy
-								Policy</a>
+						<button type="submit" class="btn btn-primary btn-block"><%=lang.emailSubmit%></button>
+						<small class="form-text text-muted mt-3"><%=lang.privacyPolicyIntro %><a href="<%=JspConstants.PRIVACY%>"
+							aria-label="<%=lang.privacyPolicyIntro %>"><%=lang.privacyPolicy %></a>
 						</small>
 
-						<%if(null != emailResp){ %>
+						<%
+						if (null != emailResp) {
+						%>
 						<script>
 							var modal = document.getElementById('reponse');
-							modal.innerHTML = "<%=emailResp%>";
+							modal.innerHTML = "<%=emailResp%>
+							";
 						</script>
 						<%}%>
 					</form>
@@ -207,33 +217,30 @@ if ((null != currentUser) && subject != null && body != null) {
 	</section>
 	<!-- End OF Contact Section -->
 	<%
-						} else {
-						%>
-							<section class="bg-white">
+	} else {
+	%>
+	<section class="bg-white">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-md-6 d-none d-md-block">
-					<img src="/assets/imgs/logo.jpg"
-						alt="INCQ Landing Page"
+					<img src="/assets/imgs/logo.jpg" alt="INCQ Landing Page"
 						class="w-100 rounded shadow">
 				</div>
-				<div class="col-md-6">				
-					<h3 class="section-title mb-5 text-center" id="reponse">We'd love to hear your thoughts. Kindly login so we can receive your message.</h3>
+				<div class="col-md-6">
+					<h3 class="section-title mb-5 text-center" id="reponse"><%=lang.contactLogin %></h3>
 					<a href="<%=userService.createLoginURL(JspConstants.CONTACT)%>"
-						class="btn btn-primary btn-sm" aria-label="Login">Login</a> 
-						<br>
-						<small class="form-text text-muted mt-3">We appreciate
-							your interest. Check our <a
-							href="<%=JspConstants.PRIVACY%>" aria-label="Privacy
-								Policy">Privacy
-								Policy</a>
-						</small>
+						class="btn btn-primary btn-sm" aria-label="Login">Login</a> <br>
+					<small class="form-text text-muted mt-3"><%=lang.privacyPolicyIntro %> <a href="<%=JspConstants.PRIVACY%>"
+						aria-label="<%=lang.privacyPolicyIntro %>"><%=lang.privacyPolicy%></a>
+					</small>
 
 				</div>
 			</div>
 		</div>
 	</section>
-	<%} %>
+	<%
+	}
+	%>
 	<!-- End OF Contact Section -->
 	<!-- End of Menu Section -->
 	<!-- Prefooter Section  -->
@@ -243,13 +250,19 @@ if ((null != currentUser) && subject != null && body != null) {
 			<div
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
-					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="Link to our Home Page"><img src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+						aria-label="Link to our Home Page"><img
+						src="/assets/imgs/logo.jpg" height="100" width="100" alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small class="font-weight-bold">Home</small></a>
-					<a href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small class="font-weight-bold">Authors</small></a>
-					<a href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home%>"
+						class="px-3"><small class="font-weight-bold"><%=lang.home%></small></a>
+					<a href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors%>"
+						class="px-3"><small class="font-weight-bold"><%=lang.authors%></small></a>
+					<a href="<%=JspConstants.CONTACT%>"
+						aria-label="<%=lang.contactUs%>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs%></small></a>
 				</div>
 			</div>
 		</div>
@@ -265,14 +278,15 @@ if ((null != currentUser) && subject != null && body != null) {
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from qualifying purchases. - <%=Constants.VERSION%>
+						, <%=lang.arr %> - <%=lang.amazon %> -
+						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/INCQreviews/"
-							class="px-2" target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a> <a
-							href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+							target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+						<a href="https://twitter.com/shrinesecrets" class="px-2"
 							target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
@@ -281,7 +295,11 @@ if ((null != currentUser) && subject != null && body != null) {
 
 	</footer>
 	<!-- End of Page Footer -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+		integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+		crossorigin="anonymous"></script>
 </body>
 </html>

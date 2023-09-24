@@ -60,16 +60,15 @@ else{
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-<meta name="description" content="INCQ Reviews on all kinds of products">
+<meta name="description" content="INCQ <%=lang.incqDesc%>">
 <meta name="author" content="INCQ">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
 
-<title>INCQ Reviews</title>
+<title>INCQ <%=lang.reviews%></title>
 
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+<body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
@@ -80,8 +79,8 @@ else{
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand"
-				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
-				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="<%=lang.linkHome%>"><img
+				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
@@ -89,7 +88,7 @@ else{
 						class="px-2" target="_blank" aria-label="Facebook"><i
 						class="ti-facebook"></i></a> <a
 						href="https://twitter.com/shrinesecrets" aria-label="Twitter"
-						class="px-2" aria-label="Link to our Home Page" target="_blank"><i
+						class="px-2" target="_blank"><i
 						class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -109,18 +108,19 @@ else{
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>" aria-label="Home">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>" aria-label="Authors">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>" aria-label="Contact Us">Contact
-							Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 					<%
 					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
 					%>
 					<li class="nav-item"><a class="nav-link"
 						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
-					<%}%>
+					<%
+					}
+					%>
 
 
 				</ul>
@@ -136,7 +136,9 @@ else{
 								<option value="<%=langEnum.code%>"
 									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 									<%=langEnum.name%></option>
-								<%}%>
+								<%
+								}
+								%>
 							</select>
 						</form></li>
 				</ul>
@@ -145,13 +147,15 @@ else{
 				%>
 				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm"
-					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%> <%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
 				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
-					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
-				<%}%>
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login%>"><%=lang.login%></a>
+				<%
+				}
+				%>
 			</div>
 		</div>
 	</nav>
@@ -159,8 +163,8 @@ else{
 	<!-- Menu Section -->
 	<section class="has-img-bg" id="insite">
 		<div class="container">
-			<h6 class="section-subtitle text-center"><%=category.length() > 0 ? "Category: " + CaseControl.capFirstLetter(category) : "Our most popular:"%></h6>
-			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
+			<h6 class="section-subtitle text-center"><%=category.length() > 0 ? lang.category + " " + CaseControl.capFirstLetter(category) : lang.popular%></h6>
+			<h3 class="section-title mb-6 text-center">INCQ <%=lang.reviews%></h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">
@@ -172,14 +176,14 @@ else{
 								<div class="flex-grow-1">
 									<a
 										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
-										aria-label="Link to our review of <%=theList.get(x).getReviewDetails().getTitle()%>"
+										aria-label="<%=URLEncoder.encode(theList.get(x).getReviewDetails().getTitle(), "UTF-8")%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
-									<img border="0" src="<%=theList.get(x).getMediaList().get(0)%>"
-										height="250px" width="250px"
+									<img src="<%=theList.get(x).getMediaList().get(0)%>"
+										height="250" width="250"
 										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
-									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
+									<p class="mt-1 mb-0">
 										<a
-											href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br>More...</a>
+											href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br><%=lang.more%></a>
 									</p>
 								</div>
 							</div>
@@ -201,16 +205,16 @@ else{
 				class="row justify-content-between align-items-center text-center">
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
-						src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
-						aria-label="Link to our Home Page" class="mb-0"></a>
+						src="/assets/imgs/logo.jpg" height=100 width=100 alt="INCQ"
+						aria-label="<%=lang.linkHome %>" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" aria-label="Home" class="px-3"><small
-						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" aria-label="Authors" class="px-3"><small
-						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" aria-label="Contact" class="pl-3"><small
-						class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.home %></small></a> <a
+						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.authors %></small></a> <a
+						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs %></small></a>
 				</div>
 			</div>
 		</div>
@@ -226,8 +230,7 @@ else{
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from
-						qualifying purchases. -
+						, <%=lang.arr %> - <%=lang.amazon %> -
 						<%=Constants.VERSION%>
 					</p>
 				</div>

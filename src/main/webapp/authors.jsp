@@ -52,34 +52,32 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Here are our most recognized authors">
-<meta name="author" content="INCQ Authors">
+<meta name="description" content="<%=lang.authDesc%>">
+<meta name="author" content="INCQ <%=lang.authors%>">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title>INCQ Reviews - Authors</title>
+<title>INCQ <%=lang.reviews%> - <%= lang.authors%></title>
 
 </head>
-<body data-spy="scroll" data-target=".navbar" data-offset="40" id="">
+<body data-spy="scroll" data-target=".navbar" data-offset="40" >
 	<!-- Google Tag Manager (noscript) -->
 	<noscript>
 		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5CJH64QP"
 			height="0" width="0" style="display: none; visibility: hidden"></iframe>
 	</noscript>
 	<!-- First Navigation -->
-	<!-- First Navigation -->
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand"
 				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
-				aria-label="Link to our Home Page"><img
-				src="/assets/imgs/logo-sm.jpg" height="55px" width="55px" alt="INCQ">
+				aria-label="Link to our Home Page" aria-label="<%=lang.linkHome %>"><img
+				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/INCQreviews/"
-						class="px-2" target="_blank" aria-label="Facebook"><i
-						class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
+					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+						target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+					<a href="https://twitter.com/shrinesecrets" class="px-2"
 						target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -99,11 +97,11 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.INDEX%>">Home</a></li>
+						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home%>"><%=lang.home%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.AUTHORS%>">Authors</a></li>
+						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="<%=JspConstants.CONTACT%>">Contact Us</a></li>
+						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form
@@ -124,14 +122,15 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				<%
 				if (currentUser != null) {
 				%>
-				<a href="<%=userService.createLogoutURL(JspConstants.AUTHORS)%>"
+				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm"
-					aria-label="Welcome <%=currentUser.getNickname()%>">Welcome <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%>
+					<%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
-				<a href="<%=userService.createLoginURL(JspConstants.AUTHORS)%>"
-					class="btn btn-primary btn-sm" aria-label="Login/Register">Login/Register</a>
+				<a href="<%=userService.createLoginURL(JspConstants.INDEX)%>"
+					class="btn btn-primary btn-sm" aria-label="<%=lang.login%>"><%=lang.login%></a>
 				<%}%>
 			</div>
 		</div>
@@ -140,8 +139,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 	<!-- Menu Section -->
 	<section class="has-img-bg" id="insite">
 		<div class="container">
-			<h6 class="section-subtitle text-center">Here are some of our
-				INCQ reviews</h6>
+			<h6 class="section-subtitle text-center"><%=lang.someAuthors %></h6>
 			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
@@ -156,7 +154,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 										href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"
 										aria-label="<%=theList.get(x).getTranslatedName()%>"><%=theList.get(x).getTranslatedName()%></a>
-									<p class="mt-1 mb-0" id="<%=JspConstants.SUMMARY%>">
+									<p class="mt-1 mb-0">
 										<a
 											href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%=theList.get(x).getShortDescription()%></a>
 									</p>
@@ -181,16 +179,16 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
 						aria-label="Link to our Home Page"><img
-						src="/assets/imgs/logo.jpg" height=100px width=100px alt="INCQ"
+						src="/assets/imgs/logo.jpg" height=100 width=100 alt="INCQ"
 						class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" class="px-3" aria-label="Home"><small
-						class="font-weight-bold">Home</small></a> <a
-						href="<%=JspConstants.AUTHORS%>" class="px-3" aria-label="Authors"><small
-						class="font-weight-bold">Authors</small></a> <a
-						href="<%=JspConstants.CONTACT%>" class="pl-3" aria-label="Contact"><small
-						class="font-weight-bold">Contact</small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.home %></small></a> <a
+						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
+						class="font-weight-bold"><%=lang.authors %></small></a> <a
+						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs %></small></a>
 				</div>
 			</div>
 		</div>
@@ -206,8 +204,11 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, INCQ All rights reserved - As an Amazon Associate we earn from
-						qualifying purchases. -
+						,
+						<%=lang.arr%>
+						-
+						<%=lang.amazon%>
+						-
 						<%=Constants.VERSION%>
 						<%
 						if (currentUser != null) {
@@ -226,10 +227,9 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/INCQreviews/"
-							class="px-2" aria-label="Facebook" target="_blank"><i
-							class="ti-facebook"></i></a> <a
-							href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+							aria-label="Facebook" target="_blank"><i class="ti-facebook"></i></a>
+						<a href="https://twitter.com/shrinesecrets" class="px-2"
 							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
