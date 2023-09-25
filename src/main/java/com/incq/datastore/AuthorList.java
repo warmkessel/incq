@@ -184,7 +184,7 @@ public class AuthorList {
 			}
 			break;
 		case STEP2:// Suggest a Style
-			auth.setStyle(AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE));
+			auth.setStyle(auth.getStyle() + " " + AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE));
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
 			}

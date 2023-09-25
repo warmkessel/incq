@@ -152,8 +152,8 @@ if (null != langList && langList.length > 0) {
 <body>
 	<h1>Language:<%=lang.flagUnicode%><%=lang.name%></h1>
 	<h1>
-		ID: <a
-			href="<%=JspConstants.ADMINAUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getKeyLong()%></a>
+		ID: <a href="<%=JspConstants.ADMINAUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getKeyLong()%></a><br>
+		<a href="<%=JspConstants.AUTHORSEO + author.getName()%>" target="_blank">Preview <%=author.getName()%></a>
 	</h1>
 	<br>
 	<form method=post name="auth"
@@ -294,7 +294,7 @@ if (null != langList && langList.length > 0) {
 		    // Check if the request was successful
 		    if (response.ok) {
 		    	 setTimeout(() => {
-		    	        window.location.reload();
+		    	        window.location = '<%=JspConstants.ADMINAUTHOR +"?" + JspConstants.ID + "=" + author.getKeyLong()%>)';
 		    	      }, 5000); // 5000 milliseconds = 5 seconds
 		   	} else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);
@@ -304,6 +304,5 @@ if (null != langList && langList.length > 0) {
 		    console.error("There was a problem with the fetch operation:", error);
 		  }
 		}
-	
-</script>
+	</script>
 </body>

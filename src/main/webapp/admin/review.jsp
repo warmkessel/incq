@@ -216,14 +216,18 @@ if (null != langList && langList.length > 0) {
 <body>
 	<h1>
 		Review ID: <a
-			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a>
+			href="<%=JspConstants.ADMINREVIEW%>?id=<%=review.getKeyLong()%>"><%=review.getKeyLong()%></a><br>
+		<a href="<%=JspConstants.REVIEWSEO + review.getSlug()%>"
+			target="_blank">Preview Review <%=review.getReviewDetails().getName()%></a><br>
+		<a href="<%=JspConstants.AUTHORSEO + review.getAuthor()%>"
+			target="_blank">Preview Author <%=review.getAuthor()%></a>
 	</h1>
 	<br>
 
 	<form method=post
 		action="<%=JspConstants.ADMINREVIEW%><%=review.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + review.getKeyLong()%>">
 		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
-			value="<%= Language.ENGLISH.code%>"> <input type="hidden"
+			value="<%=Language.ENGLISH.code%>"> <input type="hidden"
 			name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>">
 		<table>
 			<%
@@ -248,9 +252,9 @@ if (null != langList && langList.length > 0) {
 			<%}%>
 		</table>
 		<br> Toggle Checkboxes<input type=button value=toggle
-			id="toggleButton"> <br><input type=hidden
-			name=save value="save"> Deleted:<input type="radio"
-			name="<%=JspConstants.DELETED%>" value="true"
+			id="toggleButton"> <br>
+		<input type=hidden name=save value="save"> Deleted:<input
+			type="radio" name="<%=JspConstants.DELETED%>" value="true"
 			<%=review.isDeleted() ? "checked" : ""%>> True <input
 			type="radio" name="<%=JspConstants.DELETED%>" value="false"
 			<%=!review.isDeleted() ? "checked" : ""%>> False<br>
@@ -315,10 +319,11 @@ if (null != langList && langList.length > 0) {
 		<h1>
 			Language:<%=lang.flagUnicode%><%=lang.name%></h1>
 		<input type="hidden" name="<%=JspConstants.LANGUAGE%>"
-			value="<%=lang.code%>"><input type=hidden name=id value="<%=review.getKeyLong()%>">
-		<input type="hidden" name="<%=JspConstants.ID%>"
-			value="<%=review.getKeyLong()%>"> Deleted:<input type="radio"
-			name="<%=JspConstants.DELETED%>" value="true"
+			value="<%=lang.code%>"><input type=hidden name=id
+			value="<%=review.getKeyLong()%>"> <input type="hidden"
+			name="<%=JspConstants.ID%>" value="<%=review.getKeyLong()%>">
+		Deleted:<input type="radio" name="<%=JspConstants.DELETED%>"
+			value="true"
 			<%=review.getReviewDetails().isDeleted() ? "checked" : ""%>>
 		True <input type="radio" name="<%=JspConstants.DELETED%>"
 			value="false"
@@ -417,11 +422,9 @@ if (null != langList && langList.length > 0) {
 		if (!Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 3 - Translate Conclusion"
 			onclick="appendToUrlAndFetch('step3')">
-		<%}%><br>
-		<input type=hidden
-			name=save value="save">
-		<input type=submit value="save">
-		<br><br>
+		<%}%><br> <input type=hidden name=save value="save"> <input
+			type=submit value="save"> <br>
+		<br>
 	</form>
 	<script type="text/javascript">
 	// Function to toggle checkboxes
@@ -469,7 +472,7 @@ if (null != langList && langList.length > 0) {
 		    // Check if the request was successful
 		    if (response.ok) {
 		    	 setTimeout(() => {
-		    	        window.location.reload();
+		    	        window.location = '<%=JspConstants.ADMINREVIEW +"?" + JspConstants.ID + "=" + review.getKeyLong()%>)';
 		    	      }, 5000); // 5000 milliseconds = 5 seconds
 		    	     } else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);

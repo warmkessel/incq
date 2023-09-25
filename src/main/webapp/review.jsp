@@ -80,12 +80,12 @@ try {
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
 	content="<%=lang.reviews%> %>:<%=review.getReviewDetails().getDesc()%>">
-<meta name="author" content="INCQ: <%=review.getAuthor()%>">
+<meta name="author" content="INCQ: <%=author.getTranslatedName()%>">
 <meta name="keywords" content="<%=review.getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title><%=lang.review%> <%=review.getReviewDetails().getName()%></title>
+<title><%=lang.review%> <%=review.getReviewDetails()%></title>
 <script type="application/ld+json">
    {
 	  "@context": "https://schema.org",
@@ -180,7 +180,7 @@ try {
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form
-							action="<%=JspConstants.REVIEWSEO%><%=review.getSlug()%>"
+							action="<%=JspConstants.REVIEWSEO + review.getSlug()%>"
 							method="get" id="languageForm">
 							<select name="la" aria-label="Language"
 								onchange="document.getElementById('languageForm').submit();">
@@ -222,7 +222,7 @@ try {
 						<a href="<%=review.getLink()%>" target="_blank"
 							aria-label="<%=review.getReviewDetails().getTitle()%>"><%=review.getReviewDetails().getTitle()%></a>
 						by - <a href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
-							aria-label="<%=author.getName()%>"><%=author.getName()%></a>
+							aria-label="<%=author.getTranslatedName()%>"><%=author.getTranslatedName()%></a>
 					</h4>
 					<a href="<%=review.getLink()%>" target="_blank"
 						aria-label="<%=review.getReviewDetails().getTitle()%>"><img
@@ -246,7 +246,7 @@ try {
 					<br>
 					<h4>
 						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"
-							aria-label="<%=lang.author %> - <%=author.getName()%>"><%=lang.author %> - <%=author.getName()%></a>
+							aria-label="<%=lang.author %> - <%=author.getTranslatedName()%>"><%=lang.author %> - <%=author.getTranslatedName()%></a>
 					</h4>
 					<p><%=author.getShortDescription()%></p>
 					<p>

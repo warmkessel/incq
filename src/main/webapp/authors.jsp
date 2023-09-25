@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.net.*"%>
+<%@ page import="com.incq.util.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.constants.*"%>
 <%@ page import="com.incq.datastore.*"%>
@@ -156,7 +157,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 										aria-label="<%=theList.get(x).getTranslatedName()%>"><%=theList.get(x).getTranslatedName()%></a>
 									<p class="mt-1 mb-0">
 										<a
-											href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%=theList.get(x).getShortDescription()%></a>
+											href="<%=JspConstants.AUTHORSEO%><%=theList.get(x).getName()%>"><%=HtmlHelper.convertLongText(theList.get(x).getShortDescription())%></a>
 									</p>
 								</div>
 							</div>
