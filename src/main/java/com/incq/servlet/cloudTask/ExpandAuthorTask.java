@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.*;
 
 import com.incq.constants.JspConstants;
-import com.incq.datastore.AuthorList;
 import com.incq.exception.IncqServletException;
+import com.incq.instantiate.AuthorInstantiate;
 
 //@WebServlet(name = "expandLanguageTask", urlPatterns = { "/tasks/expandLanguage" })
 public class ExpandAuthorTask extends HttpServlet {
@@ -34,7 +34,7 @@ public class ExpandAuthorTask extends HttpServlet {
 			positionString = "0";
 		}
 		// Call your method here
-		AuthorList.expandAuthorSteps(keyString, langString, stepString, positionString, contString);
+		AuthorInstantiate.expandAuthorSteps(keyString, langString, stepString, positionString, contString);
 		
 	}
 }

@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import javax.servlet.http.*;
 
 import com.incq.constants.JspConstants;
-import com.incq.datastore.ReviewList;
 import com.incq.exception.IncqServletException;
+import com.incq.instantiate.ReviewInstantiate;
 
 //@WebServlet(name = "expandLanguageTask", urlPatterns = { "/tasks/expandLanguage" })
 public class ExpandReviewTask extends HttpServlet {
@@ -31,7 +31,7 @@ public class ExpandReviewTask extends HttpServlet {
 		String contString = req.getParameter(JspConstants.CONTINUE);
 
 		// Call your method here
-		ReviewList.expandReviewSteps(keyString, langString, stepString, contString);
+		ReviewInstantiate.expandReviewSteps(keyString, langString, stepString, contString);
 		
 	}
 }

@@ -37,10 +37,11 @@ for (Language langEnum : Language.values()) {
 for (Language langEnum : Language.values()) {
 	ArrayList<Review> reviews = ReviewList.fetchReviewSiteMap(langEnum);
 	for (Review review : reviews) {
+		if (null != ReviewDetailsList.fetchEventDetails(review.getKeyLong(), langEnum, false)){
  %>
 <url>
 	<loc><%=JspConstants.HTTPS+(Language.ENGLISH.equals(langEnum) ? JspConstants.WWW : langEnum.code)+JspConstants.INCQP + JspConstants.REVIEWSEO + URLEncoder.encode(review.getSlug(), StandardCharsets.UTF_8.toString())%></loc>
 	<lastmod><%=review.getUpdatedDateShort()%></lastmod>
 </url>
-<%}}%>
+<%}}}%>
 </urlset>

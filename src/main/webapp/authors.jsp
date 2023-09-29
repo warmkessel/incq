@@ -23,11 +23,16 @@ if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstant
 	if (null != langString && langString.length() > 0) {
 		lang = Language.findByCode(langString);
 	}
-} else {
+} 
+else {
 	lang = Language.findByCode(subDomain);
 }
+boolean all = true;
+if(userService.isUserLoggedIn() && userService.isUserAdmin() && null != request.getParameter(JspConstants.ALL) && Boolean.TRUE.toString().equals(request.getParameter(JspConstants.ALL).toLowerCase())) {
+	all = false;
+}
+ArrayList<Author>  theList = AuthorList.fetchAuthors(lang, all);
 
-ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">
 <head>
@@ -78,7 +83,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 						target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
-					<a href="https://twitter.com/shrinesecrets" class="px-2"
+					<a href="https://twitter.com/incqReviews" class="px-2"
 						target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -103,6 +108,16 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 						href="<%=JspConstants.AUTHORS%>" aria-label="><%=lang.authors%>"><%=lang.authors%></a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="<%=JspConstants.CONTACT%>" aria-label="><%=lang.contactUs%>"><%=lang.contactUs%></a></li>
+						<%
+					if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
+					%>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.ADMININDEX%>" target="_blank">Admin</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="<%=JspConstants.AUTHORS + "?"+ JspConstants.ALL+"=true" %>" target="_blank">All Authors</a></li>
+					<%
+					}
+					%>
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><form
@@ -230,7 +245,7 @@ ArrayList<Author> theList = AuthorList.fetchAuthors(lang);
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 							aria-label="Facebook" target="_blank"><i class="ti-facebook"></i></a>
-						<a href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://twitter.com/incqReviews" class="px-2"
 							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>

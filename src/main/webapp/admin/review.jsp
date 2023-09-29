@@ -4,6 +4,7 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.net.*"%>
 <%@ page import="com.incq.util.*"%>
+<%@ page import="com.incq.instantiate.*"%>
 <%@ page import="com.incq.entity.*"%>
 <%@ page import="com.incq.datastore.*"%>
 <%@ page import="com.google.cloud.datastore.*"%>
@@ -209,7 +210,7 @@ if (dirty && save) {
 langList = request.getParameterValues(JspConstants.LANGUAGELIST);
 
 if (null != langList && langList.length > 0) {
-	ReviewDetailsList.expandReviewDetails(review.getKeyLong(), langList);
+	ReviewDetailsInstantiate.expandReviewDetails(review.getKeyLong(), langList);
 }
 %>
 </head>

@@ -113,7 +113,7 @@ try {
 					<a href="https://www.facebook.com/INCQreviews/"
 						class="px-2" target="_blank" aria-label="Facebook"><i
 						class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
+						href="https://twitter.com/incqReviews" class="px-2"
 						aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -234,7 +234,7 @@ try {
 						<a href="https://www.facebook.com/INCQreviews/"
 							class="px-2" target="_blank" aria-label="Facebook"><i
 							class="ti-facebook"></i></a> <a
-							href="https://twitter.com/shrinesecrets" class="px-2"
+							href="https://twitter.com/incqReviews" class="px-2"
 							target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>

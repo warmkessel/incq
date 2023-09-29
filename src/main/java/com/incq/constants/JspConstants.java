@@ -26,6 +26,7 @@ public class JspConstants {
 	public static final String ADMININDEX = ADMIN + "/index.jsp";
 	public static final String ADMINAUTHORSEO = ADMIN + "/author/";
 	public static final String ADMINREVIEWSEO = ADMIN + "/review/";
+	public static final String ALL = "all";
 	
 	
 	public static final String EXPANDREVIEW = "/tasks/expandReview";

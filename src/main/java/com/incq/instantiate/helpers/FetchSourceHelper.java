@@ -1,4 +1,4 @@
-package com.incq.datastore.helper;
+package com.incq.instantiate.helpers;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

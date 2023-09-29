@@ -80,7 +80,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 						target="_blank" aria-label="Facebook" aria-label="Facebook"><i
 						class="ti-facebook"></i></a> <a
-						href="https://twitter.com/shrinesecrets" class="px-2"
+						href="https://twitter.com/incqReviews" class="px-2"
 						target="_blank" aria-label="Twitter" aria-label="Twitter"><i
 						class="ti-twitter"></i></a>
 				</h6>
@@ -193,7 +193,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 							target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
-						<a href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://twitter.com/incqReviews" class="px-2"
 							target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>

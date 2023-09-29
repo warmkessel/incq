@@ -9,6 +9,7 @@
 <%@ page import="com.google.cloud.datastore.*"%>
 <%@ page import="com.google.appengine.api.users.*"%>
 <%@ page import="com.incq.enqueue.*"%>
+<%@ page import="com.incq.instantiate.*"%>
 
 <%
 UserService userService = UserServiceFactory.getUserService();
@@ -145,7 +146,7 @@ if (dirty && save) {
 langList = request.getParameterValues(JspConstants.LANGUAGELIST);
 
 if (null != langList && langList.length > 0) {
-	AuthorList.expandLanguage(author.getName(), langList);
+	AuthorInstantiate.expandLanguage(author.getName(), langList);
 }
 %>
 </head>

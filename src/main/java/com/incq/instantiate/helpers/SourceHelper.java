@@ -1,4 +1,4 @@
-package com.incq.datastore.helper;
+package com.incq.instantiate.helpers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

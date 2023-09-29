@@ -107,7 +107,7 @@ if ((null != currentUser) && subject != null && body != null) {
 				<h6 class="mb-0">
 					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 						target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
-					<a href="https://twitter.com/shrinesecrets" class="px-2"
+					<a href="https://twitter.com/incqReviews" class="px-2"
 						target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
@@ -286,7 +286,7 @@ if ((null != currentUser) && subject != null && body != null) {
 					<h6 class="small mb-0">
 						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
 							target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
-						<a href="https://twitter.com/shrinesecrets" class="px-2"
+						<a href="https://twitter.com/incqReviews" class="px-2"
 							target="_blank" aria-label="Twitter"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
