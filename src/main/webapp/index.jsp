@@ -178,9 +178,12 @@ else{
 										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
 										aria-label="<%=URLEncoder.encode(theList.get(x).getReviewDetails().getTitle(), "UTF-8")%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
-									<img src="<%=theList.get(x).getMediaList().get(0)%>"
+									<a
+										href="<%=theList.get(x).getLink()%>"
+										aria-label="<%=theList.get(x).getLink()%>">
+										<img src="<%=theList.get(x).getMediaList().get(0)%>"
 										height="250" width="250"
-										alt="<%=theList.get(x).getReviewDetails().getDesc()%>">
+										alt="<%=theList.get(x).getReviewDetails().getDesc()%>"></a>
 									<p class="mt-1 mb-0">
 										<a
 											href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"><%=theList.get(x).getReviewDetails().getSummary()%><br><%=lang.more%></a>

@@ -57,6 +57,11 @@
 		<servlet-name>AdminReviewRedirectServlet</servlet-name>
 		<jsp-file>/admin/review.jsp</jsp-file>
 	</servlet>
+		<servlet>
+		<servlet-name>AdminFacebokRedirectServlet</servlet-name>
+		<jsp-file>/admin/facebook.jsp</jsp-file>
+	</servlet>
+	
 	<servlet>
 		<servlet-name>SitemapServlet</servlet-name>
 		<jsp-file>/sitemap.jsp</jsp-file>
@@ -100,6 +105,10 @@
 	<servlet-mapping>
 		<servlet-name>AdminReviewRedirectServlet</servlet-name>
 		<url-pattern>/admin/review/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AdminFacebokRedirectServlet</servlet-name>
+		<url-pattern>/admin/facebook/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>SitemapServlet</servlet-name>

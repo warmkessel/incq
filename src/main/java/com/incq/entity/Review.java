@@ -3,6 +3,7 @@ package com.incq.entity;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 //import java.util.logging.Logger;
@@ -157,7 +158,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
 	}
 
-	public void setMeta(Set<String> meta) {
+	public void setMeta(Collection<String> meta) {
 		String[] metaArray = meta.toArray(new String[meta.size()]);
 		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
 	}

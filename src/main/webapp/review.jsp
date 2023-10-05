@@ -79,9 +79,9 @@ try {
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
-	content="<%=lang.reviews%> %>:<%=review.getReviewDetails().getDesc()%>">
+	content="<%=lang.reviews%>: <%=review.getReviewDetails().getDesc()%>">
 <meta name="author" content="INCQ: <%=author.getTranslatedName()%>">
-<meta name="keywords" content="<%=review.getMetaString()%>">
+<meta name="keywords" content="<%=review.getReviewDetails().getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
@@ -98,8 +98,8 @@ try {
 	  "description": "<%=review.getReviewDetails().getSummary()%>",
 	  "name": "<%=review.getReviewDetails().getName()%>",
 	  "image": "<%=review.getMediaList().get(0)%>",
-	  "url": "<%=review.getMetaString()%>",
-	  "keywords": "<%=review.getLink()%>",
+	  "url": "<%=review.getLink()%>",
+	  "keywords": "<%=review.getReviewDetails().getMetaString()%>",
 	  "positiveNotes": <%=HtmlHelper.convertLongJSON(review.getReviewDetails().getReviewBody())%>
 	  },
 	  "review": [
@@ -217,7 +217,7 @@ try {
 				<div class="card-body px-4 pb-4 text-center">
 					<h6>| <a 
 						href="<%=JspConstants.INDEX%>" aria-label="><%=lang.home %>"><%=lang.home %></a> | <a 
-						href="<%=JspConstants.CATEGORY +review.getCategory()%>" aria-label="<%=CaseControl.capFirstLetter(review.getCategory())%>"><%=CaseControl.capFirstLetter(review.getCategory())%></a> |</h6>
+						href="<%=JspConstants.CATEGORY +review.getCategory()%>" aria-label="<%=CaseControl.capFirstLetter(review.getCategory())%>"><%=CaseControl.capFirstLetter(review.getReviewDetails().getCategory())%></a> |</h6>
 					<h4>
 						<a href="<%=review.getLink()%>" target="_blank"
 							aria-label="<%=review.getReviewDetails().getTitle()%>"><%=review.getReviewDetails().getTitle()%></a>
@@ -236,12 +236,12 @@ try {
 					<p><%=review.getReviewDetails().getConclusion()%></p>
 					<h2>
 						<a href="<%=review.getLink()%>"
-							aria-label="<%=review.getReviewDetails().getCall()%>"><%=review.getReviewDetails().getCall()%></a>
+							aria-label="<%=review.getReviewDetails().getCall()%>" target="_blank"><%=review.getReviewDetails().getCall()%></a>
 					</h2>
 					<br>
 					<h1>
 						<a href="<%=review.getLink()%>"
-							aria-label="<%=review.getReviewDetails().getCall()%>"><%=lang.checkAmazon %></a>
+							aria-label="<%=lang.checkAmazon%>" target="_blank"><%=lang.checkAmazon%></a>
 					</h1>
 					<br>
 					<h4>
@@ -252,9 +252,13 @@ try {
 					<p>
 						<%
 						for (int x = 0; x < review.getTagsList().size(); x++) {
+							String locTag = review.getTagsList().get(x);
+							if(review.getTagsList().size() == review.getReviewDetails().getTagsList().size()){
+								locTag = review.getReviewDetails().getTagsList().get(x);
+							}
 						%>
 						| <a
-							href="<%=JspConstants.CATEGORY%><%=review.getTagsList().get(x)%>"><%=review.getTagsList().get(x)%></a>
+							href="<%=JspConstants.CATEGORY%><%=review.getTagsList().get(x)%>"><%=locTag%></a>
 						<%}%>
 						|
 					</p>

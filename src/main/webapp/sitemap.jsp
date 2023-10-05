@@ -35,7 +35,7 @@ for (Language langEnum : Language.values()) {
 <%}}%>
 <%
 for (Language langEnum : Language.values()) {
-	ArrayList<Review> reviews = ReviewList.fetchReviewSiteMap(langEnum);
+	List<Review> reviews = ReviewList.fetchReviewSiteMap(langEnum);
 	for (Review review : reviews) {
 		if (null != ReviewDetailsList.fetchEventDetails(review.getKeyLong(), langEnum, false)){
  %>

@@ -11,6 +11,7 @@ import com.incq.constants.*;
 import com.incq.enqueue.EnqueueReview;
 import com.incq.entity.*;
 import com.incq.exception.IncqServletException;
+import com.incq.instantiate.helpers.FacebookHelper;
 import com.incq.instantiate.helpers.FetchSourceHelper;
 import com.incq.instantiate.helpers.SourceHelper;
 
@@ -71,12 +72,15 @@ public class ReviewInstantiate {
 
 		case STEP4:// Determine the Meta Tags
 			review.setMeta(AIManager.editText(review.getSource(), AIConstants.AIMETA + review.getSource(), ""));
+			review.getReviewDetails().setMeta(review.getMetaList());
+
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP5:// Determine the Tags
 			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + review.getSource(), ""));
+			review.getReviewDetails().setTags(review.getTagsList());
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
@@ -148,6 +152,12 @@ public class ReviewInstantiate {
 			break;
 		case STEP15:// Mark the Review Active
 			review.setDeleted(false);
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP16:
+			FacebookHelper.postToFacebookGraphAPI(review);
 			break;
 		case FAIL:
 			logger.log(Level.SEVERE, "AuthorStep Fail key " + key + " step " + step);

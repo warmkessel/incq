@@ -58,6 +58,7 @@ if (null != id && id.length() > 0 && !id.equals("0")) {
 }
 long reviewDate = 0;
 
+Set<String> tagDetails = new HashSet<String>();
 Set<String> tag = new HashSet<String>();
 Set<String> meta = new HashSet<String>();
 String name = (String) request.getParameter(JspConstants.NAME);
@@ -92,6 +93,14 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.TAGS)
 		&& request.getParameter(JspConstants.TAGS).length() > 0) {
 	review.setTags(request.getParameter(JspConstants.TAGS));
+}
+if (null != request.getParameter(JspConstants.TAGSREVIEW)
+		&& request.getParameter(JspConstants.TAGSREVIEW).length() > 0) {
+	review.getReviewDetails().setTags(request.getParameter(JspConstants.TAGSREVIEW));
+}
+if (null != request.getParameter(JspConstants.METAREVIEW)
+&& request.getParameter(JspConstants.METAREVIEW).length() > 0) {
+review.getReviewDetails().setMeta(request.getParameter(JspConstants.METAREVIEW));
 }
 if (Language.ENGLISH.equals(lang) && null != request.getParameter(JspConstants.META)
 		&& request.getParameter(JspConstants.META).length() > 0) {
@@ -253,9 +262,9 @@ if (null != langList && langList.length > 0) {
 			<%}%>
 		</table>
 		<br> Toggle Checkboxes<input type=button value=toggle
-			id="toggleButton"> <br>
-		<input type=hidden name=save value="save"> Deleted:<input
-			type="radio" name="<%=JspConstants.DELETED%>" value="true"
+			id="toggleButton"> <br> <input type=hidden name=save
+			value="save"> Deleted:<input type="radio"
+			name="<%=JspConstants.DELETED%>" value="true"
 			<%=review.isDeleted() ? "checked" : ""%>> True <input
 			type="radio" name="<%=JspConstants.DELETED%>" value="false"
 			<%=!review.isDeleted() ? "checked" : ""%>> False<br>
@@ -423,9 +432,32 @@ if (null != langList && langList.length > 0) {
 		if (!Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 3 - Translate Conclusion"
 			onclick="appendToUrlAndFetch('step3')">
+		<%}%><br>
+		<br> Localized Tags
+		<textarea name="<%=JspConstants.TAGSREVIEW%>" rows="20" cols="80"><%=review.getReviewDetails().getTagsString()%></textarea>
+		<%
+		if (!Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 9 - Translate the Tags"
+			onclick="appendToUrlAndFetch('step9')">
+		<%}%>
+		<br> Localized Meta
+		<textarea name="<%=JspConstants.METAREVIEW%>" rows="20" cols="80"><%=review.getReviewDetails().getMetaString()%></textarea>
+		<%
+		if (!Language.ENGLISH.equals(review.getReviewDetails().getLanguage())) {
+		%><input type="button" value="Step 10 - Translate the Meta"
+			onclick="appendToUrlAndFetch('step10')">
+		<%}%><br>
+		<%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 16 - Post to Facebook"
+			onclick="appendToUrlAndFetch('step16')">
+		<%}%>
+		<%
+		if (!Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 12 - Post to Facebook"
+			onclick="appendToUrlAndFetch('step12')">
 		<%}%><br> <input type=hidden name=save value="save"> <input
-			type=submit value="save"> <br>
-		<br>
+			type=submit value="save"> <br> <br>
 	</form>
 	<script type="text/javascript">
 	// Function to toggle checkboxes
@@ -473,7 +505,7 @@ if (null != langList && langList.length > 0) {
 		    // Check if the request was successful
 		    if (response.ok) {
 		    	 setTimeout(() => {
-		    	        window.location = '<%=JspConstants.ADMINREVIEW +"?" + JspConstants.ID + "=" + review.getKeyLong()%>)';
+		    	        window.location = '<%=JspConstants.ADMINREVIEW + "?" + JspConstants.LANGUAGE + "=" + lang.code + "&" + JspConstants.ID + "=" + review.getKeyLong()%>';
 		    	      }, 5000); // 5000 milliseconds = 5 seconds
 		    	     } else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);

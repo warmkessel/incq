@@ -1,6 +1,8 @@
 package com.incq.entity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 //import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -30,6 +32,8 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 	private long reviewId = 0l;
 	private String name = "";
 	private String call = "Get Mine Today!";
+	private List<? extends Value<?>> tags = null;
+	private List<? extends Value<?>> meta = null;
 
 	public ReviewDetails() {
 	}
@@ -117,6 +121,86 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		this.reviewId = reviewId;
 	}
 
+	public String getCategory() {
+	    return getTags().stream()
+	                    .map(Value::get)
+	                    .map(Object::toString)
+	                    .findFirst()
+	                    .orElse(ReviewConstants.GENERAL);
+	}
+	public List<? extends Value<?>> getTags() {
+
+		if (null == tags) {
+			tags = new ArrayList<>();
+		}
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		String[] tagsArray = tags.toLowerCase().split(",");
+		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTags(Collection<String> tags) {
+		String[] tagsArray = tags.toArray(new String[tags.size()]);
+		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTags(List<? extends Value<?>> tags) {
+		this.tags = tags;
+	}
+	public List<String> getTagsList() {
+		return getTags().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+	}
+
+	public String getTagsString() {
+		if (getTags().size() == 0) {
+			return "";
+		} else {
+			return String.join(",", getTagsList());
+		}
+	}
+	public String getMetaEncodedString() {
+		if (getMeta().size() == 0) {
+			return "";
+		} else {
+			return String.join("&tags=", getMetaList());
+		}
+	}
+
+	public List<String> getMetaList() {
+		return getMeta().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+	}
+
+	public String getMetaString() {
+		if (getMeta().size() == 0) {
+			return "";
+		} else {
+			return String.join(",", getMetaList());
+		}
+	}
+
+	public List<? extends Value<?>> getMeta() {
+
+		if (null == meta) {
+			meta = new ArrayList<>();
+		}
+		return meta;
+	}
+
+	public void setMeta(String meta) {
+		String[] metaArray = meta.toLowerCase().split(",");
+		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setMeta(Collection<String> meta) {
+		String[] metaArray = meta.toArray(new String[meta.size()]);
+		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setMeta(List<? extends Value<?>> meta) {
+		this.meta = meta;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -141,6 +225,9 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 		result = 31 * result + reviewBody.hashCode();
 		result = 31 * result + conclusion.hashCode();
 		result = 31 * result + call.hashCode();
+		result = 31 * result + getTags().hashCode();
+		result = 31 * result + getMeta().hashCode();
+
 		return result;
 	}
 
@@ -158,8 +245,11 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 						StringValue.newBuilder(getIntroduction()).setExcludeFromIndexes(true).build())
 				.set(ReviewConstants.REVIEWBODY,
 						StringValue.newBuilder(getReviewBody()).setExcludeFromIndexes(true).build())
+				.set(ReviewConstants.TAGS, getTags())
+				.set(ReviewConstants.META, getMeta())
 				.set(ReviewConstants.CONCLUSION,
 						StringValue.newBuilder(getConclusion()).setExcludeFromIndexes(true).build());
+		
 		getDatastore().put(entity.build());
 	}
 
@@ -198,6 +288,12 @@ public class ReviewDetails extends BaseEntity implements Comparable<ReviewDetail
 			setSummary(entity.getString(ReviewConstants.SUMMARY));
 			setReviewId(entity.getLong(ReviewConstants.REVIEW));
 
+			if (entity.contains(ReviewConstants.TAGS)) {
+				setTags(entity.getList(ReviewConstants.TAGS));
+			}
+			if (entity.contains(ReviewConstants.META)) {
+				setMeta(entity.getList(ReviewConstants.META));
+			}
 			try {
 				setLanguage(entity.getString(ReviewConstants.LANGUAGE));
 			} catch (NumberFormatException nfe) {

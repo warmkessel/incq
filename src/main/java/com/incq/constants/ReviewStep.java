@@ -21,7 +21,8 @@ public enum ReviewStep {
 	STEP12("step12"), // Write Description
 	STEP13("step13"), // Get Score
 	STEP14("step14"), // Write a call to Action
-	STEP15("step15"); // Mark the Review Active
+	STEP15("step15"), // Mark the Review Active
+	STEP16("step16"); // PostToFacebook
 
 	static Logger logger = Logger.getLogger(ReviewStep.class.getName());
 

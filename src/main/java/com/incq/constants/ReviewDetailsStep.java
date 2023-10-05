@@ -6,24 +6,29 @@ import java.util.logging.Logger;
 
 
 public enum ReviewDetailsStep {
-	FAIL("fail"), // "Failure"
-	STEP1("step1"), // Translate Introduction"
-	STEP2("step2"), // Translate Description
-	STEP3("step3"), // Translate Conclusion"
-	STEP4("step4"), // Translate Summary"
-	STEP5("step5"), // Translate Title"
-	STEP6("step6"), // Translate Name"
-	STEP7("step7"), // Translate Call
-	STEP8("step8"), // Translate Review
-	STEP9("step9"); // Enable
+	FAIL("fail", "Failure"), // "Failure"
+	STEP1("step1", "Translate Introduction"), // Translate Introduction
+	STEP2("step2", "Translate Description"), // Translate Description
+	STEP3("step3", "Translate Conclusion"), // Translate Conclusion
+	STEP4("step4", "Translate Conclusion"), // Translate Summary
+	STEP5("step5", "Translate Title"), // Translate Title
+	STEP6("step6", "Translate Name"), // Translate Name
+	STEP7("step7", "Translate Call"), // Translate Call
+	STEP8("step8", "Translate Review"), // Translate Review
+	STEP9("step9", "Translate Tags"), // Translate Tags
+	STEP10("step10", "Translate Meta"), // Translate Meta
+	STEP11("step11", "Enable"), // Enable
+	STEP12("step12", "Post To Facebook"); // PostToFacebook
 
 	static Logger logger = Logger.getLogger(ReviewDetailsStep.class.getName());
 
-	ReviewDetailsStep(String name) {
+	ReviewDetailsStep(String name, String desc ) {
 		this.name = name;
+		this.desc = desc;
 	}
 
 	public final String name;
+	public final String desc;
 
 	private static final Map<String, ReviewDetailsStep> BY_NAME = new HashMap<>();
 	

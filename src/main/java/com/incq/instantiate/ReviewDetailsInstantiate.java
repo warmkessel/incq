@@ -1,5 +1,7 @@
 package com.incq.instantiate;
 
+import java.util.ArrayList;
+import java.util.List;
 //import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +12,7 @@ import com.incq.datastore.ReviewDetailsList;
 import com.incq.enqueue.EnqueueReviewDetails;
 import com.incq.entity.ReviewDetails;
 import com.incq.exception.IncqServletException;
+import com.incq.instantiate.helpers.FacebookHelper;
 
 public class ReviewDetailsInstantiate {
 	static Logger logger = Logger.getLogger(ReviewDetailsInstantiate.class.getName());
@@ -34,6 +37,8 @@ public class ReviewDetailsInstantiate {
 				rdetailSub.setIntroduction(rdetail.getIntroduction());
 				rdetailSub.setReviewBody(rdetail.getReviewBody());
 				rdetailSub.setConclusion(rdetail.getConclusion());
+				rdetailSub.setTags(rdetail.getTags());
+				rdetailSub.setMeta(rdetail.getMeta());
 				rdetailSub.save();
 				EnqueueReviewDetails.enqueueReviewDetailsTask(rdetailSub.getReviewId(), lang, ReviewDetailsStep.STEP1,
 						true);
@@ -41,7 +46,7 @@ public class ReviewDetailsInstantiate {
 			}
 		}
 	}
-	
+
 	public static void expandReviewDetailSteps(String key, String lang, String step, String position,
 			String continueExpand) throws IncqServletException {
 		expandReviewDetailSteps(Long.valueOf(key), Language.findByCode(lang), ReviewDetailsStep.findByName(step),
@@ -59,9 +64,12 @@ public class ReviewDetailsInstantiate {
 
 	public static void expandReviewDetailSteps(ReviewDetails reviewDetails, Language lang, ReviewDetailsStep step,
 			int position, boolean continueExpand) throws IncqServletException {
+		ReviewDetails sourceDetails = new ReviewDetails();
+		sourceDetails.loadEvent(reviewDetails.getReviewId(), Language.ENGLISH, true);
+
 		switch (step) {
 		case STEP1: // translate Introduction"
-			reviewDetails.setIntroduction(AIManager.editText(reviewDetails.getIntroduction(),
+			reviewDetails.setIntroduction(AIManager.editText(sourceDetails.getIntroduction(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -70,7 +78,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP2: // translate Desc"
-			reviewDetails.setDesc(AIManager.editText(reviewDetails.getDesc(),
+			reviewDetails.setDesc(AIManager.editText(sourceDetails.getDesc(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -79,7 +87,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP3: // translate Conclusion"
-			reviewDetails.setConclusion(AIManager.editText(reviewDetails.getConclusion(),
+			reviewDetails.setConclusion(AIManager.editText(sourceDetails.getConclusion(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -88,7 +96,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP4: // translate Summary"
-			reviewDetails.setSummary(AIManager.editText(reviewDetails.getSummary(),
+			reviewDetails.setSummary(AIManager.editText(sourceDetails.getSummary(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -97,7 +105,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP5: // translate Title"
-			reviewDetails.setTitle(AIManager.editText(reviewDetails.getTitle(),
+			reviewDetails.setTitle(AIManager.editText(sourceDetails.getTitle(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -106,7 +114,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP6: // translate Name"
-			reviewDetails.setName(AIManager.editText(reviewDetails.getName(),
+			reviewDetails.setName(AIManager.editText(sourceDetails.getName(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -115,7 +123,7 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP7: // translate Call"
-			reviewDetails.setCall(AIManager.editText(reviewDetails.getCall(),
+			reviewDetails.setCall(AIManager.editText(sourceDetails.getCall(),
 					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 
 			if (continueExpand) {
@@ -124,11 +132,48 @@ public class ReviewDetailsInstantiate {
 			}
 			break;
 		case STEP8: // translate Review"
+//			reviewDetails.setReviewBody(translateString(sourceDetails.getReviewBody(), reviewDetails, lang, step,
+//					position, continueExpand));
 			reviewDetails.setReviewBody(translateString(reviewDetails.getReviewBody(), reviewDetails, lang, step,
 					position, continueExpand));
 			break;
-		case STEP9:
+		case STEP9:// translate Tags"
+			List<String>tags = sourceDetails.getTagsList();
+			List<String>translatedTags = new ArrayList<String>();
+			for(String tag: tags) {
+				translatedTags.add(AIManager.editText(tag,
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			}
+			reviewDetails.setTags(translatedTags);
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
+			break;
+		case STEP10: // translate Meta"
+			List<String>meta = sourceDetails.getMetaList();
+			List<String>translatedMeta = new ArrayList<String>();
+			for(String element: meta) {
+				translatedMeta.add(AIManager.editText(element,
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			}
+			reviewDetails.setMeta(translatedMeta);
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
+			break;
+		case STEP11:
 			reviewDetails.setDeleted(false);
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
+			break;
+		case STEP12:
+			if(!reviewDetails.isDeleted()) {
+				FacebookHelper.postToFacebookGraphAPI(reviewDetails.getReviewId(), lang);
+			}
 			break;
 		case FAIL:
 			logger.log(Level.SEVERE,

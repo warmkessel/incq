@@ -73,7 +73,7 @@ public class ReviewList {
 		return theReturn;
 	}
 	
-	public static ArrayList<Review> fetchReviewSiteMap(Language lang) {
+	public static List<Review> fetchReviewSiteMap(Language lang) {
 		ArrayList<Review> theReturn = new ArrayList<Review>();
 		List<Entity> entitys = fetchBookmaredEntities(false);
 		for (int x = 0; x < entitys.size(); x++) {
