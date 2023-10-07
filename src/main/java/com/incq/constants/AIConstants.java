@@ -20,7 +20,9 @@ public class AIConstants {
 
 	public static final String AIMANAGERSTYLE = "Format the response in this Style:";
 
-	public static final String AIREVIEW = "Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences.   Review this product and write a generally positive review.  Find at least one not positive topic, and do not list any Amazon product or offer";
+	public static final String AIREVIEW = "Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences with no introduction or conclusion.  Do not label any heading or begin with title.   Review this product and write a generally positive review.  Find at least one not positive topic, and do not list any Amazon product or offer.  ";
+
+	public static final String AIREVIEWA = "Respond only with four or five paragraphs.  Each paragraph should have a title and four sentences with no introduction or conclusion.  Do not label any heading or begin with title.   Review this product and write a generally negative review.  Find at least one not negative topic, and do not list any Amazon product or offer.  ";
 
 	public static final String AISLUG = "write a slug based upon this product name to be used in the url ";
 	
@@ -32,7 +34,7 @@ public class AIConstants {
 
 	public static final String AISUMMARY = "Review this content and write a summary product in 3-5 sentinces review of the production listed here ";
 
-	public static final String AICONCLUSION = "Review this content and write an introduction to a product review of the production listed here ";
+	public static final String AICONCLUSION = "Review this content and write an conclusion to a product review of the production listed here ";
 
 	public static final String AIINTRODUCTION = "Review this content and write an introduction to a product review of the production listed here ";
 

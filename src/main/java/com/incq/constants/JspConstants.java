@@ -10,6 +10,8 @@ public class JspConstants {
 
 	
 	
+	public static final String ALT = "alt";
+
 	public static final String INDEX = "/index.jsp";
 	public static final String CONTACT = "/contact.jsp";
 	public static final String PRIVACY = "/privacy.jsp";
@@ -41,6 +43,7 @@ public class JspConstants {
 	public static final String ADMINTWITTER = "/admin/twitter.jsp";
 	public static final String ADMINREVIEW = "/admin/review.jsp";
 	public static final String ADMINREVIEWBATCH = "/admin/reviewBatch.jsp";
+	public static final String ADMINAUTHORBATCH = "/admin/authorBatch.jsp";
 	public static final String ADMINAUTHOR = "/admin/author.jsp";
 
 	
@@ -49,6 +52,7 @@ public class JspConstants {
 	public static final String LANGUAGELIST = "list";
 
 	public static final String REVIEWLIST = "reviewList";
+	public static final String AUTHORLIST = "autorList";
 	
 	
 	public static final String DEFAULTFAGCOLOR = "#886433";
@@ -82,6 +86,7 @@ public class JspConstants {
 	public static final String SLUG = "slug";
 	public static final String META = "meta";
 	public static final String TAGS = "tags";
+	public static final String TAGSTRANSLATED = "tagsTranslated";
 	public static final String TAGSREVIEW = "tagsReview";
 	public static final String METAREVIEW = "metaReview";
 	public static final String TAGINPUT = "tag";

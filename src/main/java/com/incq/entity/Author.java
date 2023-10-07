@@ -7,6 +7,7 @@ import com.incq.datastore.AuthorList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	private String shortDescription = "";
 	private String longDescription = "";
 	private List<? extends Value<?>> tags = null;
+	private List<? extends Value<?>> tagsTranslated = null;
 
 	public Author() {
 	}
@@ -106,6 +108,49 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		this.language = language;
 	}
 
+	public String getTagsTranslatedEncodedString() {
+		if (getTagsTranslated().size() == 0) {
+			return "";
+		} else {
+			List<String> tagStrings = getTagsTranslated().stream().map(Value::get).map(Object::toString)
+					.collect(Collectors.toList());
+			return String.join("&tags=", tagStrings);
+		}
+	}
+
+	public List<String> getTagsTranslatedList() {
+		return getTagsTranslated().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+	}
+
+	public String getTagsTranslatedString() {
+		if (getTagsTranslated().size() == 0) {
+			return "";
+		} else {
+			return String.join(",", getTagsTranslatedList());
+		}
+	}
+
+	public List<? extends Value<?>> getTagsTranslated() {
+
+		if (null == tagsTranslated) {
+			tagsTranslated = new ArrayList<>();
+		}
+		return tagsTranslated;
+	}
+
+	public void setTagsTranslated(String tags) {
+		String[] tagsArray = tags.toLowerCase().split(",");
+		setTagsTranslated(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTagsTranslated(Collection<String> tags) {
+		String[] tagsArray = tags.toArray(new String[tags.size()]);
+		setTagsTranslated(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+	}
+
+	public void setTagsTranslated(List<? extends Value<?>> tags) {
+		this.tagsTranslated = tags;
+	}
 	public String getTagsEncodedString() {
 		if (getTags().size() == 0) {
 			return "";
@@ -124,7 +169,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		if (getTags().size() == 0) {
 			return "";
 		} else {
-			return String.join(" ", getTagsList());
+			return String.join(",", getTagsList());
 		}
 	}
 
@@ -137,7 +182,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	}
 
 	public void setTags(String tags) {
-		String[] tagsArray = tags.toLowerCase().split(" ");
+		String[] tagsArray = tags.toLowerCase().split(",");
 		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
 	}
 
@@ -149,7 +194,6 @@ public class Author extends BaseEntity implements Comparable<Author> {
 	public void setTags(List<? extends Value<?>> tags) {
 		this.tags = tags;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -172,6 +216,7 @@ public class Author extends BaseEntity implements Comparable<Author> {
 		result = 31 * result + shortDescription.hashCode();
 		result = 31 * result + longDescription.hashCode();
 		result = 31 * result + getTags().hashCode();
+		result = 31 * result + getTagsTranslated().hashCode();
 
 		return result;
 	}
@@ -188,7 +233,8 @@ public class Author extends BaseEntity implements Comparable<Author> {
 						StringValue.newBuilder(getLongDescription()).setExcludeFromIndexes(true).build())
 				.set(AuthorConstants.SHORTDESC,
 						StringValue.newBuilder(getShortDescription()).setExcludeFromIndexes(true).build())
-				.set(ReviewConstants.TAGS, getTags())
+				.set(AuthorConstants.TAGS, getTags())
+				.set(AuthorConstants.TAGSTRANSLATED, getTagsTranslated())
 				.set(AuthorConstants.STYLE, StringValue.newBuilder(getStyle()).setExcludeFromIndexes(true).build())
 				.set(AuthorConstants.LANGUAGE, getLanguageSring()).build();
 		getDatastore().put(entity.build());
@@ -226,6 +272,9 @@ public class Author extends BaseEntity implements Comparable<Author> {
 			setLongDescription(entity.getString(AuthorConstants.LONGDESC));
 			if (entity.contains(AuthorConstants.TAGS)) {
 				setTags(entity.getList(AuthorConstants.TAGS));
+			}
+			if (entity.contains(AuthorConstants.TAGSTRANSLATED)) {
+				setTagsTranslated(entity.getList(AuthorConstants.TAGSTRANSLATED));
 			}
 
 		}

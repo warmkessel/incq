@@ -23,15 +23,15 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 <html>
 <head>
 <%
-List<Review> theList = ReviewList.fetchReviewSiteMap(Language.ENGLISH);
+List<Author> theList = AuthorList.fetchAuthorsSiteMap(Language.ENGLISH);
 %>
 </head>
 <body>
 	<form>
 		<table>
 			<%
-			for (ReviewDetailsStep step : ReviewDetailsStep.values()) {
-				if (ReviewDetailsStep.FAIL != step) {
+			for (AuthorStep step : AuthorStep.values()) {
+				if (AuthorStep.FAIL != step) {
 			%>
 			<tr>
 				<td><%=step.name%>: <%=step.desc%></td>
@@ -47,15 +47,15 @@ List<Review> theList = ReviewList.fetchReviewSiteMap(Language.ENGLISH);
 
 		<table>
 			<%
-			for (Review review : theList) {
+			for (Author author : theList) {
 			%>
 			<tr>
 				<td><a
-					href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=<%=review.getKeyLong()%>">
-						<%=review.getSlug()%>
+					href="<%=JspConstants.ADMINAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>">
+						<%=author.getName()%>
 				</a></td>
-				<td><input name="<%=JspConstants.REVIEWLIST%>" type=checkbox
-					value="<%=review.getKeyLong()%>"></td>
+				<td><input name="<%=JspConstants.AUTHORLIST%>" type=checkbox
+					value="<%=author.getName()%>"></td>
 			</tr>
 			<%
 			}
@@ -68,7 +68,7 @@ List<Review> theList = ReviewList.fetchReviewSiteMap(Language.ENGLISH);
 			%>
 			<tr>
 				<td><a
-					href="<%=JspConstants.ADMINREVIEW%>?<%=JspConstants.ID%>=&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>">
+					href="<%=JspConstants.ADMINAUTHOR%>?<%=JspConstants.ID%>=&<%=JspConstants.LANGUAGE%>=<%=langEnum.code%>">
 						<%=langEnum.name%>
 				</a></td>
 				<td><input name="<%=JspConstants.LANGUAGELIST%>" type=checkbox
@@ -87,14 +87,14 @@ List<Review> theList = ReviewList.fetchReviewSiteMap(Language.ENGLISH);
         const submitButton = document.getElementById("submitButton");
         submitButton.disabled = true;
 
-        const stepElements = document.querySelectorAll('input[name="step"]:checked');
-        const reviewListElements = document.querySelectorAll('input[name="reviewList"]:checked');
-        const listElements = document.querySelectorAll('input[name="list"]:checked');
+        const stepElements = document.querySelectorAll('input[name="<%=JspConstants.STEP%>"]:checked');
+        const authorListElements = document.querySelectorAll('input[name="<%=JspConstants.AUTHORLIST%>"]:checked');
+        const listElements = document.querySelectorAll('input[name="<%=JspConstants.LANGUAGELIST%>"]:checked');
 
-        for (const review of reviewListElements) {
+        for (const author of authorListElements) {
             for (const list of listElements) {
                 for (const step of stepElements) {
-                    await appendToUrlAndFetch(step.value, review.value, list.value);
+                    await appendToUrlAndFetch(step.value, author.value, list.value);
                 }
             }
         }
@@ -104,12 +104,12 @@ List<Review> theList = ReviewList.fetchReviewSiteMap(Language.ENGLISH);
         submitButton.disabled = false;
     }
 
-    async function appendToUrlAndFetch(step, review, lang) {
-        const newUrl = "/tasks/expandReviewDetails?cont=false&<%=JspConstants.STEP%>=";
+    async function appendToUrlAndFetch(step, author, lang) {
+        const newUrl = "/tasks/expandAuthor?cont=false&<%=JspConstants.STEP%>=";
         try {
-            console.info(newUrl + step + "&<%=JspConstants.ID%>=" + review +"&<%=JspConstants.LANGUAGE%>=" + lang );
+            console.info(newUrl + step + "&<%=JspConstants.ID%>=" + author +"&<%=JspConstants.LANGUAGE%>=" + lang );
             
-        	const response = await fetch(newUrl + step + "&<%=JspConstants.ID%>=" + review +"&<%=JspConstants.LANGUAGE%>=" + lang );
+        	const response = await fetch(newUrl + step + "&<%=JspConstants.NAME%>=" + author +"&<%=JspConstants.LANGUAGE%>=" + lang );
             if (!response.ok) {
                 console.error("Error fetching the URL:", response.status, response.statusText);
             }

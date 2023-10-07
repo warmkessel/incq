@@ -86,8 +86,15 @@ public class ReviewInstantiate {
 			}
 			break;
 		case STEP6:// Write the Review Body
-			review.getReviewDetails().setReviewBody(AIManager.editText(review.getReviewDetails().getReviewBody(),
+			review.getReviewDetails().setReviewBody(AIManager.editText(review.getSource(),
 					AIConstants.AIREVIEW, author.getStyle(), review.getReviewDetails().getReviewBody()));
+			if (continueExpand) {
+				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP6A:// Write the Review Body Alternate
+			review.getReviewDetails().setReviewBody(AIManager.editText(review.getSource(),
+					AIConstants.AIREVIEWA, author.getStyle(), review.getReviewDetails().getReviewBody()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
@@ -106,7 +113,7 @@ public class ReviewInstantiate {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
 			}
 			break;
-		case STEP9:// Write the Conclusion
+		case STEP9:// Write the Summary
 			review.getReviewDetails()
 					.setSummary(AIManager.editText(
 							review.getSource(),

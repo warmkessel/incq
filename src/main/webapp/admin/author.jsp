@@ -73,6 +73,7 @@ String translatedNameParam = (String) request.getParameter(JspConstants.TRANSLAT
 String longDesc = (String) request.getParameter(JspConstants.LONGDESC);
 String shortDesc = (String) request.getParameter(JspConstants.SHORTDESC);
 Set<String> tag = new HashSet<String>();
+Set<String> tagTranslated = new HashSet<String>();
 
 String[] langList = {};
 boolean dirty = false;
@@ -88,12 +89,22 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspConstants.TAGS).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGS));
 	for (String str : list) {
-		String[] split = str.split(" ");
+		String[] split = str.split(",");
 		for (int x = 0; x < split.length; x++) {
 	tag.add(split[x]);
 		}
 	}
 	author.setTags(tag);
+}
+if (null != request.getParameter(JspConstants.TAGSTRANSLATED) && request.getParameter(JspConstants.TAGSTRANSLATED).length() > 0) {
+	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGSTRANSLATED));
+	for (String str : list) {
+		String[] split = str.split(",");
+		for (int x = 0; x < split.length; x++) {
+	tag.add(split[x]);
+		}
+	}
+	author.setTagsTranslated(tag);
 }
 if (null != request.getParameter(JspConstants.DELETED) && request.getParameter(JspConstants.DELETED).length() > 0) {
 	deleted = Boolean.valueOf(request.getParameter(JspConstants.DELETED));
@@ -134,11 +145,6 @@ if (null != request.getParameter(JspConstants.LONGDESC) && request.getParameter(
 	author.setLongDescription(longDesc);
 	dirty = true;
 }
-if (null != request.getParameter(JspConstants.LANGUAGE) && request.getParameter(JspConstants.LANGUAGE).length() > 0) {
-	lang = Language.findByCode((String) request.getParameter(JspConstants.LANGUAGE));
-	author.setLanguage(lang);
-	dirty = true;
-}
 
 if (dirty && save) {
 	author.save();
@@ -156,6 +162,8 @@ if (null != langList && langList.length > 0) {
 		ID: <a href="<%=JspConstants.ADMINAUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getKeyLong()%></a><br>
 		<a href="<%=JspConstants.AUTHORSEO + author.getName()%>" target="_blank">Preview <%=author.getName()%></a>
 	</h1>
+	<h1><a href="<%=JspConstants.ADMINAUTHORBATCH%>"
+			target="_blank">Batch Review</a></h1>
 	<br>
 	<form method=post name="auth"
 		action="<%=JspConstants.ADMINAUTHOR%><%=author.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + author.getKeyLong()%>">
@@ -215,6 +223,15 @@ if (null != langList && langList.length > 0) {
 		%><input type="button" value="Step
 			3 - Suggest some Tags"
 			onclick="appendToUrlAndFetch('step3')">
+			
+		<%}%><br> Tags Translated
+		<textarea name="<%=JspConstants.TAGSTRANSLATED%>" rows="20" cols="80"><%=author.getTagsTranslatedString()%></textarea>
+		<%
+		if (!Language.ENGLISH.equals(author.getLanguage())) {
+		%><input type="button" value="Step
+			9 - Translate the Tags"
+			onclick="appendToUrlAndFetch('step9')">
+			
 		<%}%><br>Translated Name:<input type="text"
 			name="<%=JspConstants.TRANSLATEDNAME%>"
 			value="<%=author.getTranslatedName()%>" size="50">
@@ -288,14 +305,14 @@ if (null != langList && langList.length > 0) {
 	
 	async function appendToUrlAndFetch(str) {
 		  // Append the string to the current URL
-		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.ID%>=<%=author.getKeyLong()%>&<%=JspConstants.POSITION%>=0&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
+		  const newUrl = "<%=JspConstants.EXPANDAUTHOR%>?<%=JspConstants.NAME%>=<%=author.getName()%>&<%=JspConstants.POSITION%>=0&<%=JspConstants.LANGUAGE%>=<%=author.getLanguage().code%>&<%=JspConstants.CONTINUE%>=false&<%=JspConstants.STEP%>=";
 		  try {
 		    // Perform an asynchronous HTTP request
 		    const response = await fetch(newUrl+str);
 		    // Check if the request was successful
 		    if (response.ok) {
 		    	 setTimeout(() => {
-		    	        window.location = '<%=JspConstants.ADMINAUTHOR +"?" + JspConstants.ID + "=" + author.getKeyLong()%>)';
+		    	        window.location = '<%=JspConstants.ADMINAUTHOR +"?" + JspConstants.ID + "=" + author.getKeyLong()%>';
 		    	      }, 5000); // 5000 milliseconds = 5 seconds
 		   	} else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);

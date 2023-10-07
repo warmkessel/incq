@@ -13,6 +13,7 @@
 UserService userService = UserServiceFactory.getUserService();
 User currentUser = userService.getCurrentUser();
 Language lang = Language.ENGLISH;
+Domains dom = Domains.WWW;
 
 String requestUrl = request.getRequestURL().toString();
 URL url = new URL(requestUrl);
@@ -24,6 +25,9 @@ if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstant
 	}
 } else {
 	lang = Language.findByCode(subDomain);
+	if(Language.ENGLISH.equals(lang)){
+		dom = Domains.findByName(subDomain);
+	}
 }
 int categoryLoc = url.getPath().indexOf(JspConstants.CATEGORY);
 ArrayList<Review> theList = new ArrayList<Review>();
@@ -33,7 +37,12 @@ if (categoryLoc >= 0) {
 	theList = ReviewList.fetchCategoryEntities(category, lang);
 }
 else{
-	theList = ReviewList.fetchBookmaredReviews(lang);
+	if(!Domains.WWW.equals(dom)){
+		theList = ReviewList.fetchCategoryEntities(dom.name, lang);
+	}
+	else{
+		theList = ReviewList.fetchBookmaredReviews(lang);
+	}
 }
 %><!DOCTYPE html>
 <html lang="<%=lang.code%>">

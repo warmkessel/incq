@@ -1,6 +1,7 @@
 package com.incq.instantiate;
 
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.incq.ai.AIManager;
@@ -27,6 +28,7 @@ public class AuthorInstantiate {
 					authSub.setName(auth.getName());
 					authSub.setTranslatedName(auth.getTranslatedName());
 					authSub.setTags(auth.getTags());
+					authSub.setTagsTranslated(auth.getTagsTranslated());
 					authSub.setLanguage(lang);
 					authSub.setStyle(auth.getStyle());
 					authSub.setBookmarked(auth.isBookmarked());
@@ -35,7 +37,7 @@ public class AuthorInstantiate {
 
 					authSub.setDeleted(true);
 					authSub.save();
-					EnqueueAuthor.enqueueAuthorTask(authSub.getKeyLong(), lang, AuthorStep.STEP6, true);
+					EnqueueAuthor.enqueueAuthorTask(authSub.getName(), lang, AuthorStep.STEP6, true);
 				}
 			}
 
@@ -45,73 +47,86 @@ public class AuthorInstantiate {
 		}
 	}
 
-	public static void expandAuthorSteps(String key, String lang, String step, String position, String continueExpand)
+	public static void expandAuthorSteps(String name, String lang, String step, String position, String continueExpand)
 			throws IncqServletException {
-		expandAuthorSteps(Long.valueOf(key), Language.findByCode(lang), AuthorStep.findByName(step),Integer.valueOf(position),
-				Boolean.valueOf(continueExpand));
+		expandAuthorSteps(name, Language.findByCode(lang), AuthorStep.findByName(step),
+				Integer.valueOf(position), Boolean.valueOf(continueExpand));
 	}
-	public static void expandAuthorSteps(Long key, Language lang, AuthorStep step, int position, boolean continueExpand)
+
+	public static void expandAuthorSteps(String name, Language lang, AuthorStep step, int position, boolean continueExpand)
 			throws IncqServletException {
 		Author auth = new Author();
-		auth.loadAuthor(key);
+		auth.loadAuthor(name, lang);
 		expandAuthorSteps(auth, lang, step, position, continueExpand);
 	}
-	public static void expandAuthorSteps(Author auth, Language lang, AuthorStep step, int position, boolean continueExpand)
-			throws IncqServletException {
+
+	public static void expandAuthorSteps(Author auth, Language lang, AuthorStep step, int position,
+			boolean continueExpand) throws IncqServletException {
 		switch (step) {
 		case STEP1:// Suggest an Authors Name
 			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP2:// Suggest a Style
 			auth.setStyle(auth.getStyle() + " " + AIManager.editText(auth.getStyle(), AIConstants.AIAUTHORSTYLE));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP3:// Suggest some Tags
 			auth.setTags(AIManager.editText(auth.getStyle() + auth.getTagsString(), AIConstants.AITAGS,
 					auth.getTagsString()));
+			auth.setTagsTranslated(auth.getTags());
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP4:// Suggest Long Description"
-			auth.setLongDescription(chunkString("My name is " + auth.getName() + auth.getLongDescription(), auth, lang, step,
-					position, continueExpand, AIConstants.AIAUTHORLONG));
-			
-			
+			auth.setLongDescription(chunkString("My name is " + auth.getName() + auth.getLongDescription(), auth, lang,
+					step, position, continueExpand, AIConstants.AIAUTHORLONG));
+
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP5:// Suggest Short Description"
-			auth.setShortDescription(AIManager.editText("My name is " + auth.getName() + auth.getLongDescription(), AIConstants.AIAUTHORSHORT,
-					auth.getStyle(), auth.getShortDescription()));
+			auth.setShortDescription(AIManager.editText("My name is " + auth.getName() + auth.getLongDescription(),
+					AIConstants.AIAUTHORSHORT, auth.getStyle(), auth.getShortDescription()));
 			break;
 		case STEP6:// Translate Name
 
 			auth.setTranslatedName(AIManager.editText(auth.getTranslatedName(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):"));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP7:// Translate Short Description
 
 			auth.setShortDescription(AIManager.editText(auth.getShortDescription(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code +"):"));
+					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
 			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(), continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP8:// Translate Long Description"
-			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step,
-					position, continueExpand));
+			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step, position, continueExpand));
 			break;
-		case STEP9:// Enable
+		case STEP9:// translate Tags"
+			List<String>tags = auth.getTagsList();
+			List<String>translatedTags = new ArrayList<String>();
+			for(String tag: tags) {
+				translatedTags.add(AIManager.editText(tag,
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			}
+			auth.setTagsTranslated(translatedTags);
+			if (continueExpand) {
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
+			}
+			break;
+		case STEP10:// Enable
 			auth.setDeleted(false);
 			break;
 		case FAIL:
@@ -124,33 +139,34 @@ public class AuthorInstantiate {
 		auth.save();
 
 	}
-	private static String chunkString(String input, Author auth, Language lang,
-			AuthorStep step, int position, boolean continueExpand) throws IncqServletException {
-		return chunkString(input, auth, lang,
-				step, position, continueExpand, 
+
+	private static String chunkString(String input, Author auth, Language lang, AuthorStep step, int position,
+			boolean continueExpand) throws IncqServletException {
+		return chunkString(input, auth, lang, step, position, continueExpand,
 				AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):");
 	}
-	private static String chunkString(String input, Author auth, Language lang,
-			AuthorStep step, int position, boolean continueExpand, String instruction) throws IncqServletException {
+
+	private static String chunkString(String input, Author auth, Language lang, AuthorStep step, int position,
+			boolean continueExpand, String instruction) throws IncqServletException {
 		StringBuffer theReturn = new StringBuffer();
 		String subString = "";
 		String[] theSplit = input.split("\r\n");
-		if(0 == position) {
+		if (0 == position) {
 			for (int x = 0; x < theSplit.length; x++) {
-				if(0<theSplit[x].trim().length()) {
+				if (0 < theSplit[x].trim().length()) {
 					theReturn.append(theSplit[x]).append("\r\n");
 				}
 			}
 			theSplit = theReturn.toString().split("\r\n");
 			theReturn = new StringBuffer();
 		}
-		if(position >= 0 && position < theSplit.length) {
+		if (position >= 0 && position < theSplit.length) {
 			subString = theSplit[position];
 		}
 		int numOfTries = 10;
 		while (numOfTries > 0 && subString.length() > 0) {
 			try {
-				theSplit[position] = AIManager.editText(subString,instruction, "", subString);
+				theSplit[position] = AIManager.editText(subString, instruction, "", subString);
 				numOfTries = 0;
 			} catch (IncqServletException incq) {
 				logger.log(Level.SEVERE, "Failed to execute editTextChunk OpenAI API request numOfTries " + numOfTries);
@@ -159,11 +175,9 @@ public class AuthorInstantiate {
 
 			position = position + 1;
 			if (position < theSplit.length) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step, position,
-						continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step, position, continueExpand);
 			} else if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getKeyLong(), lang, step.next(),
-						continueExpand);
+				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 		}
 		for (int x = 0; x < theSplit.length; x++) {

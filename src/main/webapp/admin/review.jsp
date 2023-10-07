@@ -230,7 +230,9 @@ if (null != langList && langList.length > 0) {
 		<a href="<%=JspConstants.REVIEWSEO + review.getSlug()%>"
 			target="_blank">Preview Review <%=review.getReviewDetails().getName()%></a><br>
 		<a href="<%=JspConstants.AUTHORSEO + review.getAuthor()%>"
-			target="_blank">Preview Author <%=review.getAuthor()%></a>
+			target="_blank">Preview Author <%=review.getAuthor()%></a><br>
+		<a href="<%=JspConstants.ADMINREVIEWBATCH%>"
+			target="_blank">Batch Review</a>
 	</h1>
 	<br>
 
@@ -415,6 +417,8 @@ if (null != langList && langList.length > 0) {
 		if (Language.ENGLISH.equals(lang)) {
 		%><input type="button" value="Step 6 - Write the Review Body"
 			onclick="appendToUrlAndFetch('step6')">
+			<input type="button" value="Step 6A - Write an Alternative Review Body"
+			onclick="appendToUrlAndFetch('step6A')">
 		<%}%>
 		<%
 		if (!Language.ENGLISH.equals(lang)) {

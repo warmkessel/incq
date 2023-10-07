@@ -25,7 +25,7 @@ public class ExpandAuthorTask extends HttpServlet {
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, IncqServletException {
-		String keyString = req.getParameter(JspConstants.ID);
+		String nameString = req.getParameter(JspConstants.NAME);
 		String langString = req.getParameter(JspConstants.LANGUAGE);
 		String stepString = req.getParameter(JspConstants.STEP);
 		String contString = req.getParameter(JspConstants.CONTINUE);
@@ -34,7 +34,7 @@ public class ExpandAuthorTask extends HttpServlet {
 			positionString = "0";
 		}
 		// Call your method here
-		AuthorInstantiate.expandAuthorSteps(keyString, langString, stepString, positionString, contString);
+		AuthorInstantiate.expandAuthorSteps(nameString, langString, stepString, positionString, contString);
 		
 	}
 }

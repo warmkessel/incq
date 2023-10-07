@@ -155,12 +155,26 @@ public class AIManager {
             // Return the input unchanged if it is null or empty
             return input;
         }
-        input = input.trim();
-        int startIndex = input.charAt(0) == '"' ? 1 : 0;
-        int endIndex = input.charAt(input.length() - 1) == '"' ? input.length() - 1 : input.length();
+        StringBuffer theReturn = new StringBuffer();
+        String[] split = input.split("\n");
+        boolean first = true;
+        for(int x=0; x< split.length; x++) {
+        	input = split[x].trim();
+            if(input.length() > 0) {
+            	if(first) {
+            		first = false;
+            	}
+            	else {
+            		theReturn.append("\r\n");
+            	}
+            	int startIndex = input.charAt(0) == '"' ? 1 : 0;
+            	int endIndex = input.charAt(input.length() - 1) == '"' ? input.length() - 1 : input.length();
+            	theReturn.append(input.substring(startIndex, endIndex));
+            }
+        }
 
         // Return the substring from startIndex to endIndex
-        return input.substring(startIndex, endIndex);
+        return theReturn.toString();
     }
 	private static boolean checkInvalidResponse(String response) {
 		String responseLower = response.toLowerCase();

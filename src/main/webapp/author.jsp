@@ -187,6 +187,19 @@ try {
 				<div class="card-body px-4 pb-4 text-center">
 					<h3><%=author.getTranslatedName()%></h3>
 					<p><%=HtmlHelper.convertLongText(author.getLongDescription())%></p>
+					<p>
+						<%
+						for (int x = 0; x < author.getTagsList().size(); x++) {
+							String locTag = author.getTagsList().get(x);
+							if(author.getTagsList().size() == author.getTagsTranslatedList().size()){
+								locTag = author.getTagsTranslatedList().get(x);
+							}
+						%>
+						| <a
+							href="<%=JspConstants.CATEGORY%><%=author.getTagsList().get(x)%>"><%=locTag%></a>
+						<%}%>
+						|
+					</p>
 				</div>
 			</div>
 		</div>

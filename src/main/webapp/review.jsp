@@ -85,7 +85,7 @@ try {
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title><%=lang.review%> <%=review.getReviewDetails()%></title>
+<title><%=lang.review%> <%=review.getReviewDetails().getTitle()%></title>
 <script type="application/ld+json">
    {
 	  "@context": "https://schema.org",
@@ -97,7 +97,7 @@ try {
 	  },
 	  "description": "<%=review.getReviewDetails().getSummary()%>",
 	  "name": "<%=review.getReviewDetails().getName()%>",
-	  "image": "<%=review.getMediaList().get(0)%>",
+	  "image": "<%=review.getMediaList().size() > 0? review.getMediaList().get(0) : "" %>",
 	  "url": "<%=review.getLink()%>",
 	  "keywords": "<%=review.getReviewDetails().getMetaString()%>",
 	  "positiveNotes": <%=HtmlHelper.convertLongJSON(review.getReviewDetails().getReviewBody())%>
@@ -226,7 +226,7 @@ try {
 					</h4>
 					<a href="<%=review.getLink()%>" target="_blank"
 						aria-label="<%=review.getReviewDetails().getTitle()%>"><img
-						border="0" src="<%=review.getMediaList().get(0)%>"
+						border="0" src="<%=review.getMediaList().size() > 0? review.getMediaList().get(0) : "" %>"
 						alt="<%=review.getReviewDetails().getDesc()%>" height="250"
 						width="250"></a>
 					<h4><%=lang.introduction%></h4>

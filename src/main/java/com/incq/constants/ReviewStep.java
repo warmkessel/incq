@@ -13,6 +13,7 @@ public enum ReviewStep {
 	STEP4("step4"), // Determine the Meta Tags
 	STEP5("step5"), // Determine the Tags
 	STEP6("step6"), // Write the Review Body
+	STEP6A("step6A"), // Write the alternative Review Body
 	STEP7("step7"), // Write the introductions
 	STEP8("step8"), // Write the Conclusion
 	STEP9("step9"), // Write a summary
