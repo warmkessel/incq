@@ -49,12 +49,12 @@ public class AuthorInstantiate {
 
 	public static void expandAuthorSteps(String name, String lang, String step, String position, String continueExpand)
 			throws IncqServletException {
-		expandAuthorSteps(name, Language.findByCode(lang), AuthorStep.findByName(step),
-				Integer.valueOf(position), Boolean.valueOf(continueExpand));
+		expandAuthorSteps(name, Language.findByCode(lang), AuthorStep.findByName(step), Integer.valueOf(position),
+				Boolean.valueOf(continueExpand));
 	}
 
-	public static void expandAuthorSteps(String name, Language lang, AuthorStep step, int position, boolean continueExpand)
-			throws IncqServletException {
+	public static void expandAuthorSteps(String name, Language lang, AuthorStep step, int position,
+			boolean continueExpand) throws IncqServletException {
 		Author auth = new Author();
 		auth.loadAuthorAdmin(name, lang);
 		expandAuthorSteps(auth, lang, step, position, continueExpand);
@@ -62,6 +62,8 @@ public class AuthorInstantiate {
 
 	public static void expandAuthorSteps(Author auth, Language lang, AuthorStep step, int position,
 			boolean continueExpand) throws IncqServletException {
+		Author sourceAuthor = new Author();
+
 		switch (step) {
 		case STEP1:// Suggest an Authors Name
 			auth.setName(AIManager.editText("", AIConstants.AIAUTHOR, auth.getName()));
@@ -96,34 +98,47 @@ public class AuthorInstantiate {
 					AIConstants.AIAUTHORSHORT, auth.getStyle(), auth.getShortDescription()));
 			break;
 		case STEP6:// Translate Name
-
-			auth.setTranslatedName(AIManager.editText(auth.getTranslatedName(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			if (!Language.ENGLISH.equals(auth.getLanguage())) {
+				sourceAuthor.loadAuthorAdmin(auth.getName(), Language.ENGLISH);
+				auth.setTranslatedName(AIManager.editText(sourceAuthor.getName(),
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			}
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP7:// Translate Short Description
-
-			auth.setShortDescription(AIManager.editText(auth.getShortDescription(),
-					AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			if (!Language.ENGLISH.equals(auth.getLanguage())) {
+				sourceAuthor.loadAuthorAdmin(auth.getName(), Language.ENGLISH);
+				auth.setShortDescription(AIManager.editText(sourceAuthor.getShortDescription(),
+						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+			}
 			if (continueExpand) {
 				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
 			}
 			break;
 		case STEP8:// Translate Long Description"
-			auth.setLongDescription(chunkString(auth.getLongDescription(), auth, lang, step, position, continueExpand));
+			if (!Language.ENGLISH.equals(auth.getLanguage())) {
+				sourceAuthor.loadAuthorAdmin(auth.getName(), Language.ENGLISH);
+				auth.setLongDescription(
+					chunkString(sourceAuthor.getLongDescription(), auth, lang, step, position, continueExpand));
+			}
 			break;
 		case STEP9:// translate Tags"
-			List<String>tags = auth.getTagsList();
-			List<String>translatedTags = new ArrayList<String>();
-			for(String tag: tags) {
-				translatedTags.add(AIManager.editText(tag,
-						AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
-			}
-			auth.setTagsTranslated(translatedTags);
-			if (continueExpand) {
-				EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
+			if (!Language.ENGLISH.equals(auth.getLanguage())) {
+				sourceAuthor.loadAuthorAdmin(auth.getName(), Language.ENGLISH);
+
+				List<String> tags = sourceAuthor.getTagsList();
+				List<String> translatedTags = new ArrayList<String>();
+				for (String tag : tags) {
+					translatedTags
+							.add(AIManager.editText(tag, AIConstants.AILANG + lang.name + " BPC-47(" + lang.code + "):"));
+				}
+				auth.setTags(tags);
+				auth.setTagsTranslated(translatedTags);
+				if (continueExpand) {
+					EnqueueAuthor.enqueueAuthorTask(auth.getName(), lang, step.next(), continueExpand);
+				}
 			}
 			break;
 		case STEP10:// Enable
