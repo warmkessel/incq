@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.incq.ai.AIManager;
 import com.incq.constants.*;
+import com.incq.datastore.TagManager;
 import com.incq.enqueue.EnqueueReview;
 import com.incq.entity.*;
 import com.incq.exception.IncqServletException;
@@ -54,7 +55,7 @@ public class ReviewInstantiate {
 			}
 			break;
 		case STEP2:// Determine the Author
-			review.setAuthor(AIManager.editText(review.getSource(), AIConstants.AIAUTHOR + review.getSource(),
+			review.setAuthor(AIManager.editText(review.getSource(), AIConstants.AIAUTHOR   + new TagManager().fetchUniqueTagsByAuthorString()  + review.getSource(),
 					review.getAuthor()));
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);
@@ -79,7 +80,7 @@ public class ReviewInstantiate {
 			}
 			break;
 		case STEP5:// Determine the Tags
-			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + review.getSource(), ""));
+			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + new TagManager().fetchUniqueTagsString() +  AIConstants.AITAGS2 +  review.getSource(), ""));
 			review.getReviewDetails().setTags(review.getTagsList());
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);

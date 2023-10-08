@@ -17,12 +17,20 @@ if (!userService.isUserLoggedIn() || !userService.isUserAdmin()) {
 </head>
 <body>
 	<ul>
-		<li><a href="<%=JspConstants.ADMINREVIEWBATCH%>">
-				Admin Review Batch</a></li>
+		<li><a href="<%=JspConstants.ADMINREVIEWBATCH%>"> Admin
+				Review Batch</a></li>
+				
+		<li><a href="<%=JspConstants.ADMINAUTHORBATCH%>"> Admin
+				Author Batch</a></li>
+		<li><a href="<%=JspConstants.ADMINTAGS%>">Tags</a></li>
 		<li><a href="https://affiliate-program.amazon.com/">
 				https://affiliate-program.amazon.com/</a></li>
 		<li>SEO
 			<ul>
+				<li><a
+					href="http://www.google.com/ping?sitemap=https://incq.com/sitemap.xml"
+					target="_blank">
+						http://www.google.com/ping?sitemap=https://incq.com/sitemap.xml</a></li>
 				<li><a href="https://pagespeed.web.dev/" target="_blank">
 						https://pagespeed.web.dev/</a></li>
 

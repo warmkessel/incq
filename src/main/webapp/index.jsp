@@ -74,7 +74,7 @@ else{
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
 
-<title>INCQ <%=lang.reviews%></title>
+<title>INCQ <%=lang.reviews%>-<%=lang.incqDesc%></title>
 
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40">
@@ -173,7 +173,7 @@ else{
 	<section class="has-img-bg" id="insite">
 		<div class="container">
 			<h6 class="section-subtitle text-center"><%=category.length() > 0 ? lang.category + " " + CaseControl.capFirstLetter(category) : lang.popular%></h6>
-			<h3 class="section-title mb-6 text-center">INCQ <%=lang.reviews%></h3>
+			<h1 class="section-title mb-6 text-center">INCQ <%=lang.reviews%></h1>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">

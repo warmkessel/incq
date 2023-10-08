@@ -78,14 +78,14 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		if (getTags().size() == 0) {
 			return "";
 		} else {
-			List<String> tagStrings = getTags().stream().map(Value::get).map(Object::toString)
+			List<String> tagStrings = getTags().stream().map(Value::get).map(Object::toString).map(String::toLowerCase).map(String::trim)
 					.collect(Collectors.toList());
 			return String.join("&tags=", tagStrings);
 		}
 	}
 
 	public List<String> getTagsList() {
-		return getTags().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+		return getTags().stream().map(Value::get).map(Object::toString).map(String::trim).collect(Collectors.toList());
 	}
 
 	public String getTagsString() {
@@ -113,12 +113,12 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void setTags(String tags) {
 		String[] tagsArray = tags.toLowerCase().split(",");
-		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+		setTags(Arrays.stream(tagsArray).map(String::toLowerCase).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setTags(Set<String> tags) {
 		String[] tagsArray = tags.toArray(new String[tags.size()]);
-		setTags(Arrays.stream(tagsArray).map(StringValue::of).collect(Collectors.toList()));
+		setTags(Arrays.stream(tagsArray).map(String::toLowerCase).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setTags(List<? extends Value<?>> tags) {
@@ -134,7 +134,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public List<String> getMetaList() {
-		return getMeta().stream().map(Value::get).map(Object::toString).collect(Collectors.toList());
+		return getMeta().stream().map(Value::get).map(Object::toString).map(String::trim).collect(Collectors.toList());
 	}
 
 	public String getMetaString() {
@@ -155,12 +155,12 @@ public class Review extends BaseEntity implements Comparable<Review> {
 
 	public void setMeta(String meta) {
 		String[] metaArray = meta.toLowerCase().split(",");
-		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
+		setMeta(Arrays.stream(metaArray).map(String::toLowerCase).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setMeta(Collection<String> meta) {
 		String[] metaArray = meta.toArray(new String[meta.size()]);
-		setMeta(Arrays.stream(metaArray).map(StringValue::of).collect(Collectors.toList()));
+		setMeta(Arrays.stream(metaArray).map(String::toLowerCase).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setMeta(List<? extends Value<?>> meta) {
@@ -216,7 +216,7 @@ public class Review extends BaseEntity implements Comparable<Review> {
 		if (getMedia().size() == 0) {
 			return "";
 		} else {
-			List<String> mediaStrings = getMedia().stream().map(Value::get).map(Object::toString)
+			List<String> mediaStrings = getMedia().stream().map(Value::get).map(Object::toString).map(String::trim)
 					.collect(Collectors.toList());
 			return String.join(" ", mediaStrings);
 		}
@@ -236,12 +236,12 @@ public class Review extends BaseEntity implements Comparable<Review> {
 	}
 
 	public void setMedia(String[] mediaArray) {
-		setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
+		setMedia(Arrays.stream(mediaArray).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setMedia(Set<String> media) {
 		String[] mediaArray = media.toArray(new String[media.size()]);
-		setMedia(Arrays.stream(mediaArray).map(StringValue::of).collect(Collectors.toList()));
+		setMedia(Arrays.stream(mediaArray).map(String::trim).map(StringValue::of).collect(Collectors.toList()));
 	}
 
 	public void setMedia(List<? extends Value<?>> media) {

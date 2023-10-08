@@ -87,7 +87,7 @@ try {
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
-	content="Reviews by: <%=author.getTranslatedName()%> <%=author.getShortDescription()%>">
+	content="Reviews by: <%=author.getTranslatedName()%> <%= HtmlHelper.truncate(author.getShortDescription(), 130) %>">
 <meta name="author" content="INCQ: <%=author.getTranslatedName()%>">
 
 <!-- Bootstrap + SOLS main styles -->
@@ -185,7 +185,7 @@ try {
 		<div class="container">
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
-					<h3><%=author.getTranslatedName()%></h3>
+					<h1 class="section-title mb-6 text-center"><%=author.getTranslatedName()%></h1>
 					<p><%=HtmlHelper.convertLongText(author.getLongDescription())%></p>
 					<p>
 						<%

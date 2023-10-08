@@ -79,13 +79,13 @@ try {
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description"
-	content="<%=lang.reviews%>: <%=review.getReviewDetails().getDesc()%>">
+	content="<%=lang.reviews%>: <%= HtmlHelper.truncate(review.getReviewDetails().getTitle(), 130) %>">
 <meta name="author" content="INCQ: <%=author.getTranslatedName()%>">
 <meta name="keywords" content="<%=review.getReviewDetails().getMetaString()%>">
 
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title><%=lang.review%> <%=review.getReviewDetails().getTitle()%></title>
+<title><%=lang.review%> <%=HtmlHelper.truncate(review.getReviewDetails().getName(), 60)%></title>
 <script type="application/ld+json">
    {
 	  "@context": "https://schema.org",
@@ -245,8 +245,8 @@ try {
 					</h1>
 					<br>
 					<h4>
-						<a href="<%=JspConstants.AUTHOR%>?id=<%=author.getKeyLong()%>"
-							aria-label="<%=lang.author %> - <%=author.getTranslatedName()%>"><%=lang.author %> - <%=author.getTranslatedName()%></a>
+						<a href="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
+							aria-label="<%=author.getTranslatedName()%>"><%=author.getTranslatedName()%></a>
 					</h4>
 					<p><%=author.getShortDescription()%></p>
 					<p>

@@ -56,7 +56,7 @@ public class AuthorInstantiate {
 	public static void expandAuthorSteps(String name, Language lang, AuthorStep step, int position, boolean continueExpand)
 			throws IncqServletException {
 		Author auth = new Author();
-		auth.loadAuthor(name, lang);
+		auth.loadAuthorAdmin(name, lang);
 		expandAuthorSteps(auth, lang, step, position, continueExpand);
 	}
 

@@ -46,11 +46,15 @@ public class AIConstants {
 
 	public static final String AIAUTHORSHORT = "summarize the background profided and write 3 to 5 sentences summarizing it in the voice of the author.   Do not referance any real people";
 
-	public static final String AIAUTHOR = "Suggest a first and last name of the author";
+	public static final String AIAUTHOR = "Match list of authors and their relivant tags and select the name of the author that best matches the attached content.";
 
 	public static final String AIMETA = "Review this content and suggest a list of 40 meta keywords seperated only with a ,  that it would be associated with the specific product described. Do not list any of the following: amazon shopping merchandise pre-order product description customer reviews product comparison amazon visa benefits product accessories online retail delivery options features app. ";
 
-	public static final String AITAGS = "Review this content and suggest a list of 10 tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
+//	public static final String AITAGS = "Review this content and suggest a list of 10 tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
+
+	public static final String AITAGS = "From this list of tags: ";
+
+	public static final String AITAGS2 = ". Review this content and determine which  tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
 
 	public static final String AILANG = "Translate the text into ";
 

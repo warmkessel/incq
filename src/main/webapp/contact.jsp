@@ -85,7 +85,7 @@ if ((null != currentUser) && subject != null && body != null) {
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css?v=1">
-<title>INCQ <%=lang.reviews%></title>
+<title>INCQ <%=lang.reviews%> Contact-<%=lang.incqDesc%></title>
 
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40">
@@ -182,7 +182,7 @@ if ((null != currentUser) && subject != null && body != null) {
 						class="w-100 rounded shadow">
 				</div>
 				<div class="col-md-6">
-					<h3 class="section-title mb-5 text-center" id="reponse"></h3>
+					<h1 class="section-title mb-5 text-center" id="reponse"></h1>
 					<form action="<%=JspConstants.CONTACT%>" method="get"
 						enctype="text/plain">
 						<input type="hidden" name="pageurl"
@@ -227,7 +227,7 @@ if ((null != currentUser) && subject != null && body != null) {
 						class="w-100 rounded shadow">
 				</div>
 				<div class="col-md-6">
-					<h3 class="section-title mb-5 text-center" id="reponse"><%=lang.contactLogin %></h3>
+					<h1 class="section-title mb-5 text-center" id="reponse"><%=lang.contactLogin %></h1>
 					<a href="<%=userService.createLoginURL(JspConstants.CONTACT)%>"
 						class="btn btn-primary btn-sm" aria-label="Login">Login</a> <br>
 					<small class="form-text text-muted mt-3"><%=lang.privacyPolicyIntro %> <a href="<%=JspConstants.PRIVACY%>"

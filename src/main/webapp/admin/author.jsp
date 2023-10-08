@@ -89,7 +89,7 @@ if (null != request.getParameter(JspConstants.SAVE) && request.getParameter(JspC
 if (null != request.getParameter(JspConstants.TAGS) && request.getParameter(JspConstants.TAGS).length() > 0) {
 	List<String> list = Arrays.asList(request.getParameterValues(JspConstants.TAGS));
 	for (String str : list) {
-		String[] split = str.split(",");
+		String[] split = str.toLowerCase().split(",");
 		for (int x = 0; x < split.length; x++) {
 	tag.add(split[x]);
 		}
@@ -157,13 +157,13 @@ if (null != langList && langList.length > 0) {
 %>
 </head>
 <body>
-	<h1>Language:<%=lang.flagUnicode%><%=lang.name%></h1>
+	<h1>Language:<%=author.getLanguage().flagUnicode%><%=author.getLanguage().name%></h1>
 	<h1>
 		ID: <a href="<%=JspConstants.ADMINAUTHOR%>?id=<%=author.getKeyLong()%>"><%=author.getKeyLong()%></a><br>
 		<a href="<%=JspConstants.AUTHORSEO + author.getName()%>" target="_blank">Preview <%=author.getName()%></a>
 	</h1>
 	<h1><a href="<%=JspConstants.ADMINAUTHORBATCH%>"
-			target="_blank">Batch Review</a></h1>
+			target="_blank">Batch Author</a></h1>
 	<br>
 	<form method=post name="auth"
 		action="<%=JspConstants.ADMINAUTHOR%><%=author.getKeyLong().equals(0l) ? "" : "?" + JspConstants.ID + "=" + author.getKeyLong()%>">
@@ -312,7 +312,7 @@ if (null != langList && langList.length > 0) {
 		    // Check if the request was successful
 		    if (response.ok) {
 		    	 setTimeout(() => {
-		    	        window.location = '<%=JspConstants.ADMINAUTHOR +"?" + JspConstants.ID + "=" + author.getKeyLong()%>';
+		    	        window.location = '<%=JspConstants.ADMINAUTHOR +"?" + JspConstants.NAME + "=" + author.getName() + "&" + JspConstants.LANGUAGE+ "=" + author.getLanguage().code%>';
 		    	      }, 5000); // 5000 milliseconds = 5 seconds
 		   	} else {
 		      console.error("Error fetching the URL:", response.status, response.statusText);

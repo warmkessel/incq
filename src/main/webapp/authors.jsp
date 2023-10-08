@@ -156,7 +156,7 @@ ArrayList<Author>  theList = AuthorList.fetchAuthors(lang, all);
 	<section class="has-img-bg" id="insite">
 		<div class="container">
 			<h6 class="section-subtitle text-center"><%=lang.someAuthors %></h6>
-			<h3 class="section-title mb-6 text-center">INCQ Reviews</h3>
+			<h1 class="section-title mb-6 text-center">INCQ Reviews</h1>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">

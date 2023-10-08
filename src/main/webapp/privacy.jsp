@@ -58,8 +58,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 <meta name="author" content="Incq.com">
 <!-- Bootstrap + SOLS main styles -->
 <link rel="stylesheet" href="/assets/css/sols.css">
-<title>INCQ <%=lang.reviews%></title>
-
+<title>INCQ <%=lang.reviews%> Privacy-<%=lang.incqDesc%></title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40">
 	<!-- Google Tag Manager (noscript) -->

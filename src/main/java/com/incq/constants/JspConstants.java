@@ -39,12 +39,13 @@ public class JspConstants {
 	
 	
 	
-	public static final String ADMINFACEBOOK = "/admin/facebook.jsp";
-	public static final String ADMINTWITTER = "/admin/twitter.jsp";
-	public static final String ADMINREVIEW = "/admin/review.jsp";
-	public static final String ADMINREVIEWBATCH = "/admin/reviewBatch.jsp";
-	public static final String ADMINAUTHORBATCH = "/admin/authorBatch.jsp";
-	public static final String ADMINAUTHOR = "/admin/author.jsp";
+	public static final String ADMINFACEBOOK = ADMIN + "/facebook.jsp";
+	public static final String ADMINTWITTER = ADMIN + "/twitter.jsp";
+	public static final String ADMINREVIEW = ADMIN + "/review.jsp";
+	public static final String ADMINREVIEWBATCH = ADMIN + "/reviewBatch.jsp";
+	public static final String ADMINAUTHORBATCH = ADMIN + "/authorBatch.jsp";
+	public static final String ADMINAUTHOR = ADMIN + "/author.jsp";
+	public static final String ADMINTAGS = ADMIN + "/tag.jsp";
 
 	
 	
