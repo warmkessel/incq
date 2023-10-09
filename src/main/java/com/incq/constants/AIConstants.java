@@ -52,10 +52,11 @@ public class AIConstants {
 
 //	public static final String AITAGS = "Review this content and suggest a list of 10 tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
 
-	public static final String AITAGS = "From this list of tags: ";
+	public static final String AITAGS = "which of these tags most closely match the product described: ";
 
-	public static final String AITAGS2 = ". Review this content and determine which  tags keywords seperated only with a ,  that it would be used to organzie a product like this. Do not list any of the following: amazon. ";
-
+	public static final String AITAGS2 = ". About this item:";
+	 
+	 
 	public static final String AILANG = "Translate the text into ";
 
 	public static final String AIERROR = "The spirits are resless, ask your qustions again.";

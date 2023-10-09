@@ -18,7 +18,8 @@ public enum ReviewDetailsStep {
 	STEP9("step9", "Translate Tags"), // Translate Tags
 	STEP10("step10", "Translate Meta"), // Translate Meta
 	STEP11("step11", "Enable"), // Enable
-	STEP12("step12", "Post To Facebook"); // PostToFacebook
+	STEP12("step12", "Post To Facebook"), // PostToFacebook
+	STEP13("step13", "Post To IndexNow"); // IndexNow
 
 	static Logger logger = Logger.getLogger(ReviewDetailsStep.class.getName());
 

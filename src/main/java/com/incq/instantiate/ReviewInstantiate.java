@@ -80,7 +80,8 @@ public class ReviewInstantiate {
 			}
 			break;
 		case STEP5:// Determine the Tags
-			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + new TagManager().fetchUniqueTagsString() +  AIConstants.AITAGS2 +  review.getSource(), ""));
+			review.setTags(AIManager.editText(review.getSource(), AIConstants.AITAGS + new TagManager().fetchUniqueTagsString() +  AIConstants.AITAGS2 + review.getSource(), ""));
+			review.getReviewDetails().setTags(review.getTags());
 			review.getReviewDetails().setTags(review.getTagsList());
 			if (continueExpand) {
 				EnqueueReview.enqueueReviewTask(key, lang, step.next(), continueExpand);

@@ -6,5 +6,8 @@ public class Constants {
 	public static final String KEY = "Key";
 	public static final String VERSION = "v.1.0.0";	
 	public static final long UNIVERSALUSER = 0l;
+	public static final String INDEXNOW = "88500517616d495992167e3b11892346";	
+
+	
 	
 }

@@ -149,20 +149,25 @@ try {
 					<%}%>
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form
-							action="<%=JspConstants.AUTHORSEO%><%=author.getName()%>"
-							method="get" id="languageForm">
-							<select name="la" aria-label="Language"
-								onchange="document.getElementById('languageForm').submit();">
+					<li class="nav-item"><form id="languageForm">
+							<select name="la" aria-label="Language" id="languageSelect">
 								<%
 								for (Language langEnum : Language.values()) {
 								%>
 								<option value="<%=langEnum.code%>"
 									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 									<%=langEnum.name%></option>
-								<%}%>
+								<%
+								}
+								%>
 							</select>
-						</form></li>
+						</form> <script>
+    					const languageSelect = document.getElementById("languageSelect");
+    					languageSelect.addEventListener("change", function () {
+        					const selectedValue = ("<%=Language.ENGLISH.code%>"==languageSelect.value?"www":languageSelect.value);
+        					window.location.href = "<%=JspConstants.HTTPS%>" + selectedValue + "<%=JspConstants.INCQP + url.getPath()%>";
+						});
+						</script></li>
 				</ul>
 				<%
 				if (currentUser != null) {

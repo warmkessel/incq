@@ -13,6 +13,7 @@ import com.incq.enqueue.EnqueueReviewDetails;
 import com.incq.entity.ReviewDetails;
 import com.incq.exception.IncqServletException;
 import com.incq.instantiate.helpers.FacebookHelper;
+import com.incq.instantiate.helpers.IndexNow;
 
 public class ReviewDetailsInstantiate {
 	static Logger logger = Logger.getLogger(ReviewDetailsInstantiate.class.getName());
@@ -174,7 +175,17 @@ public class ReviewDetailsInstantiate {
 			if(!reviewDetails.isDeleted()) {
 				FacebookHelper.postToFacebookGraphAPI(reviewDetails.getReviewId(), lang);
 			}
+			if (continueExpand) {
+				EnqueueReviewDetails.enqueueReviewDetailsTask(reviewDetails.getReviewId(), lang, step.next(),
+						continueExpand);
+			}
 			break;
+			
+		case STEP13:
+			if(!reviewDetails.isDeleted()) {
+				IndexNow.postIndexNow(reviewDetails.getReviewId(), lang);
+			}
+			break;	
 		case FAIL:
 			logger.log(Level.SEVERE,
 					"AuthorStep Fail key " + reviewDetails.getKeyLong() + " lang " + lang + " step " + step);

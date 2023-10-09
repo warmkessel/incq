@@ -30,6 +30,8 @@ public class JspConstants {
 	public static final String ADMINREVIEWSEO = ADMIN + "/review/";
 	public static final String ADMINFACEBOOKSEO = ADMIN + "/facebook/";
 	public static final String ADMINTWITTERSEO = ADMIN + "/twitter/";
+	public static final String ADMININDEXNOW = ADMIN + "/indexnow/";
+
 	public static final String ALL = "all";
 	
 	

@@ -297,7 +297,11 @@ if (null != langList && langList.length > 0) {
 		%><input type="button" value="Step 1 - Fetch the Source"
 			onclick="appendToUrlAndFetch('step1')">
 		<%}%><br> Author:<input type="text" name="<%=JspConstants.AUTHOR%>"
-			value="<%=review.getAuthor()%>" size="50"> <br> Media
+			value="<%=review.getAuthor()%>" size="50"> <%
+		if (Language.ENGLISH.equals(lang)) {
+		%><input type="button" value="Step 2 - Determine Author"
+			onclick="appendToUrlAndFetch('step2')">
+		<%}%><br><br> Media
 		<textarea name="<%=JspConstants.MEDIA%>" rows="20" cols="80"><%=review.getMediaString()%></textarea>
 		<br> Tags
 		<textarea name="<%=JspConstants.TAGS%>" rows="20" cols="80"><%=review.getTagsString()%></textarea>

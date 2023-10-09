@@ -25,7 +25,7 @@ if (0 == subDomain.length() || JspConstants.WWW.equals(subDomain) || JspConstant
 	}
 } else {
 	lang = Language.findByCode(subDomain);
-	if(Language.ENGLISH.equals(lang)){
+	if (Language.ENGLISH.equals(lang)) {
 		dom = Domains.findByName(subDomain);
 	}
 }
@@ -35,12 +35,10 @@ String category = "";
 if (categoryLoc >= 0) {
 	category = URLDecoder.decode(url.getPath().substring(categoryLoc + JspConstants.CATEGORY.length()), "UTF-8");
 	theList = ReviewList.fetchCategoryEntities(category, lang);
-}
-else{
-	if(!Domains.WWW.equals(dom)){
+} else {
+	if (!Domains.WWW.equals(dom)) {
 		theList = ReviewList.fetchCategoryEntities(dom.name, lang);
-	}
-	else{
+	} else {
 		theList = ReviewList.fetchBookmaredReviews(lang);
 	}
 }
@@ -88,17 +86,16 @@ else{
 	<nav class="navbar nav-first navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand"
-				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>" aria-label="<%=lang.linkHome%>"><img
+				href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"
+				aria-label="<%=lang.linkHome%>"><img
 				src="/assets/imgs/logo-sm.jpg" height="55" width="55" alt="INCQ">
 			</a>
 			<div class="d-none d-md-block">
 				<h6 class="mb-0">
-					<a href="https://www.facebook.com/INCQreviews/"
-						class="px-2" target="_blank" aria-label="Facebook"><i
-						class="ti-facebook"></i></a> <a
-						href="https://twitter.com/incqReviews" aria-label="Twitter"
-						class="px-2" target="_blank"><i
-						class="ti-twitter"></i></a>
+					<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+						target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+					<a href="https://twitter.com/incqReviews" aria-label="Twitter"
+						class="px-2" target="_blank"><i class="ti-twitter"></i></a>
 				</h6>
 			</div>
 		</div>
@@ -134,11 +131,8 @@ else{
 
 				</ul>
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><form
-							action="<%=JspConstants.INDEX%>?la=<%=lang.code%>" method="get"
-							id="languageForm">
-							<select name="la" aria-label="Language"
-								onchange="document.getElementById('languageForm').submit();">
+					<li class="nav-item"><form id="languageForm">
+							<select name="la" aria-label="Language" id="languageSelect">
 								<%
 								for (Language langEnum : Language.values()) {
 								%>
@@ -149,14 +143,21 @@ else{
 								}
 								%>
 							</select>
-						</form></li>
+						</form> <script>
+    					const languageSelect = document.getElementById("languageSelect");
+    					languageSelect.addEventListener("change", function () {
+        					const selectedValue = ("<%=Language.ENGLISH.code%>"==languageSelect.value?"www":languageSelect.value);
+        					window.location.href = "<%=JspConstants.HTTPS%>" + selectedValue + "<%=JspConstants.INCQP + url.getPath()%>";
+						});
+						</script></li>
 				</ul>
 				<%
 				if (currentUser != null) {
 				%>
 				<a href="<%=userService.createLogoutURL(JspConstants.INDEX)%>"
 					class="btn btn-primary btn-sm"
-					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%> <%=currentUser.getNickname()%></a>
+					aria-label="<%=lang.welcome%> <%=currentUser.getNickname()%>"><%=lang.welcome%>
+					<%=currentUser.getNickname()%></a>
 				<%
 				} else {
 				%>
@@ -173,7 +174,9 @@ else{
 	<section class="has-img-bg" id="insite">
 		<div class="container">
 			<h6 class="section-subtitle text-center"><%=category.length() > 0 ? lang.category + " " + CaseControl.capFirstLetter(category) : lang.popular%></h6>
-			<h1 class="section-title mb-6 text-center">INCQ <%=lang.reviews%></h1>
+			<h1 class="section-title mb-6 text-center">
+				INCQ
+				<%=lang.reviews%></h1>
 			<div class="card bg-light">
 				<div class="card-body px-4 pb-4 text-center">
 					<div class="row text-left">
@@ -187,11 +190,10 @@ else{
 										href="<%=JspConstants.REVIEWSEO%><%=theList.get(x).getSlug()%>"
 										aria-label="<%=URLEncoder.encode(theList.get(x).getReviewDetails().getTitle(), "UTF-8")%>"
 										class="pb-3 mx-3 d-block text-dark text-decoration-none border border-left-0 border-top-0 border-right-0"><%=theList.get(x).getReviewDetails().getTitle()%></a>
-									<a
-										href="<%=theList.get(x).getLink()%>"
-										aria-label="<%=theList.get(x).getLink()%>">
-										<img src="<%=theList.get(x).getMediaList().get(0)%>"
-										height="250" width="250"
+									<a href="<%=theList.get(x).getLink()%>"
+										aria-label="<%=theList.get(x).getLink()%>"> <img
+										src="<%=theList.get(x).getMediaList().get(0)%>" height="250"
+										width="250"
 										alt="<%=theList.get(x).getReviewDetails().getDesc()%>"></a>
 									<p class="mt-1 mb-0">
 										<a
@@ -218,15 +220,16 @@ else{
 				<div class="col-md-3 text-md-left mb-3 mb-md-0">
 					<a href="<%=JspConstants.HTTPS + JspConstants.INCQ%>"><img
 						src="/assets/imgs/logo.jpg" height=100 width=100 alt="INCQ"
-						aria-label="<%=lang.linkHome %>" class="mb-0"></a>
+						aria-label="<%=lang.linkHome%>" class="mb-0"></a>
 				</div>
 				<div class="col-md-9 text-md-right">
-					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home %>" class="px-3"><small
-						class="font-weight-bold"><%=lang.home %></small></a> <a
-						href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors %>" class="px-3"><small
-						class="font-weight-bold"><%=lang.authors %></small></a> <a
-						href="<%=JspConstants.CONTACT%>" aria-label="<%=lang.contactUs %>" class="pl-3"><small
-						class="font-weight-bold"><%=lang.contactUs %></small></a>
+					<a href="<%=JspConstants.INDEX%>" aria-label="<%=lang.home%>"
+						class="px-3"><small class="font-weight-bold"><%=lang.home%></small></a>
+					<a href="<%=JspConstants.AUTHORS%>" aria-label="<%=lang.authors%>"
+						class="px-3"><small class="font-weight-bold"><%=lang.authors%></small></a>
+					<a href="<%=JspConstants.CONTACT%>"
+						aria-label="<%=lang.contactUs%>" class="pl-3"><small
+						class="font-weight-bold"><%=lang.contactUs%></small></a>
 				</div>
 			</div>
 		</div>
@@ -242,16 +245,19 @@ else{
 					<p class="mb-0 small">
 						&copy;
 						<%=Constants.YEAR%>
-						, <%=lang.arr %> - <%=lang.amazon %> -
+						,
+						<%=lang.arr%>
+						-
+						<%=lang.amazon%>
+						-
 						<%=Constants.VERSION%>
 					</p>
 				</div>
 				<div class="d-none d-md-block">
 					<h6 class="small mb-0">
-						<a href="https://www.facebook.com/INCQreviews/"
-							class="px-2" target="_blank" aria-label="Facebook"><i
-							class="ti-facebook"></i></a> <a
-							href="https://twitter.com/incqReviews" class="px-2"
+						<a href="https://www.facebook.com/INCQreviews/" class="px-2"
+							target="_blank" aria-label="Facebook"><i class="ti-facebook"></i></a>
+						<a href="https://twitter.com/incqReviews" class="px-2"
 							aria-label="Twitter" target="_blank"><i class="ti-twitter"></i></a>
 					</h6>
 				</div>
