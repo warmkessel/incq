@@ -266,9 +266,11 @@ public enum Language {
 		this.authDesc = authDesc;
 		this.more = more;
 	}
-
+	public String getCode(){
+		return code.replaceAll("_", "-");
+	}
 	public static Language findByCode(String code) {
-		Language lang = BY_CODE.getOrDefault(code.toLowerCase(), ENGLISH);
+		Language lang = BY_CODE.getOrDefault(code.replaceAll("-", "_").toLowerCase(), ENGLISH);
 		if (ENGLISH.equals(lang) && code.startsWith("es-")) {
 			lang = Language.SPANISH_MEXICO;
 		}

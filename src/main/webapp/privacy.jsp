@@ -112,7 +112,7 @@ ArrayList<Review> theList = ReviewList.fetchBookmaredReviews(lang);
 								<%
 								for (Language langEnum : Language.values()) {
 								%>
-								<option value="<%=langEnum.code%>"
+								<option value="<%=langEnum.getCode()%>"
 									<%=langEnum.equals(lang) ? "selected" : ""%>><%=langEnum.flagUnicode%>
 									<%=langEnum.name%></option>
 								<%

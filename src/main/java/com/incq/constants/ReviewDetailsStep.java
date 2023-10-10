@@ -10,7 +10,7 @@ public enum ReviewDetailsStep {
 	STEP1("step1", "Translate Introduction"), // Translate Introduction
 	STEP2("step2", "Translate Description"), // Translate Description
 	STEP3("step3", "Translate Conclusion"), // Translate Conclusion
-	STEP4("step4", "Translate Conclusion"), // Translate Summary
+	STEP4("step4", "Translate Summary"), // Translate Summary
 	STEP5("step5", "Translate Title"), // Translate Title
 	STEP6("step6", "Translate Name"), // Translate Name
 	STEP7("step7", "Translate Call"), // Translate Call
